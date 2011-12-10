@@ -42,11 +42,6 @@
 	define("DB_USER", "");
 	define("DB_PASS", "");
 	
-	// Login Config
-	define("LOGIN_PATH", "login");
-	define("LOGOUT_PATH", "logout");	
-	define("LOGIN_ENTRANCE", "admin");
-	
 	// Session Start Baby
 	$session = MWSession::getInstance();
 	$session -> setName('mwlabs');
