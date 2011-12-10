@@ -22,10 +22,11 @@
 		
 	}
 
+
 	// Paths and Site Config
-	define("DOMAIN",		"something like 'http://yourdomainname/' ");	
-	define("BASE_PATH",		"something like 'http://yourdomainname/somefolder' ");
-	define("ASSET_PATH",	"something like 'http://yourdomainname/somefolder/web' ");
+	define("DOMAIN",		"http://localhost/");	
+	define("BASE_PATH",		DOMAIN."_projects/mw/");
+	define("ASSET_PATH",	DOMAIN."_projects/mw/web/");
 	define("MW_CORE",		__DIR__."/src/MWCore/");	
 	define("MW_VIEWS",		__DIR__."/src/MWCore/View/");
 	define("MW_RESOURCES",	__DIR__."/src/MWCore/Resources");		
@@ -36,10 +37,15 @@
 	define('REWRITE_RULE', '^(.*)$ index.php');
 	
 	// DB Config
-	define("DB_HOST", "your db host");
-	define("DB_NAME", "your db name");
-	define("DB_USER", "your db user");
-	define("DB_PASS", "your db pass");
+	define("DB_HOST", "localhost");
+	define("DB_NAME", "mwlabs");
+	define("DB_USER", "root");
+	define("DB_PASS", "ipsdam");
+	
+	// Login Config
+	define("LOGIN_PATH", "login");
+	define("LOGOUT_PATH", "logout");	
+	define("LOGIN_ENTRANCE", "admin");
 	
 	// Session Start Baby
 	$session = MWSession::getInstance();
