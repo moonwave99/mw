@@ -1,0 +1,14 @@
+/* the humans responsible & colophon */
+/* humanstxt.org */
+
+
+/* TEAM */
+  Names (& URL):
+
+/* THANKS */
+  Names (& URL):
+
+
+/* SITE */
+  Standards: HTML5, CSS3
+  Components: Modernizr, jQuery

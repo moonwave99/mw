@@ -1,0 +1,61 @@
+#debug {
+	width:100%;
+	position: fixed;
+	bottom: 0px;
+	z-index: 9999;
+	background-color: black;	
+	color:white;
+	font-family: monospace, serif; font-family: 'Monaco', monospace; font-size: 1em;
+	padding:10px;
+}
+
+#debug a{
+	font-weight:normal;
+}
+
+#debug .highlight{
+	color: #fe57a1;
+}
+
+#debug-left{
+	float:left;
+}
+
+#debug-right{
+	float:right;
+	margin-right:20px;
+}
+
+#log{
+	display:none;
+	position:fixed;
+	right:0px;
+	z-index: 9999;
+	bottom:40px;
+	max-height:400px;
+	width:700px;
+	background-color:#222;
+	color:white;
+	font-family: monospace, serif; font-family: 'Monaco', monospace; font-size: 12px;	
+	overflow-y: scroll;
+	border-top:4px solid orange;
+	border-left:4px solid orange;
+	padding-left:10px;
+}
+
+#log ul{
+	list-style:none;
+}
+
+#log .orange{
+	color:orange;
+}
+
+#log .green{
+	color:green;
+}
+
+#log pre{
+	font-size:10px;
+	background-color:transparent;
+}
