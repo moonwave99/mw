@@ -210,6 +210,69 @@ textarea { overflow: auto; vertical-align: top; resize: vertical; }
 input:valid, textarea:valid {  }
 input:invalid, textarea:invalid { background-color: white; }
 
+/* Custom styles */
+
+.mw-form { 
+  	border-top: 4px solid #D0E4F2;		
+	text-align:right;
+}
+
+.mw-form p {
+	margin:20px 0px;
+	line-height:28px;
+	vertical-align:middle;
+}
+
+.mw-form .line input, .mw-form .line textarea, .mw-form .line select{	
+	border: 1px solid #aaa;
+	padding: 7px;
+	font-size: 12px;
+	background-color: rgba(208, 228, 242, 0.3);	
+	font-weight:normal;
+	color:black;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;	
+}
+
+.mw-form input:focus, .mw-form textarea:focus {
+	background-color: #FFF3D0;
+}
+
+.mw-form input[type='submit'] {
+	background-color: rgb(220, 220, 220);
+}
+
+.mw-form input[type='submit']:hover{
+	background-color:#D0E4F2;
+}
+
+.mw-form label {	
+	margin-right:20px;
+	font-weight:bold;
+	color: #35478C;
+	font-size:14px;
+}
+
+.mw-form *[disabled='disabled'] {
+	opacity:0.5;
+	cursor:default;
+}
+
+.mw-form .captcha-image {
+	float: right;
+	width: 150px;
+	height: 60px;
+	border: 1px solid #eee;
+	padding: 2px;
+}
+
+.mw-form .captcha-refresh {
+	float:right;
+	border: 0px;
+	margin:16px 10px;
+}
+
 
 /* =============================================================================
    Tables
@@ -234,6 +297,7 @@ body {
   background: #D0E4F2;
   color: #222;
   line-height: 1.6em;
+  height:100%
 }
 
 a {
@@ -298,6 +362,23 @@ strong { font-weight: bold; }
 #site-footer{
 	border-top:2px solid #D0E4F2;
 	padding-top:10px;
+}
+
+.mwAlertBox{
+	
+	-webkit-border-top-right-radius: 30px;
+	-moz-border-radius-topright: 30px;
+	border-top-right-radius: 30px;
+	
+	-webkit-border-bottom-left-radius: 30px;
+	-moz-border-radius-bottomleft: 30px;
+	border-bottom-left-radius: 30px;
+	
+	background-color:white;
+	padding:40px;
+	width:400px;
+	margin:100px auto;	
+	
 }
 
 
