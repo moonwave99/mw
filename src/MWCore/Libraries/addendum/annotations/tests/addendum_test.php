@@ -24,5 +24,6 @@
 		public function testClassResolverShouldTriggerErrorOnCommonSuffix() {
 			$this->expectError("Cannot resolve class name for 'CommonSuffix'. Possible matches: Namespace1_CommonSuffix, Namespace2_CommonSuffix");
 			Addendum::resolveClassName('CommonSuffix');
-		}	}
+		}
+	}
 ?>
