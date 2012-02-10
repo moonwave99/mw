@@ -10,9 +10,9 @@ class PagesController extends MWController
 	public function indexAction()
 	{
 		
-		$this -> requestView("index", array(
-			'pageTitle'	=> 'MW. | Hello, World!',
-			'title'		=> 'Hello World!'			
+		$this -> requestView("App\View\index", array(
+			'pageTitle'	=> 'MW | Hello World!',
+			'title'		=> 'Hello World!'
 		));		
 		
 	}
@@ -20,7 +20,7 @@ class PagesController extends MWController
 	public function showPageAction($page)
 	{
 
-		$this -> requestView("Pages\\".$page, array(
+		$this -> requestView("App\View\Pages\\".$page, array(
 			'pageTitle'	=> 'MW. | '.ucwords($page),
 			'title'		=> ucwords($page)			
 		));

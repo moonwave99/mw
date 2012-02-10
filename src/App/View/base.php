@@ -14,16 +14,15 @@
 		<meta name="description" content="## PUT YOUR CONTENT HERE ##"/>
 		<meta name="author" content="## PUT YOUR AUTHOR INFO HERE ##"/>	
 		<meta name="viewport" content="width=device-width,initial-scale=1"/>	
+		<meta name="csrf" content="<?php echo $data['token'] ?>"/>		
 		
 		<link rel="author" href="humans.txt" />
 		<link href="<?php asset('favicon.ico') ?>" rel="icon" type="image/x-icon" />
 		<link href="<?php asset('favicon.ico') ?>" rel="shortcut icon" type="image/x-icon" />
 		
 	<?php startblock('css') ?>		
-		<link rel="stylesheet" href="<?php asset('css/style.css') ?>"/>		
-		<?php if( DEBUG === true ):?>
-		<link rel="stylesheet" href="<?php asset('css/debug.css') ?>"/>
-		<?endif;?>		
+		<link rel="stylesheet" href="<?php asset('css/style.css') ?>"/>	
+				
 	<?php endblock() ?>	
 		
 		<script src="<?php asset('js/libs/modernizr-2.0.6.min.js') ?>"></script>
@@ -31,29 +30,10 @@
 	</head>
 	<body>
 		
-		<section id="container">
-			<header id="header">
-				<h1>
-
-		<?php startblock('title') ?>
-			Made with MW.
-		<?php endblock() ?>				
-
-				</h1>
-			</header>
-
-			<section id="content" role="main">
-	<?php startblock('content') ?>
-
-	<?php endblock() ?>
-			</section> <!-- /#main -->
-
-			<footer id="site-footer">
-				<strong>&copy; 2011 - moonwavelabs</strong>
-			</footer> <!-- /#footer -->
-	
-		</section>			
-
+		<?php startblock('container') ?>
+		
+		<?php endblock() ?>	
+		
 		<?php startblock('js') ?>
 			<!--[if lt IE 9]>
 			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -62,10 +42,11 @@
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 			<script>window.jQuery || document.write('<script src="<?php asset('js/libs/jquery-1.7.0.min.js') ?>"><\/script>')</script>
 			
-			<script defer src="<?php asset('js/plugins.js') ?>"></script>
+			<script src="<?php asset('js/libs/underscore-min.js') ?>"></script>
+			<script src="<?php asset('js/plugins.js') ?>"></script>
 			
 			<script>
-				var _gaq=[['_setAccount','<?php echo $data['settings'] -> GOOGLE_ANALYTICS ?>'],['_trackPageview']];
+				var _gaq=[['_setAccount','<?php echo GOOGLE_ANALYTICS ?>'],['_trackPageview']];
 				(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
 				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
 				s.parentNode.insertBefore(g,s)}(document,'script'));
@@ -77,11 +58,6 @@
 		  <![endif]-->			
 			
 		<?php endblock() ?>
-		
-		<?php if( DEBUG === true ):?>
-			<script defer src="<?php asset('js/mylibs/debug.js') ?>"></script>
-			<?php require_once(MW_VIEWS.DIRECTORY_SEPARATOR.'debug.php'); ?>
-		<?endif;?>
 		
 	</body>
 </html>

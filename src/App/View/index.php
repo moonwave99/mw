@@ -1,4 +1,4 @@
-<?php requestView('base', $data) ?>
+<?php requestView('App\View\layout', $data) ?>
 
 <?php startblock('pageTitle') ?>
 	<?php echo $data['pageTitle'] ?>
@@ -10,7 +10,7 @@
 
 <?php startblock('content') ?>
 
-	<p>Everything fine at moonwavelabs.</p>
+	<p>Proudly made in MW.</p>
 
 <?php endblock() ?>
 

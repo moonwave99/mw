@@ -1,4 +1,4 @@
-<?php requestView('base', $data) ?>
+<?php requestView('App\View\layout', $data) ?>
 
 <?php startblock('pageTitle') ?>
 	<?php echo $data['pageTitle'] ?>
