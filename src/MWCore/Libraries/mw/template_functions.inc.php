@@ -10,7 +10,9 @@
 	function requestView($view, $data)
 	{
 
-		include(APP_VIEWS.$view.".php");
+		$view = str_replace("\\", DIRECTORY_SEPARATOR, $view);
+
+		include( SRC_PATH.$view.".php" );
 		
 	}
 	

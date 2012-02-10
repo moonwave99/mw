@@ -1,6 +1,6 @@
 <?php
 
-//require_once("Libraries/addendum/annotations.php");
+require_once("Libraries/addendum/annotations.php");
 require_once("Libraries/mw/useful.inc.php");
 
 class MWAutoloader
