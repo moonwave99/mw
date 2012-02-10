@@ -45,18 +45,18 @@ class MWRouter implements MWSingleton
 	public function routeRequest()
 	{
 
-		$pattern = $this -> getPatternFromURI();
+		$pattern = $this -> getPatternFromURI();	
 
-		$firewallProblem = MWFirewall::getInstance() -> isPatternRejected($pattern);		
-
+		$firewallProblem = MWFirewall::getInstance() -> isPatternRejected($pattern);
+		
 		if($firewallProblem !== false){
 
 			header("Location: ".BASE_PATH.$firewallProblem);
 			exit;
 			
-		}
+		}			
 
-		$route = $this -> searchPattern($pattern);
+		$route = $this -> searchPattern($pattern);		
 		
 		if(false === $route || false === $route -> follow($pattern)){
 			
@@ -88,12 +88,14 @@ class MWRouter implements MWSingleton
 
 		$rewrite_rule = explode(' ', REWRITE_RULE);
 		
+		$xpl = str_replace($rewrite_rule[1], '', $_SERVER['SCRIPT_NAME']);
+		
 		$route = explode('?', str_replace(
-			str_replace($rewrite_rule[1], '', $_SERVER['SCRIPT_NAME']),
+			$xpl == "/" ? '' : $xpl,
 			'',
 			$_SERVER['REQUEST_URI']
 		));
-		
+
 		return $route[0];
 		
 	}

@@ -97,7 +97,7 @@ class MWSingleRoute
 						$controllerInstance	,
 						$this->action."Action"
 					),
-					$params
+					$this -> cleanParams($params)
 				);
 				
 			}else{
@@ -112,6 +112,22 @@ class MWSingleRoute
 			
 		}
 	
+	}
+	
+	protected function cleanParams($params)
+	{
+		
+		$p = array();
+		
+		foreach($params as $param)
+		{
+			
+			$p[] = htmlentities($param, ENT_QUOTES, 'UTF-8');
+			
+		}
+		
+		return $p;
+				
 	}
 
 }

@@ -3,6 +3,7 @@
 namespace MWCore\Kernel;
 
 use MWCore\Interfaces\MWSingleton;
+use MWCore\Kernel\MWQueryBuilder;
 
 class MWDBManager implements MWSingleton
 {
@@ -37,20 +38,15 @@ class MWDBManager implements MWSingleton
 	
 	public function getQueryNumber(){ return $this -> queryNumber; }
 	
-	public function getDBData($query, $params = NULL)
+	public function getDBData($query, $params = array())
 	{
 
 		$statement = $this -> pdo -> prepare($query);
-		
-		if(isset($params))
+
+		foreach($params as $i => $p)
 		{
 			
-			foreach($params as $i => $p)
-			{
-				
-				$statement -> bindValue(':'.$p['field'], $p['value'], $p['type']);
-				
-			}
+			$statement -> bindValue(':'.$p['field'], $p['value'], $p['type']);
 			
 		}
 	
@@ -59,37 +55,34 @@ class MWDBManager implements MWSingleton
 		
 		if(DEBUG === true){
 
-			\MWCore\Kernel\MWLog::getInstance() -> add( $statement -> errorInfo() );
+			\MWCore\Kernel\MWLog::getInstance() -> add( array($query, $statement -> errorInfo(), $params) );
 			$this -> queryNumber ++;	
 			
 		}
 		
-		return $statement -> fetchAll();
+		$results = $statement -> fetchAll();
+		
+		return $results;
 		
 	}
 	
-	public function setDBData($query, $params = NULL)
+	public function setDBData($query, $params = array())
 	{
 
 		$statement = $this -> pdo -> prepare($query);  
-
-		if(isset($params))
+			
+		foreach($params as $i => $p)
 		{
 			
-			foreach($params as $i => $p)
-			{
-				
-				$statement -> bindValue(':'.$p['field'], $p['value'], $p['type']);
-				
-			}
+			$statement -> bindValue(':'.$p['field'], $p['value'], $p['type']);
 			
-		}	
+		}
 		
 		$statement -> execute();
 		
 		if(DEBUG === true){
 
-			\MWCore\Kernel\MWLog::getInstance() -> add( $statement -> errorInfo() );
+			\MWCore\Kernel\MWLog::getInstance() -> add( array($query, $statement -> errorInfo(), $params) );
 			$this -> queryNumber ++;	
 			
 		}
@@ -97,5 +90,5 @@ class MWDBManager implements MWSingleton
 		return $this -> pdo ->lastInsertId();	
 		
 	}
-	
+		
 }

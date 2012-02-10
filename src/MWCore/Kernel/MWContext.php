@@ -44,7 +44,8 @@ class MWContext implements MWSingleton
 	public function isRoleGranted($roleName)
 	{
 
-		return $this -> user != NULL ? $this -> user -> hasRole($roleName) : false;
+		return	$this -> user != NULL ? 
+				$this -> user -> hasRole($roleName) || $roleName == "IS_LOGGED" : false;
 		
 	}
 	

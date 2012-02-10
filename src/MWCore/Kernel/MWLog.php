@@ -55,8 +55,6 @@ class MWLog implements MWSingleton
 	
 	public function flush(){
 		
-		ob_start();
-		
 		echo '<pre>';
 		
 		foreach($this -> list as $l){
@@ -70,8 +68,6 @@ class MWLog implements MWSingleton
 		}
 		
 		echo '</pre>';
-		
-		echo ob_get_flush();
 		
 	}
 	

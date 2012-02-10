@@ -46,7 +46,9 @@ class MWFirewall implements MWSingleton
 			if($tiles[0] == $currentTiles[0])
 			{
 
-				return MWContext::getInstance() -> isRoleGranted( $rule -> getRole() ) ? false : $rule -> getFallbackPattern();
+				return MWContext::getInstance() -> isRoleGranted( $rule -> getRole() ) || 
+					($rule -> isFlashEnabled() && strpos($_SERVER['HTTP_USER_AGENT'], "Adobe Flash Player") !== false )
+					? false : $rule -> getFallbackPattern();
 				
 			}
 			

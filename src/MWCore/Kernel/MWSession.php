@@ -30,7 +30,7 @@ class MWSession implements MWSingleton
 	{
 	
 		$this -> values = array();
-		
+
 	}
 	
 	public function setName($name){ $this -> name = $name; }
@@ -63,9 +63,9 @@ class MWSession implements MWSingleton
 	{
 		
 		session_start($this -> name);
-		
+
 		$this -> values = $_SESSION[$this -> name];
-		
+
 		if( $this -> get('csrfToken') == NULL ){
 
 			$this -> set('csrfToken', sha1(microtime()) );

@@ -11,12 +11,15 @@ class MWFirewallRule
 	
 	protected $fallbackPattern;
 	
-	public function __construct($pattern, $role, $fallbackPattern)
+	protected $flashEnabled;
+	
+	public function __construct($pattern, $role, $fallbackPattern, $flashEnabled = false)
 	{
 		
 		$this -> setPattern($pattern);
 		$this -> setRole($role);
 		$this -> setFallbackPattern($fallbackPattern);
+		$this -> flashEnabled = $flashEnabled;
 		
 	}
 	
@@ -28,5 +31,7 @@ class MWFirewallRule
 	
 	public function setFallbackPattern($fallbackPattern){ $this -> fallbackPattern = $fallbackPattern; }
 	public function getFallbackPattern(){ return $this -> fallbackPattern; }
+	
+	public function isFlashEnabled(){ return $this -> flashEnabled; }
 	
 }
