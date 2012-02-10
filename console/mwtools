@@ -1,0 +1,74 @@
+<?php
+
+	require __DIR__."/../config.php";
+
+	use MWCore\Kernel\MWLog;
+
+	use MWCore\Tools\MWSchemaGenerator;	
+	use MWCore\Tools\MWComponentGenerator;
+
+	use MWCore\Exception\MWNamespaceException;		
+	
+	function printUsage()
+	{
+		
+		include __DIR__."/usage.txt";
+		
+	}
+	
+	print("\n	### MWTools - CLI utilities for MW. ###\n\n");
+
+	switch($argv[1]){
+
+		case "--docrud":
+		
+			try{
+						
+				$generator = new MWComponentGenerator(str_replace('/', '\\', $argv[2]));
+				$generator -> generateCrudController();
+			
+			}catch(MWNamespaceException $e){
+			
+				print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+			
+			}
+			
+			break;
+		
+		case "--dorep":
+		
+			try{
+		
+				$generator = new MWComponentGenerator(str_replace('/', '\\', $argv[2]));
+				$generator -> generateRepository();
+			
+			}catch(MWNamespaceException $e){
+			
+				print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+			
+			}		
+		
+			break;
+		
+		case "--doschema":
+		
+			try{
+			
+				$generator = new MWSchemaGenerator(str_replace('/', '\\', $argv[2]));
+				$generator -> generateSchema();
+				
+			}catch(MWNamespaceException $e){
+				
+				print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+				
+			}
+			
+			break;
+		
+		default:
+			printUsage();
+			break;
+		
+	}	
+
+	exit(0);
