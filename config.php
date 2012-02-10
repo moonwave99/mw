@@ -42,7 +42,7 @@
 	define("DB_HOST", "localhost");
 	define("DB_NAME", "mw");
 	define("DB_USER", "root");
-	define("DB_PASS", "ipsdam");
+	define("DB_PASS", "");
 
 	// Login Config
 	define("LOGIN_PATH", 		"login");
