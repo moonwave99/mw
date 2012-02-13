@@ -130,6 +130,22 @@ class MWQueryBuilder
 		
 	}
 	
+	public function selectCount($entityname)
+	{
+		
+		$this -> type = "SELECT";
+		
+		$this -> entityname = $entityname;
+		
+		$this -> query = sprintf(
+			"SELECT COUNT(id) FROM %s",
+			MWEntity::getTableNameFromClass( $entityname )
+		);
+
+		return $this;		
+		
+	}
+	
 	public function selectFrom($entityname)
 	{
 
