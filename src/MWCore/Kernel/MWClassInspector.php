@@ -12,7 +12,8 @@ class MWClassInspector implements MWSingleton
 	protected $annotationCache;
 	protected $tableCache;
 	protected $repCache;
-	protected $reverseCache;	
+	protected $reverseCache;
+	protected $commonCache;	
 	
 	public static function getInstance()
 	{
@@ -34,6 +35,7 @@ class MWClassInspector implements MWSingleton
 		$this -> tableCache = array();
 		$this -> repCache = array();
 		$this -> reverseCache = array();
+		$this -> commonCache = array();
 		
 	}	
 	
@@ -146,5 +148,21 @@ class MWClassInspector implements MWSingleton
 		
 	}	
 	
+	public function getSingleAnnotationForEntity($entity, $annotation)
+	{
+
+		$className = is_object($entity) ? get_class($entity) : $entity;
+		
+		if( $this -> commonCache[$className] === NULL){
+
+			$ref = new \ReflectionAnnotatedClass($entity);
+			$notes = $ref -> getAllAnnotations($annotation);
+			$this -> commonCache[$className] = $notes[0];
+			
+		}
+
+		return $this -> commonCache[$className]; 
+		
+	}	
 	
 }

@@ -141,7 +141,7 @@ class MWEntity implements MWPersistent
 		foreach($fields as $field)
 		{
 
-			$tmpAnnotationName = array_shift(array_keys($field['annotations']));
+			$tmpAnnotationName = @array_shift(@array_keys($field['annotations']));
 
 			switch($tmpAnnotationName){
 				
@@ -274,7 +274,7 @@ class MWEntity implements MWPersistent
 		foreach($fields as $field)
 		{
 
-			$tmpAnnotationName = array_shift(array_keys($field['annotations']));
+			$tmpAnnotationName = @array_shift(@array_keys($field['annotations']));
 
 			switch($tmpAnnotationName){
 				
