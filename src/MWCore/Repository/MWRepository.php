@@ -4,6 +4,7 @@ namespace MWCore\Repository;
 
 use MWCore\Entity\MWEntity;
 use MWCore\Kernel\MWDBManager;
+use MWCore\Kernel\MWClassInspector;
 use MWCore\Kernel\MWQueryBuilder\MWQueryBuilder;
 use MWCore\Component\MWCollection;
 	
@@ -25,7 +26,7 @@ class MWRepository
 
 	public function findAll($start = 0, $range = 1000, $column = 'id', $order = 'ASC')
 	{
-		
+
 		$dbh = MWDBManager::getInstance();	
 		$qb = new MWQueryBuilder();
 		
@@ -46,13 +47,13 @@ class MWRepository
 		
 	}
 	
-	public function findAllByField($name, $value)
+	public function findAllByField($name, $value, $start = 0, $range = 1000, $column = 'id', $order = 'ASC')
 	{
 
 		$dbh = MWDBManager::getInstance();	
 		$qb = new MWQueryBuilder();
 		
-		$qb -> selectFrom( $this -> entityname ) -> where($name, '=');
+		$qb -> selectFrom( $this -> entityname ) -> order($column, $order) -> where($name, '=') -> limit($start, $range);
 
 		$query = $qb -> build();
 
@@ -136,6 +137,21 @@ class MWRepository
 		));
 
 		return count($queryResults) > 0 ? $this -> fillObjectFromArray($this -> entityname, $queryResults[0]) : false;
+		
+	}
+	
+	public function getTotalRecords()
+	{
+		
+		$dbh = MWDBManager::getInstance();		
+		$ins = MWClassInspector::getInstance();	
+		$qb = new MWQueryBuilder();
+		
+		$qb -> selectCount($this -> entityname);				
+
+		$result = $dbh -> getDBData($qb -> build());
+		
+		return $result[0]['COUNT(id)'];
 		
 	}
 	
