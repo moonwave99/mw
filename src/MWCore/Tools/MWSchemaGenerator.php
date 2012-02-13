@@ -210,6 +210,10 @@ class MWSchemaGenerator
 				return "TEXT";	
 				break;
 				
+			case "datetime":
+				return sprintf("VARCHAR(%d)", 19);
+				break;				
+				
 			case "int":
 				return sprintf("INT(%d)", $annotation -> length == "" ? 11 : $annotation -> length);
 				break;
