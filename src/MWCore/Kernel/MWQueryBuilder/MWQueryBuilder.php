@@ -268,7 +268,8 @@ class MWQueryBuilder
 			'operator'	=> $operator,
 			'value'		=> $value,
 			'table'		=> $table,
-			'mode'		=> 'MD5'
+			'mode'		=> 'MD5',
+			'boolean'	=> 'AND'
 		);
 		
 		return $this;		
