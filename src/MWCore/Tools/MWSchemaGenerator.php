@@ -136,6 +136,10 @@ class MWSchemaGenerator
 		$prev = NULL;
 		$count = 0;
 		
+		$columns = $this -> columnInfo;
+		
+		$notes = array();
+		
 		foreach($fields as $field)
 		{
 
@@ -164,6 +168,9 @@ class MWSchemaGenerator
 				case "MWCore\Annotation\OneToOne":							
 				case "MWCore\Annotation\ManyToOne":
 				
+					if($tmpAnnotation -> container === "false")
+						break;
+				
 					$query = sprintf('ALTER TABLE %1$s %2$s id_%3$s INT(10) NOT NULL %4$s',
 						$this -> tableInfo['TABLE_NAME'],
 						$tmpCol !== false ? 'MODIFY' : 'ADD',							
@@ -189,11 +196,31 @@ class MWSchemaGenerator
 					
 					break;
 
-			}		
+			}
 
 			$prev = $tmpAnnotation;
+			
+			$notes[] = $tmpAnnotation;
 
-		}		
+		}
+		
+		foreach($this -> columnInfo as $col)
+		{
+			
+			if($this -> _searchAnnotation($col, $notes) === false && $col['COLUMN_NAME'] != "id"){
+			
+				$query = sprintf('ALTER TABLE %1$s DROP COLUMN %2$s',
+					$this -> tableInfo['TABLE_NAME'],
+					$col['COLUMN_NAME']
+				);					
+
+				$this -> pdo -> query($query);
+				
+				printf("#	%s	: %s \n", "[Dropping]", $query);				
+				
+			}
+			
+		}
 		
 	}	
 	
@@ -286,6 +313,25 @@ class MWSchemaGenerator
 		
 		return false;
 
+	}
+	
+	protected function _searchAnnotation($column, $annotations)
+	{
+
+		$field = NULL;
+
+		foreach($annotations as $annotation)
+		{
+			
+			$field = $this -> _getFieldFromAnnotation($annotation);
+			
+			if($field == $column['COLUMN_NAME'])
+				return $field;
+
+		}
+		
+		return false;
+		
 	}
 	
 }
