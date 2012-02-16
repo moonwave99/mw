@@ -140,6 +140,8 @@ class MWSchemaGenerator
 		
 		$notes = array();
 		
+		$indexes = array();
+		
 		foreach($fields as $field)
 		{
 
@@ -181,6 +183,8 @@ class MWSchemaGenerator
 					$this -> pdo -> query($query);
 					
 					printf("#	%s	: %s \n", $field['name'], $query);
+					
+					$indexes[] = $this -> ins -> getTableNameForEntity($tmpAnnotation -> entity);
 				
 					break;
 					
@@ -219,6 +223,23 @@ class MWSchemaGenerator
 				printf("#	%s	: %s \n", "[Dropping]", $query);				
 				
 			}
+			
+		}
+		
+		count($indexes) > 0 && printf("\n	Creating indexes...\n\n");			
+		
+		foreach($indexes as $index)
+		{
+			
+			$query = sprintf('CREATE INDEX %1$s ON %2$s(%3$s)',
+				$index,
+				$this -> tableInfo['TABLE_NAME'],
+				"id_".$index
+			);
+			
+			$this -> pdo -> query($query);
+			
+			printf("#	%s	: %s \n", "[Index]", $query);
 			
 		}
 		
