@@ -1,5 +1,5 @@
 <?php	
 
-	require "config.php";
+require "config.php";
 
-	$router -> routeRequest();
+\MWCore\Kernel\MWRouter::getInstance() -> routeRequest();
