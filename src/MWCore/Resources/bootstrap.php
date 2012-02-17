@@ -1,7 +1,7 @@
 <?php
 
-require_once("Libraries/addendum/annotations.php");
-require_once("Libraries/mw/useful.inc.php");
+require(SRC_PATH."MWCore/Libraries/addendum/annotations.php");
+require(SRC_PATH."MWCore/Libraries/mw/useful.inc.php");
 
 class MWAutoloader
 {
@@ -19,12 +19,8 @@ class MWAutoloader
 		
 		$className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
 
-		if(file_exists(__DIR__."/..".DIRECTORY_SEPARATOR.$className.'.php')){
-
-			require(__DIR__."/..".DIRECTORY_SEPARATOR.$className.'.php');
+		file_exists(SRC_PATH.DIRECTORY_SEPARATOR.$className.'.php') && require(SRC_PATH.DIRECTORY_SEPARATOR.$className.'.php');
 			
-		}
-
 	}
 
 }
