@@ -1,14 +1,13 @@
 <?php
 
+use MWCore\Kernel\MWPackage;
 use MWCore\Kernel\MWSingleRoute;
 
-$signature = "MW";
+$package = new MWPackage("MWCore", "MW");
 
-$constants = array(
-	"MW_LOGIN_PATH"		=> "login",
-	"MW_LOGOUT_PATH"	=> "logout"
+$package -> addConstants(
+	array(
+		"MW_LOGIN_PATH"		=> "login",
+		"MW_LOGOUT_PATH"	=> "logout"
+	)
 );
-
-$routes = array();
-
-$rules = array();

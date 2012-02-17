@@ -1,75 +1,136 @@
 <?php
 
-	require __DIR__."/../config.php";
+require __DIR__."/../config.php";
 
-	use MWCore\Kernel\MWLog;
+use MWCore\Kernel\MWLog;
 
-	use MWCore\Tools\MWSchemaGenerator;	
-	use MWCore\Tools\MWComponentGenerator;
+use MWCore\Tools\MWSchemaGenerator;	
+use MWCore\Tools\MWComponentGenerator;
+use MWCore\Tools\MWFixtureLoader;
 
-	use MWCore\Exception\MWNamespaceException;		
+use MWCore\Exception\MWNamespaceException;		
+use MWCore\Exception\MWPackageLoadException;		
+use MWCore\Exception\MWFixtureException;		
+
+function printUsage()
+{
 	
-	function printUsage()
-	{
-		
-		include __DIR__."/usage.txt";
-		
-	}
+	include __DIR__."/usage.txt";
 	
-	print("\n	### MWTools - CLI utilities for MW. ###\n\n");
+}
 
-	switch($argv[1]){
+print("\n	### MWTools - CLI utilities for MW. ###\n\n");
 
-		case "--docrud":
-		
-			try{
-						
-				$generator = new MWComponentGenerator(str_replace('/', '\\', $argv[2]));
-				$generator -> generateCrudController();
-			
-			}catch(MWNamespaceException $e){
-			
-				print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
-			
-			}
-			
-			break;
-		
-		case "--dorep":
-		
-			try{
-		
-				$generator = new MWComponentGenerator(str_replace('/', '\\', $argv[2]));
-				$generator -> generateRepository();
-			
-			}catch(MWNamespaceException $e){
-			
-				print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
-			
-			}		
-		
-			break;
-		
-		case "--doschema":
-		
-			try{
-			
-				$generator = new MWSchemaGenerator(str_replace('/', '\\', $argv[2]));
-				$generator -> generateSchema();
-				
-			}catch(MWNamespaceException $e){
-				
-				print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
-				
-			}
-			
-			break;
-		
-		default:
-			printUsage();
-			break;
-		
-	}	
+switch($argv[1]){
 
-	exit(0);
+	case "--docrud":
 	
+		try{
+					
+			$generator = new MWComponentGenerator(str_replace('/', '\\', $argv[2]));
+			$generator -> generateCrudController();
+		
+		}catch(MWNamespaceException $e){
+		
+			print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+		
+		}
+		
+		break;
+	
+	case "--dorep":
+	
+		try{
+	
+			$generator = new MWComponentGenerator(str_replace('/', '\\', $argv[2]));
+			$generator -> generateRepository();
+		
+		}catch(MWNamespaceException $e){
+		
+			print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+		
+		}		
+	
+		break;
+	
+	case "--doschema":
+	
+		try{
+		
+			$generator = new MWSchemaGenerator(str_replace('/', '\\', $argv[2]));
+			$generator -> generateSchema();
+			
+		}catch(MWNamespaceException $e){
+			
+			print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+			
+		}
+		
+		break;
+		
+	case "--doschemabatch":
+	
+		if ($handle = @opendir(__DIR__."/../src/".$argv[2])) {
+
+			$generator = NULL;
+
+		    while (false !== ($entry = readdir($handle))) {
+
+				try{
+					
+					if(strpos($entry, '.') == 0)
+						continue;
+					$filename = explode(".", $entry);
+					
+					$generator = new MWSchemaGenerator(
+						str_replace('/', '\\', $argv[2])."\\".$filename[0]
+					);
+					$generator -> generateSchema();
+
+				}catch(MWNamespaceException $e){
+
+					print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+
+				}					
+
+		    }
+
+		    closedir($handle);
+		
+		}else{
+			
+			printf("	MWTools says: can't find '%s' directory.\n\n", $argv[2]);				
+			
+		}
+	
+		break;
+		
+	case "--loadfixtures":
+	
+		try{
+	
+			$packageManager = \MWCore\Kernel\MWPackageManager::getInstance();
+			
+			$package = $packageManager -> getPackage($argv[2]);
+			
+			$package -> loadFixtures();
+		
+		}catch(MWPackageLoadException $e){
+		
+			print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+		
+		}catch(MWFixtureException $e){
+			
+			print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+			
+		}	
+	
+		break;
+	
+	default:
+		printUsage();
+		break;
+	
+}	
+
+exit(0);

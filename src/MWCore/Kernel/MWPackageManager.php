@@ -10,7 +10,7 @@ class MWPackageManager implements MWSingleton
 
 	private static $instance = null;
 
-	protected $packets;
+	protected $packages;
 	
 	public static function getInstance()
 	{
@@ -28,30 +28,39 @@ class MWPackageManager implements MWSingleton
 	private function __construct()
 	{	
 		
-		$this -> packets = array();
+		$this -> packages = array();
 		
 	}
 	
-	public function registerPacket($packetName)
+	public function getPackage($packageName)
 	{
 		
-		$path = SRC_PATH.$packetName;
+		if($this -> packages[$packageName] === NULL) throw new \MWCore\Exception\MWPackageLoadException($packageName);
 		
-		if(!file_exists($path."/Resources/loader.php")) throw new \MWCore\Exception\MWPackageLoadException($packetName);
+		return $this -> packages[$packageName];
+		
+	}
+	
+	public function registerPackage($packageName)
+	{
+		
+		$path = SRC_PATH.$packageName;
+		
+		if(!file_exists($path."/Resources/loader.php")) throw new \MWCore\Exception\MWPackageLoadException($packageName);
 		
 		include($path."/Resources/loader.php");
 		
-		MWRouter::getInstance() -> setRoutes($routes);
-		MWFirewall::getInstance() -> setRules($rules);
+		MWRouter::getInstance() -> setRoutes($package -> getRoutes());
+		MWFirewall::getInstance() -> setRules($package -> getRules());
 		
-		foreach($constants as $key => $value)
+		foreach($package -> getConstants() as $key => $value)
 		{
 		
 			define($key, $value);
 			
 		}
 		
-		$this -> packets[$signature] = $packetName;
+		$this -> packages[$packageName] = $package;
 		
 	}
 	

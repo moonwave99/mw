@@ -44,8 +44,8 @@ $packetManager = MWPackageManager::getInstance();
 
 try{
 	
-	$packetManager -> registerPacket("MWCore");
-	$packetManager -> registerPacket("App");
+	$packetManager -> registerPackage("MWCore");
+	$packetManager -> registerPackage("App");
 	
 }catch(\MWcore\Exception\MWPackageLoadException $e){
 	

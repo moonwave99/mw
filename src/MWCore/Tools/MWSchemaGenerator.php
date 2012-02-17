@@ -71,6 +71,8 @@ class MWSchemaGenerator
 		$tmpAnnotation = NULL;
 		
 		$queryFields = "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+		
+		$indexes = array();		
 
 		foreach($fields as $field)
 		{
@@ -81,10 +83,10 @@ class MWSchemaGenerator
 
 				case "MWCore\Annotation\Field":
 
-					$queryFields .= sprintf('%1$s %2$s %3$s, ',
+					$queryFields .= sprintf('`%1$s` %2$s %3$s, ',
 						$tmpAnnotation -> name,
 						$this -> _getVarType($tmpAnnotation),
-						$tmpAnnotation -> default != "" ? 'DEFAULT '.$tmpAnnotation -> default : ""
+						$tmpAnnotation -> default != "" ? "DEFAULT '".$tmpAnnotation -> default."'" : ""
 					);													
 
 					break;
@@ -95,6 +97,8 @@ class MWSchemaGenerator
 					$queryFields .= sprintf('id_%s INT(10) NOT NULL, ',
 						$this -> ins -> getTableNameForEntity($tmpAnnotation -> entity)
 					);					
+					
+					$indexes[] = $this -> ins -> getTableNameForEntity($tmpAnnotation -> entity);					
 				
 					break;	
 					
@@ -115,7 +119,24 @@ class MWSchemaGenerator
 		
 		printf("#	%s \n", $query);	
 		
-		$this -> pdo -> query($query);		
+		$this -> pdo -> query($query);	
+		
+		count($indexes) > 0 && printf("\n	Creating indexes...\n\n");			
+		
+		foreach($indexes as $index)
+		{
+			
+			$query = sprintf('CREATE INDEX %1$s ON %2$s(%3$s)',
+				$index,
+				$this -> ins -> getTableNameForEntity($this -> entity),
+				"id_".$index
+			);
+			
+			$this -> pdo -> query($query);
+			
+			printf("#	%s	: %s \n", "[Index]", $query);
+			
+		}			
 		
 	}	
 	
@@ -152,12 +173,12 @@ class MWSchemaGenerator
 				
 				case "MWCore\Annotation\Field":
 				
-					$query = sprintf('ALTER TABLE %1$s %2$s %3$s %4$s %5$s %6$s',
+					$query = sprintf('ALTER TABLE %1$s %2$s `%3$s` %4$s %5$s %6$s',
 						$this -> tableInfo['TABLE_NAME'],
 						$tmpCol !== false ? 'MODIFY' : 'ADD',
 						$tmpAnnotation -> name,
 						$this -> _getVarType($tmpAnnotation),
-						$tmpAnnotation -> default != "" ? 'DEFAULT '.$tmpAnnotation -> default : "",
+						$tmpAnnotation -> default != "" ? "DEFAULT '".$tmpAnnotation -> default."'" : "",
 						$prev !== NULL && $tmpCol === false ? "AFTER ".$this -> _getFieldFromAnnotation($prev) : ""
 					);											
 
