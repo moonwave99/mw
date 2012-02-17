@@ -105,7 +105,7 @@ class MWRouter implements MWSingleton
 
 		header("HTTP/1.0 404 Not Found");
 
-		include(MW_VIEWS."404.php");
+		include(SRC_PATH."MWCore/View/404.php");
 		
 	}
 

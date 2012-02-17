@@ -17,9 +17,9 @@
 		<a href="#" data-controller="debug" data-action="log">[View Log]</a>
 		<a href="#" data-controller="debug" data-action="hide">[Hide Bar]</a> | 
 	<?php if($context -> isUserLogged() === true):?>
-		<a href="<?php path_to(LOGOUT_PATH) ?>">[Logout]</a>
+		<a href="<?php path_to(MW_LOGOUT_PATH) ?>">[Logout]</a>
 	<?php else:?>				
-		<a href="<?php path_to(LOGIN_PATH) ?>">[Login]</a>		
+		<a href="<?php path_to(MW_LOGIN_PATH) ?>">[Login]</a>		
 	<?php endif;?>		
 		
 	</div>

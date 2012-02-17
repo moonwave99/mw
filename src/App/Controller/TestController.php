@@ -12,8 +12,6 @@ class TestController extends MWController
 	public function testAction()
 	{
 		
-		
-		
 	}
 		
 }

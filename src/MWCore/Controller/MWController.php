@@ -72,15 +72,10 @@ class MWController
 			$data['token']		= $this -> session -> get('csrfToken');
 			$data['settings']	= $this -> settings;
 			
-			if($this -> context -> isUserLogged()){
-				
-				$data['user'] = $this -> session -> get('user');
-				
-			}
-				
+			$this -> context -> isUserLogged() && $data['user'] = $this -> session -> get('user');
 
-			require_once(MW_CORE."/Libraries/arshaw/ti.php");
-			require_once(MW_CORE."/Libraries/mw/template_functions.inc.php");			
+			require_once(SRC_PATH."MWCore/Libraries/arshaw/ti.php");
+			require_once(SRC_PATH."MWCore/Libraries/mw/template_functions.inc.php");			
 			
 			requestView($view, $data);
 			
@@ -106,11 +101,10 @@ class MWController
 			$data['token']		= $this -> session -> get('csrfToken');
 			$data['settings']	= $this -> settings;
 						
-			if($this -> context -> isUserLogged())
-				$data['user'] = $this -> context -> getUser();			
+			$this -> context -> isUserLogged() && $data['user'] = $this -> context -> getUser();			
 
-			require_once(MW_CORE."/Libraries/arshaw/ti.php");
-			require_once(MW_CORE."/Libraries/mw/template_functions.inc.php");			
+			require_once(SRC_PATH."MWCore/Libraries/arshaw/ti.php");
+			require_once(SRC_PATH."MWCore/Libraries/mw/template_functions.inc.php");			
 			
 			requestView($view, $data);
 			

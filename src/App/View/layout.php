@@ -4,13 +4,7 @@
 
 <section id="container" class="mwAlertBox cornered">
 	<header id="header">
-		<h1>
-
-<?php startblock('title') ?>
-	Made with MW.
-<?php endblock() ?>				
-
-		</h1>
+		<h1><?php startblock('title') ?>Made with MW.<?php endblock() ?></h1>
 	</header>
 
 	<section id="content" role="main">
