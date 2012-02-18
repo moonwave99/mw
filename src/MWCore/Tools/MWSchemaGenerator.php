@@ -191,7 +191,7 @@ class MWSchemaGenerator
 				case "MWCore\Annotation\OneToOne":							
 				case "MWCore\Annotation\ManyToOne":
 				
-					if($tmpAnnotation -> container === "false")
+					if($tmpAnnotation -> container === "false" && get_class($tmpAnnotation) == "MWCore\Annotation\OneToOne")
 						break;
 				
 					$query = sprintf('ALTER TABLE %1$s %2$s id_%3$s INT(10) NOT NULL %4$s',

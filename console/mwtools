@@ -113,7 +113,11 @@ switch($argv[1]){
 			
 			$package = $packageManager -> getPackage($argv[2]);
 			
+			printf("	Loading fixtures for package '%s'...\n\n", $package -> getName() );			
+			
 			$package -> loadFixtures();
+			
+			print("	Fixtures loaded!\n\n");				
 		
 		}catch(MWPackageLoadException $e){
 		
