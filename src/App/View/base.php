@@ -40,14 +40,7 @@
 			<script>window.jQuery || document.write('<script src="<?php asset('js/libs/jquery-1.7.0.min.js') ?>"><\/script>')</script>
 			
 			<script src="<?php asset('js/libs/underscore-min.js') ?>"></script>
-			<script src="<?php asset('js/plugins.js') ?>"></script>
-			
-			<script>
-				var _gaq=[['_setAccount','<?php echo $data['settings'] -> GOOGLE_ANALYTICS ?>'],['_trackPageview']];
-				(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
-				g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-				s.parentNode.insertBefore(g,s)}(document,'script'));
-			</script>		
+			<script src="<?php asset('js/plugins.js') ?>"></script>	
 			
 		  <!--[if lt IE 7 ]>
 		    <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>

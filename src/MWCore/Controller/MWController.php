@@ -67,23 +67,17 @@ class MWController
 
 		$view = str_replace("\\", DIRECTORY_SEPARATOR, $view);
 
-		if(file_exists(SRC_PATH.$view.".php")){
+		!file_exists(SRC_PATH.$view.".php") && MWRouter::requestNotFound();
 					
-			$data['token']		= $this -> session -> get('csrfToken');
-			$data['settings']	= $this -> settings;
-			
-			$this -> context -> isUserLogged() && $data['user'] = $this -> session -> get('user');
+		$data['token']		= $this -> session -> get('csrfToken');
+		$data['settings']	= $this -> settings;
+		
+		$this -> context -> isUserLogged() && $data['user'] = $this -> session -> get('user');
 
-			require_once(SRC_PATH."MWCore/Libraries/arshaw/ti.php");
-			require_once(SRC_PATH."MWCore/Libraries/mw/template_functions.inc.php");			
-			
-			requestView($view, $data);
-			
-		}else{
-
-			MWRouter::requestNotFound();
-			
-		}
+		require_once(SRC_PATH."MWCore/Libraries/arshaw/ti.php");
+		require_once(SRC_PATH."MWCore/Libraries/mw/template_functions.inc.php");			
+		
+		requestView($view, $data);
 
 	}
 	
@@ -92,28 +86,23 @@ class MWController
 		
 		$view = str_replace("\\", DIRECTORY_SEPARATOR, $view);
 
-		$wrapper = false;
-
-		if(file_exists(SRC_PATH.$view.".php")){
+		if(!file_exists(SRC_PATH.$view.".php"))
+			return false;
 			
-			ob_start();
-			
-			$data['token']		= $this -> session -> get('csrfToken');
-			$data['settings']	= $this -> settings;
-						
-			$this -> context -> isUserLogged() && $data['user'] = $this -> context -> getUser();			
-
-			require_once(SRC_PATH."MWCore/Libraries/arshaw/ti.php");
-			require_once(SRC_PATH."MWCore/Libraries/mw/template_functions.inc.php");			
-			
-			requestView($view, $data);
-			
-			$wrapper = ob_get_clean();
-			
-		}
+		ob_start();
 		
-		return $wrapper;
+		$data['token']		= $this -> session -> get('csrfToken');
+		$data['settings']	= $this -> settings;
+					
+		$this -> context -> isUserLogged() && $data['user'] = $this -> context -> getUser();			
+
+		require_once(SRC_PATH."MWCore/Libraries/arshaw/ti.php");
+		require_once(SRC_PATH."MWCore/Libraries/mw/template_functions.inc.php");			
 		
+		requestView($view, $data);
+		
+		return ob_get_clean();
+
 	}
 
 }
