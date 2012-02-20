@@ -107,6 +107,8 @@ class MWRouter implements MWSingleton
 
 		include(SRC_PATH."MWCore/View/404.php");
 		
+		exit;
+		
 	}
 
 }
