@@ -1,28 +1,27 @@
 <?php
 	
 	$log = \MWCore\Kernel\MWLog::getInstance();
-	$context = \MWCore\Kernel\MWContext::getInstance();
 
 ?>
 
-<script defer src="<?php asset('js/mylibs/debug.js') ?>"></script>
+<script defer src="<?php $this -> asset('js/mylibs/debug.js') ?>"></script>
 
 <div id="debug" class="clearfix">
 	<div id="debug-left">
 		<span class="highlight">[MWDebugger]</span>
 		| Excecution Time: <span class="highlight"><?php echo $log -> getExectime() ?> sec</span>
 		| Query Number: <span class="highlight"><?php echo $log -> getQueryNumber() ?></span>
-	<?php if($context -> isUserLogged() === true):?>
-		| Logged as: <span class="highlight"><?php echo $context -> getUser() -> username ?></span>
+	<?php if($this -> user !== NULL):?>
+		| Logged as: <span class="highlight"><?php echo $this -> user -> username ?></span>
 	<?php endif;?>
 	</div>
 	<div id="debug-right">
 		<a href="#" data-controller="debug" data-action="log">[View Log]</a>
 		<a href="#" data-controller="debug" data-action="hide">[Hide Bar]</a> | 
-	<?php if($context -> isUserLogged() === true):?>
-		<a href="<?php path_to(MW_LOGOUT_PATH) ?>">[Logout]</a>
+	<?php if($this -> user !== NULL):?>
+		<a href="<?php $this -> path_to(MW_LOGOUT_PATH) ?>">[Logout]</a>
 	<?php else:?>				
-		<a href="<?php path_to(MW_LOGIN_PATH) ?>">[Login]</a>		
+		<a href="<?php $this -> path_to(MW_LOGIN_PATH) ?>">[Login]</a>		
 	<?php endif;?>		
 		
 	</div>

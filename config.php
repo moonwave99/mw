@@ -1,6 +1,7 @@
 <?php
 
 // Framework Config
+define("SRC_PATH", __DIR__."/src/");
 define('DEBUG', true);
 define("SESSION_NAME", "mw");
 $packages = array("MWCore", "Backstage", "App");

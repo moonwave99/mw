@@ -31,11 +31,15 @@ $autoloader = new MWAutoloader();
 DEBUG === true && \MWCore\Kernel\MWLog::getInstance() -> setStartTime($startTime);
 
 // Session Start Baby
-$session = \MWCore\Kernel\MWSession::getInstance();
+$session = new \MWCore\Kernel\MWSession();
 $session -> setName(SESSION_NAME);
 $session -> start();
 
-$packageManager = \MWCore\Kernel\MWPackageManager::getInstance();
+$context = new \MWCore\Kernel\MWContext($session);
+$firewall = new \MWCore\Kernel\MWFirewall($context);
+$router = new \MWCore\Kernel\MWRouter($session, $context, $firewall);
+
+$packageManager = new \MWCore\Kernel\MWPackageManager($router, $firewall);
 
 foreach($packages as $package)
 {

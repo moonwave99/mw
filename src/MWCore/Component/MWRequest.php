@@ -2,31 +2,14 @@
 
 namespace MWCore\Component;
 
-use MWCore\Interfaces\MWSingleton;
-
-class MWRequest implements MWSingleton
+class MWRequest
 {
-	
-	private static $instance = null;
 	
 	protected $values;
 	
 	protected $method;
 	
-	public static function getInstance()
-	{
-
-		if(self::$instance == null)
-		{   
-			$c = __CLASS__;			
-			self::$instance = new $c;
-		}
-
-		return self::$instance;
-		
-	}	
-	
-	private function __construct()
+	public function __construct()
 	{
 	
 		$this -> values = array();
@@ -41,13 +24,6 @@ class MWRequest implements MWSingleton
 	{
 		
 		return isset( $this -> values[$key] ) ? $this -> values[$key] : NULL;		
-		
-	}
-	
-	public function get($key)
-	{
-		
-		return isset( $this -> values[$key] ) ? $this -> values[$key] : NULL;
 		
 	}
 	
@@ -90,6 +66,5 @@ class MWRequest implements MWSingleton
 		unset($_COOKIE);
 				
 	}
-
 	
 }

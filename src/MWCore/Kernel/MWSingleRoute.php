@@ -41,6 +41,13 @@ class MWSingleRoute
 
 	}
 	
+	public function __get($property)
+	{
+
+		return $this -> $property;
+		
+	}
+	
 	public function getTiles()
 	{
 		
@@ -74,60 +81,6 @@ class MWSingleRoute
 	
 		return count(MWSingleRoute::tiles($pattern));
 		
-	}
-	
-	public function follow($pattern)
-	{
-
-		if(class_exists($this -> controller)){
-
-			$controllerInstance = new $this -> controller;
-			
-			if(method_exists($controllerInstance, $this->action."Action")){
-
-				$params = MWSingleRoute::tiles($pattern);
-				
-				while(count($params) > $this -> getParamCount() )
-				{
-					array_shift($params);
-				}
-				
-				call_user_func_array(
-					array(
-						$controllerInstance	,
-						$this -> action."Action"
-					),
-					$this -> cleanParams($params)
-				);
-				
-			}else{
-			
-				return false;
-				
-			}
-			
-		}else{
-			
-			return false;
-			
-		}
-	
-	}
-	
-	protected function cleanParams($params)
-	{
-		
-		$p = array();
-		
-		foreach($params as $param)
-		{
-			
-			$p[] = htmlentities($param, ENT_QUOTES, 'UTF-8');
-			
-		}
-		
-		return $p;
-				
 	}
 
 }

@@ -1,4 +1,4 @@
-<?php requestView('App\View\base', $data) ?>
+<?php $this -> requestView('App\View\base') ?>
 
 <?php startblock('css') ?>
 	<?php superBlock() ?>

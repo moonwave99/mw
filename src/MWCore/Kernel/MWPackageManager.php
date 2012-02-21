@@ -2,33 +2,23 @@
 
 namespace MWCore\Kernel;
 
-use MWCore\Interfaces\MWSingleton;
-use MWCore\Kernel\MWSingleRoute;
-
-class MWPackageManager implements MWSingleton
+class MWPackageManager
 {
-
-	private static $instance = null;
 
 	protected $packages;
 	
-	public static function getInstance()
-	{
-
-		if(self::$instance == null)
-		{   
-			$c = __CLASS__;			
-			self::$instance = new $c;
-		}
-
-		return self::$instance;
-		
-	}	
+	protected $router;
 	
-	private function __construct()
+	protected $firewall;
+	
+	public function __construct(&$router, &$firewall)
 	{	
 		
 		$this -> packages = array();
+		
+		$this -> router = $router;
+		
+		$this -> firewall = $firewall;
 		
 	}
 	
@@ -50,8 +40,8 @@ class MWPackageManager implements MWSingleton
 		
 		include($path."/Resources/loader.php");
 		
-		MWRouter::getInstance() -> setRoutes($package -> getRoutes());
-		MWFirewall::getInstance() -> setRules($package -> getRules());
+ 		$this -> router -> setRoutes($package -> getRoutes());
+		$this -> firewall -> setRules($package -> getRules());
 		
 		foreach($package -> getConstants() as $key => $value)
 		{

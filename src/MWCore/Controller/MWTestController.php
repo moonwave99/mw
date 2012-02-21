@@ -3,7 +3,6 @@
 namespace MWCore\Controller;
 
 use MWCore\Controller\MWController;
-use MWCore\Kernel\MWSettings;
 use MWCore\Kernel\MWLog;
 
 class MWTestController extends MWController

@@ -9,22 +9,22 @@
 		<meta name="author" content="<?php startblock('author') ?>Diego Caponera<?php endblock() ?>"/>	
 		<meta name="description" content="<?php startblock('description') ?>Made with MW.<?php endblock() ?>"/>		
 		<meta name="viewport" content="width=device-width,initial-scale=1"/>	
-		<meta name="csrf" content="<?php echo $data['token'] ?>"/>
+		<meta name="csrf" content="<?php echo $this -> token ?>"/>
 	
 		<title><?php startblock('pageTitle') ?>Made with MW.<?php endblock() ?></title>		
 	
 		<link rel="author" href="humans.txt" />
-		<link href="<?php asset('favicon.ico') ?>" rel="icon" type="image/x-icon" />
-		<link href="<?php asset('favicon.ico') ?>" rel="shortcut icon" type="image/x-icon" />
+		<link href="<?php $this -> asset('favicon.ico') ?>" rel="icon" type="image/x-icon" />
+		<link href="<?php $this -> asset('favicon.ico') ?>" rel="shortcut icon" type="image/x-icon" />
 		
 <?php startblock('css') ?>		
-		<link rel="stylesheet" href="<?php asset('css/style.css') ?>"/>
+		<link rel="stylesheet" href="<?php $this -> asset('css/style.css') ?>"/>
 	<?php if(DEBUG === true):?>
-		<link rel="stylesheet" href="<?php asset('css/debug.css') ?>"/>
+		<link rel="stylesheet" href="<?php $this -> asset('css/debug.css') ?>"/>
 	<?php endif;?>		
 <?php endblock() ?>	
 		
-		<script src="<?php asset('js/libs/modernizr-2.0.6.min.js') ?>"></script>
+		<script src="<?php $this -> asset('js/libs/modernizr-2.0.6.min.js') ?>"></script>
 		<script>var mwBasepath = "<?php echo BASE_PATH ?>"</script>
 
 	</head>
@@ -40,10 +40,10 @@
 			<![endif]-->	
 
 			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
-			<script>window.jQuery || document.write('<script src="<?php asset('js/libs/jquery-1.7.0.min.js') ?>"><\/script>')</script>
+			<script>window.jQuery || document.write('<script src="<?php $this -> asset('js/libs/jquery-1.7.0.min.js') ?>"><\/script>')</script>
 			
-			<script src="<?php asset('js/libs/underscore-min.js') ?>"></script>
-			<script src="<?php asset('js/plugins.js') ?>"></script>	
+			<script src="<?php $this -> asset('js/libs/underscore-min.js') ?>"></script>
+			<script src="<?php $this -> asset('js/plugins.js') ?>"></script>	
 			
 		  <!--[if lt IE 7 ]>
 		    <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
@@ -52,9 +52,7 @@
 			
 		<?php endblock() ?>
 		
-		<?php if( DEBUG === true ):?>
-			<?php requestView('MWCore\View\debug'); ?>
-		<?endif;?>
+		<?php DEBUG === true && $this -> requestView('MWCore\View\debug'); ?>
 		
 	</body>
 </html>

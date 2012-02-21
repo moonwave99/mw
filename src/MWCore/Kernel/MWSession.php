@@ -2,33 +2,16 @@
 
 namespace MWCore\Kernel;
 
-use MWCore\Interfaces\MWSingleton;
-
-class MWSession implements MWSingleton
+class MWSession
 {
-
-	private static $instance = null;
 
 	protected $name;
 	
 	protected $values;
 	
-	public static function getInstance()
+	public function __construct()
 	{
 
-		if(self::$instance == null)
-		{   
-			$c = __CLASS__;			
-			self::$instance = new $c;
-		}
-
-		return self::$instance;
-		
-	}	
-	
-	private function __construct()
-	{
-	
 		$this -> values = array();
 
 	}

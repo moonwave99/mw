@@ -2,33 +2,22 @@
 	
 namespace MWCore\Kernel;
 
-use MWCore\Interfaces\MWSingleton;
 use MWCore\Kernel\MWSingleRoute;
-use MWCore\Kernel\MWContext;
 
-class MWFirewall implements MWSingleton
+class MWFirewall
 {
-	
-	private static $instance = null;	
 
 	protected $rules;
 	
-	public static function getInstance()
-	{
-
-		if(self::$instance == null)
-		{   
-			$c = __CLASS__;			
-			self::$instance = new $c;
-		}
-
-		return self::$instance;
-		
-	}	
+	protected $context;
 	
-	private function __construct()
+	public function __construct(&$context)
 	{	
-		$rules = array();
+		
+		$this -> rules = array();
+		
+		$this -> context = $context;
+		
 	}
 	
 	public function setRules($rules)
@@ -46,7 +35,7 @@ class MWFirewall implements MWSingleton
 	{
 
 		$currentTiles = MWSingleRoute::tiles($pattern);
-
+		
 		foreach($this -> rules as $rule)
 		{
 			
@@ -55,7 +44,7 @@ class MWFirewall implements MWSingleton
 			if($tiles[0] == $currentTiles[0])
 			{
 
-				return MWContext::getInstance() -> isRoleGranted( $rule -> getRole() ) || 
+				return $this -> context -> isRoleGranted( $rule -> getRole() ) || 
 					($rule -> isFlashEnabled() && strpos($_SERVER['HTTP_USER_AGENT'], "Adobe Flash Player") !== false )
 					? false : $rule -> getFallbackPattern();
 				

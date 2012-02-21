@@ -19,7 +19,7 @@ class MWSecurityController extends MWController
 	
 	public function loginCheckAction()
 	{
-
+		
 		// Request should be in POST method and the csrf token should match
 		if($this -> request -> getMethod() != 'POST' || $this -> csrfCheck() !== true)
 			$this -> redirect(MW_LOGIN_PATH);

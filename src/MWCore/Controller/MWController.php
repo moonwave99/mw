@@ -6,9 +6,8 @@ use MWCore\Component\MWRequest;
 use MWCore\Kernel\MWRouter;
 use MWCore\Kernel\MWLog;
 use MWCore\Kernel\MWClassInspector;
-use MWCore\Kernel\MWContext;
-use MWcore\Kernel\MWSession;	
 use MWCore\Kernel\MWSettings;
+use MWCore\Kernel\MWView;
 	
 class MWController
 {
@@ -25,16 +24,17 @@ class MWController
 	
 	protected $inspector;
 
-	public function __construct()
+	public function __construct($session, $context)
 	{
 
-		$this -> session	= MWSession::getInstance();
-		$this -> context	= MWContext::getInstance();
+		$this -> session	= $session;
+		$this -> context	= $context;
+		$this -> request	= new MWRequest();
+		$this -> settings	= new MWSettings();
+		
 		$this -> inspector	= MWClassInspector::getInstance();
-		$this -> log	 	= MWLog::getInstance();
-		$this -> request	= MWRequest::getInstance();
-		$this -> settings	= MWSettings::getInstance();
-	
+		$this -> log	 	= MWLog::getInstance();		
+		
 	}
 	
 	public function json($data)
@@ -59,51 +59,42 @@ class MWController
 	
 	protected function csrfCheck()
 	{
-		
-		return $this -> request -> get('token') == $this -> session -> get('csrfToken');
+
+		return $this -> request -> token == $this -> session -> get('csrfToken');
 		
 	}
 	
-	protected function requestView($view, $data)
+	protected function requestView($viewName, $data)
 	{
-
-		$view = str_replace("\\", DIRECTORY_SEPARATOR, $view);
-
-		!file_exists(SRC_PATH.$view.".php") && MWRouter::requestNotFound();
-					
-		$data['token']		= $this -> session -> get('csrfToken');
-		$data['settings']	= $this -> settings;
 		
-		$this -> context -> isUserLogged() && $data['user'] = $this -> session -> get('user');
+		try{
+			
+			$view = new MWView($viewName, $data, $this -> session, $this -> settings, $this -> context);
 
-		require_once(SRC_PATH."MWCore/Libraries/arshaw/ti.php");
-		require_once(SRC_PATH."MWCore/Libraries/mw/template_functions.inc.php");			
+			$view -> render();		
+			
+		}catch(\MWCore\Exception\MWViewException $e){
+			
+			
+			\MWCore\Kernel\MWRouter::requestNotFound();
+			
+		}
 		
-		requestView($view, $data);
-
 	}
 	
-	protected function wrapView($view, $data)
+	protected function wrapView($viewName, $data)
 	{
 		
-		$view = str_replace("\\", DIRECTORY_SEPARATOR, $view);
-
-		if(!file_exists(SRC_PATH.$view.".php"))
+		try{
+		
+			$view = new MWView($viewName, $data, $this -> session, $this -> settings, $this -> context);
+			return $view -> wrap();
+			
+		}catch(\MWCore\Exception\MWViewException $e){
+			
 			return false;
 			
-		ob_start();
-		
-		$data['token']		= $this -> session -> get('csrfToken');
-		$data['settings']	= $this -> settings;
-					
-		$this -> context -> isUserLogged() && $data['user'] = $this -> context -> getUser();			
-
-		require_once(SRC_PATH."MWCore/Libraries/arshaw/ti.php");
-		require_once(SRC_PATH."MWCore/Libraries/mw/template_functions.inc.php");			
-		
-		requestView($view, $data);
-		
-		return ob_get_clean();
+		}
 
 	}
 

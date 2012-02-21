@@ -9,7 +9,7 @@ class PagesController extends MWController
 	
 	public function indexAction()
 	{
-		
+	
 		$this -> requestView("App\View\index", array(
 			'pageTitle'	=> 'MW | Hello World!',
 			'title'		=> 'Hello World!'

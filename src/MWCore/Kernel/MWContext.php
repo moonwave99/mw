@@ -2,33 +2,19 @@
 
 namespace MWCore\Kernel;
 
-use MWCore\Interfaces\MWSingleton;
-use MWCore\Kernel\MWSession;
-
-class MWContext implements MWSingleton
+class MWContext
 {
-
-	private static $instance = null;
 
 	protected $user;
 	
-	public static function getInstance()
-	{
-
-		if(self::$instance == null)
-		{   
-			$c = __CLASS__;			
-			self::$instance = new $c;
-		}
-
-		return self::$instance;
-		
-	}	
+	protected $session;	
 	
-	private function __construct()
+	public function __construct(&$session)
 	{	
 		
-		$this -> user = MWSession::getInstance() -> get('user');
+		$this -> session = $session;
+		
+		$this -> user = $this -> session -> get('user');
 		
 	}
 	
@@ -37,7 +23,7 @@ class MWContext implements MWSingleton
 	public function isUserLogged()
 	{
 		
-		return MWSession::getInstance() -> get('logged') === true;
+		return $this -> session -> get('logged') === true;
 		
 	}
 	

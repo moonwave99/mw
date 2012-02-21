@@ -1,11 +1,11 @@
-<?php requestView('App\View\layout', $data) ?>
+<?php $this -> requestView('App\View\layout') ?>
 
 <?php startblock('pageTitle') ?>
-	<?php echo $data['pageTitle'] ?>
+	<?php echo $this -> pageTitle ?>
 <?php endblock() ?>
 
 <?php startblock('title') ?>
-	<?php echo $data['title'] ?>
+	<?php echo $this -> title ?>
 <?php endblock() ?>
 
 <?php startblock('content') ?>

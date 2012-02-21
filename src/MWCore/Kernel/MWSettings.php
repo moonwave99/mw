@@ -3,31 +3,15 @@
 namespace MWCore\Kernel;
 
 use MWCore\Kernel\MWDBManager;
-use MWCore\Interfaces\MWSingleton;
 
-class MWSettings implements MWSingleton
+class MWSettings
 {
-	
-	private static $instance = null;
 	
 	protected $tablename;
 	
 	protected $loaded = false;
 	
-	public static function getInstance()
-	{
-
-		if(self::$instance == null)
-		{   
-			$c = __CLASS__;			
-			self::$instance = new $c;
-		}
-
-		return self::$instance;
-		
-	}	
-	
-	private function __construct()
+	public function __construct()
 	{
 		$this -> tablename = 'settings';
 	}
@@ -66,11 +50,7 @@ class MWSettings implements MWSingleton
 		
 		$dbh = MWDBManager::getInstance();
 		
-		$query = "
-			SELECT * FROM ".$this -> tablename."
-		";
-		
-		$queryResults = $dbh -> getDBData($query);
+		$queryResults = $dbh -> getDBData(sprintf("SELECT * FROM %s", $this -> tablename));
 		
 		foreach($queryResults as $r){
 			
