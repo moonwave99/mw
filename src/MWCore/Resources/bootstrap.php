@@ -26,3 +26,28 @@ class MWAutoloader
 }
 
 $autoloader = new MWAutoloader();
+
+// Sets debug environment
+DEBUG === true && \MWCore\Kernel\MWLog::getInstance() -> setStartTime($startTime);
+
+// Session Start Baby
+$session = \MWCore\Kernel\MWSession::getInstance();
+$session -> setName(SESSION_NAME);
+$session -> start();
+
+$packageManager = \MWCore\Kernel\MWPackageManager::getInstance();
+
+foreach($packages as $package)
+{
+	
+	try{
+
+		$packageManager -> registerPackage($package);
+
+	}catch(\MWcore\Exception\MWPackageLoadException $e){
+
+		\MWCore\Kernel\MWLog::getInstance() -> add($e);
+
+	}	
+	
+}

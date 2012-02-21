@@ -1,4 +1,4 @@
-<?php requestView('App\View\layout', $data) ?>
+<?php requestView('Backstage\View\layout', $data) ?>
 
 <?php startblock('pageTitle') ?>
 	<?php echo $data['pageTitle'] ?>
@@ -10,6 +10,6 @@
 
 <?php startblock('content') ?>
 
-	<p>Proudly made in MW.</p>
+	<p>This is the backstage of your application.</p>
 
 <?php endblock() ?>

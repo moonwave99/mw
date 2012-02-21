@@ -124,11 +124,11 @@ switch($argv[1]){
 		
 		}catch(MWPackageLoadException $e){
 		
-			print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+			print("	MWTools says: " . $e -> getMessage() . "\n\n");
 		
 		}catch(MWFixtureException $e){
 			
-			print("\n	MWTools says: " . $e -> getMessage() . "\n\n");
+			print("	MWTools says: " . $e -> getMessage() . "\n\n");
 			
 		}	
 	

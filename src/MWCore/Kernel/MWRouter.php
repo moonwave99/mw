@@ -29,7 +29,9 @@ class MWRouter implements MWSingleton
 	
 	private function __construct()
 	{	
+	
 		$this -> routes = array();
+		
 	}	
 	
 	public function setRoutes($routes){ 
@@ -56,7 +58,7 @@ class MWRouter implements MWSingleton
 			
 		}			
 
-		$route = $this -> searchPattern($pattern);		
+		$route = $this -> searchPattern($pattern);
 		
 		if(false === $route || false === $route -> follow($pattern)){
 			
@@ -105,7 +107,7 @@ class MWRouter implements MWSingleton
 
 		header("HTTP/1.0 404 Not Found");
 
-		include(SRC_PATH."MWCore/View/404.php");
+		requestView("MWCore\View\Error\404");
 		
 		exit;
 		

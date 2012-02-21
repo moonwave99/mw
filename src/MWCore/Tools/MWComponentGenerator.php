@@ -39,7 +39,7 @@ class MWComponentGenerator
 			
 			file_put_contents(
 				$destination,
-				sprintf(file_get_contents(__DIR__."/Templates/TemplateRepository.tpl"), $this -> entity, $bits[2])
+				sprintf(file_get_contents(__DIR__."/Templates/TemplateRepository.tpl"), $bits[0], $bits[2], $this -> entity)
 			);
 			
 			printf("	Repository for '%s' built succesfully!\n\n", $this -> entity);			

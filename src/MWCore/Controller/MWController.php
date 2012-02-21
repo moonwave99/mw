@@ -53,6 +53,8 @@ class MWController
 		
 		header("Location: ".BASE_PATH.$path);
 		
+		exit;
+		
 	}
 	
 	protected function csrfCheck()

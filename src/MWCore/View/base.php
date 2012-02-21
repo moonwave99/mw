@@ -18,10 +18,10 @@
 		<link href="<?php asset('favicon.ico') ?>" rel="shortcut icon" type="image/x-icon" />
 		
 <?php startblock('css') ?>		
-		<link rel="stylesheet" href="<?php asset('css/style.css') ?>"/>
+		<link rel="stylesheet" href="<?php asset('css/style.css') ?>"/>	
 	<?php if(DEBUG === true):?>
 		<link rel="stylesheet" href="<?php asset('css/debug.css') ?>"/>
-	<?php endif;?>		
+	<?php endif;?>
 <?php endblock() ?>	
 		
 		<script src="<?php asset('js/libs/modernizr-2.0.6.min.js') ?>"></script>
@@ -54,7 +54,7 @@
 		
 		<?php if( DEBUG === true ):?>
 			<?php requestView('MWCore\View\debug'); ?>
-		<?endif;?>
+		<?endif;?>		
 		
 	</body>
 </html>

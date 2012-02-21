@@ -31,7 +31,16 @@ class MWFirewall implements MWSingleton
 		$rules = array();
 	}
 	
-	public function setRules($rules){ $this -> rules = $rules; }
+	public function setRules($rules)
+	{
+		
+		foreach($rules as $r){
+			
+			$this -> rules[] = $r;
+			
+		}
+		
+	}
 	
 	public function isPatternRejected($pattern)
 	{
@@ -40,7 +49,7 @@ class MWFirewall implements MWSingleton
 
 		foreach($this -> rules as $rule)
 		{
-
+			
 			$tiles = MWSingleRoute::tiles( $rule -> getPattern() );
 			
 			if($tiles[0] == $currentTiles[0])

@@ -27,10 +27,3 @@
 </form>
 
 <?php endblock() ?>
-
-<?php startblock('js') ?>
-	<?php superBlock() ?>
-
-	<!-- require page specific JS files here -->
-
-<?php endblock() ?>

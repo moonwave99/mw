@@ -4,6 +4,9 @@
 	$context = \MWCore\Kernel\MWContext::getInstance();
 
 ?>
+
+<script defer src="<?php asset('js/mylibs/debug.js') ?>"></script>
+
 <div id="debug" class="clearfix">
 	<div id="debug-left">
 		<span class="highlight">[MWDebugger]</span>

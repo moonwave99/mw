@@ -91,11 +91,11 @@ class MWSingleRoute
 				{
 					array_shift($params);
 				}
-
+				
 				call_user_func_array(
 					array(
 						$controllerInstance	,
-						$this->action."Action"
+						$this -> action."Action"
 					),
 					$this -> cleanParams($params)
 				);

@@ -1,4 +1,4 @@
-<?php requestView('App\View\base', $data) ?>
+<?php requestView('MWCore\View\base', $data) ?>
 
 <?php startblock('css') ?>
 	<?php superBlock() ?>
@@ -12,7 +12,7 @@
 <section id="container" class="mwAlertBox cornered">
 	<header id="header">
 		<h1><?php startblock('title') ?>Made with MW.<?php endblock() ?></h1>
-	</header> <!-- /#header -->
+	</header> <!-- /#main -->
 
 	<section id="content" role="main">
 <?php startblock('content') ?>

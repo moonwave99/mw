@@ -1,18 +1,18 @@
 <?php
 
-namespace %1$s\Repository;
+namespace MWCore\Repository;
 
 use MWCore\Kernel\MWDBManager;
 use MWCore\Repository\MWRepository;
 use MWCore\Component\MWCollection;
 	
-class %2$sRepository extends MWRepository
+class MWUserRepository extends MWRepository
 {
 	
 	public function __construct()
 	{
 
-		parent::__construct('%3$s');
+		parent::__construct('MWCore\Entity\MWUser');
 		
 	}
 
