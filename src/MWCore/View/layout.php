@@ -1,4 +1,4 @@
-<?php requestView('App\View\base', $data) ?>
+<?php $this -> requestView('MWCore\View\base') ?>
 
 <?php startblock('css') ?>
 	<?php superBlock() ?>

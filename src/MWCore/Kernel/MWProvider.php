@@ -53,10 +53,25 @@ class MWProvider
 		
 	}
 	
-	public static function initPackageManager()
+	public static function initPackageManager($packages)
 	{
 		
 		self::$packageManager = new \MWCore\Kernel\MWPackageManager(self::$router, self::$firewall);
+		
+		foreach($packages as $package)
+		{
+
+			try{
+
+				self::$packageManager -> registerPackage($package);
+
+			}catch(\MWcore\Exception\MWPackageLoadException $e){
+
+				\MWCore\Kernel\MWLog::getInstance() -> add($e);
+
+			}	
+
+		}		
 		
 	}
 	

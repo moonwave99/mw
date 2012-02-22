@@ -1,4 +1,4 @@
-<?php $this -> requestView('App\View\layout') ?>
+<?php $this -> requestView('MWCore\View\layout') ?>
 
 <?php startblock('pageTitle') ?>
 	<?php echo $this -> pageTitle ?>

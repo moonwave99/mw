@@ -22,12 +22,10 @@ class MWSecurityController extends MWController
 		
 		// Request should be in POST method and the csrf token should match
 		if($this -> request -> getMethod() != 'POST' || $this -> csrfCheck() !== true)
-			$this -> redirect(MW_LOGIN_PATH);
+			$this -> redirect(MW_LOGIN_PATH);			
 		
 		$repName = $this -> inspector -> getRepositoryNameForEntity(MW_LOGIN_ENTITY);
-
 		$rep = new $repName();
-		
 		$user = $rep -> findOneByField('username', $this -> request -> username );
 
 		if($user === false){
@@ -77,12 +75,7 @@ class MWSecurityController extends MWController
 	    $color = imagecolorallocate($pic, 0, 0, 0);
 		
 
-		$fonts = array(
-			SRC_PATH . "MWCore/Resources/Fonts/1942.ttf",
-			SRC_PATH . "MWCore/Resources/Fonts/underwood_etendu_1913.ttf",
-			SRC_PATH . "MWCore/Resources/Fonts/junkos_typewriter.ttf",
-			SRC_PATH . "MWCore/Resources/Fonts/old_typewriter.ttf"
-		);
+		$fonts = glob(SRC_PATH . 'MWCore/Resources/Fonts/*.ttf');
 		
 		for( $i = 0; $i < strlen($string); $i++ )
 		{

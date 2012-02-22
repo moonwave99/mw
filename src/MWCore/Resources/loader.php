@@ -18,12 +18,16 @@ $package -> addRoutes(
 	array(
 		
 		// Test Routes				
-		new MWSingleRoute("test",			"MWCore\Controller\MWTestController", 		"test"),		
+		new MWSingleRoute("test",					"MWCore\Controller\MWTestController", 		"test"),		
 		
 		// Security Routes
-		new MWSingleRoute("login",			"MWCore\Controller\MWSecurityController", 	"login"),	
-		new MWSingleRoute("login_check",	"MWCore\Controller\MWSecurityController", 	"loginCheck"),	
-		new MWSingleRoute("logout",			"MWCore\Controller\MWSecurityController", 	"logout"),
+		new MWSingleRoute("login",					"MWCore\Controller\MWSecurityController", 	"login"),	
+		new MWSingleRoute("login_check",			"MWCore\Controller\MWSecurityController", 	"loginCheck"),	
+		new MWSingleRoute("logout",					"MWCore\Controller\MWSecurityController", 	"logout"),
+		
+		// Captcha Routes	
+		new MWSingleRoute("captcha/image/{seed}",	"MWCore\Controller\MWSecurityController", "captchaImage"),
+		new MWSingleRoute("captcha/seed",			"MWCore\Controller\MWSecurityController", "captchaSeed"),		
 				
 	)
 );

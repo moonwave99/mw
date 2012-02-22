@@ -30,27 +30,11 @@ $autoloader = new MWAutoloader();
 // Sets debug environment
 DEBUG === true && \MWCore\Kernel\MWLog::getInstance() -> setStartTime($startTime);
 
-// Session Start Baby
 \MWCore\Kernel\MWProvider::initSession(SESSION_NAME);
 \MWCore\Kernel\MWProvider::initContext();
 \MWCore\Kernel\MWProvider::initFirewall();
 \MWCore\Kernel\MWProvider::initRouter();
 \MWCore\Kernel\MWProvider::initRequest();
 \MWCore\Kernel\MWProvider::initSettings();
-\MWCore\Kernel\MWProvider::initPackageManager();
+\MWCore\Kernel\MWProvider::initPackageManager($packages);
 \MWCore\Kernel\MWProvider::initLog();
-
-foreach($packages as $package)
-{
-	
-	try{
-
-		\MWCore\Kernel\MWProvider::$packageManager -> registerPackage($package);
-
-	}catch(\MWcore\Exception\MWPackageLoadException $e){
-
-		\MWCore\Kernel\MWLog::getInstance() -> add($e);
-
-	}	
-	
-}
