@@ -5,26 +5,19 @@ namespace MWCore\Kernel;
 use MWCore\Kernel\MWSingleRoute;
 use MWCore\Kernel\MWFirewall;
 use MWCore\Kernel\MWFirewallRule;
+use MWCore\Kernel\MWProvider;
 
 class MWRouter
 {
 	
 	protected $routes;
 	
-	protected $session;
-	
-	protected $context;
-	
 	protected $firewall;
 	
-	public function __construct(&$session, &$context, &$firewall)
+	public function __construct(&$firewall)
 	{	
 	
 		$this -> routes = array();
-		
-		$this -> session = $session;
-		
-		$this -> context = $context;
 		
 		$this -> firewall = $firewall;
 		
@@ -47,8 +40,6 @@ class MWRouter
 		
 		$firewallProblem = $this -> firewall -> isPatternRejected($pattern);
 
-		echo ($firewallProblem);
-
 		if($firewallProblem !== false){
 
 			header("Location: ".BASE_PATH.$firewallProblem);
@@ -59,14 +50,12 @@ class MWRouter
 		$route = $this -> searchPattern($pattern);	
 		
 		$route === false && $this -> requestNotFound();
+		
+		$controller = MWProvider::makeController($route -> controller);
 
-		if(class_exists($route -> controller)){
-
-			$controllerName = $route -> controller;
-
-			$controllerInstance = new $controllerName($this -> session, $this -> context);
+		if($controller !== false){
 			
-			if(method_exists($controllerInstance, $route -> action."Action")){
+			if(method_exists($controller, $route -> action."Action")){
 
 				$params = MWSingleRoute::tiles($pattern);
 				
@@ -77,7 +66,7 @@ class MWRouter
 				
 				call_user_func_array(
 					array(
-						$controllerInstance,
+						$controller,
 						$route -> action."Action"
 					),
 					$this -> cleanParams($params)

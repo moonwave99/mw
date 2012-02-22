@@ -24,13 +24,13 @@ class MWController
 	
 	protected $inspector;
 
-	public function __construct($session, $context)
+	public function __construct($session, $context, $request, $settings)
 	{
 
 		$this -> session	= $session;
 		$this -> context	= $context;
-		$this -> request	= new MWRequest();
-		$this -> settings	= new MWSettings();
+		$this -> request	= $request;
+		$this -> settings	= $settings;
 		
 		$this -> inspector	= MWClassInspector::getInstance();
 		$this -> log	 	= MWLog::getInstance();		

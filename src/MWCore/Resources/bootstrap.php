@@ -31,22 +31,21 @@ $autoloader = new MWAutoloader();
 DEBUG === true && \MWCore\Kernel\MWLog::getInstance() -> setStartTime($startTime);
 
 // Session Start Baby
-$session = new \MWCore\Kernel\MWSession();
-$session -> setName(SESSION_NAME);
-$session -> start();
-
-$context = new \MWCore\Kernel\MWContext($session);
-$firewall = new \MWCore\Kernel\MWFirewall($context);
-$router = new \MWCore\Kernel\MWRouter($session, $context, $firewall);
-
-$packageManager = new \MWCore\Kernel\MWPackageManager($router, $firewall);
+\MWCore\Kernel\MWProvider::initSession(SESSION_NAME);
+\MWCore\Kernel\MWProvider::initContext();
+\MWCore\Kernel\MWProvider::initFirewall();
+\MWCore\Kernel\MWProvider::initRouter();
+\MWCore\Kernel\MWProvider::initRequest();
+\MWCore\Kernel\MWProvider::initSettings();
+\MWCore\Kernel\MWProvider::initPackageManager();
+\MWCore\Kernel\MWProvider::initLog();
 
 foreach($packages as $package)
 {
 	
 	try{
 
-		$packageManager -> registerPackage($package);
+		\MWCore\Kernel\MWProvider::$packageManager -> registerPackage($package);
 
 	}catch(\MWcore\Exception\MWPackageLoadException $e){
 

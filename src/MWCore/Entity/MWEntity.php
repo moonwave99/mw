@@ -15,7 +15,9 @@ class MWEntity implements MWPersistent
 
 	public function __construct($id = NULL)
 	{
+	
 		$this -> id = $id;
+		
 	}
 	
 	public function __set($property, $value)
@@ -25,8 +27,6 @@ class MWEntity implements MWPersistent
 			
 			$this -> $property = $value;			
 			
-		}else{
-
 		}
 		
 	}	
@@ -34,13 +34,7 @@ class MWEntity implements MWPersistent
 	public function &__get($property)
 	{
 		
-		if(property_exists($this, $property)){
-
-			return $this -> $property;
-			
-		}else{
-			
-		}		
+		return property_exists($this, $property) ? $this -> $property : NULL;
 		
 	}
 	

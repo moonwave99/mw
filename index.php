@@ -10,4 +10,4 @@ require "config.php";
 include( SRC_PATH."MWCore/Resources/bootstrap.php" );
 
 // Let's go baby!
-$router -> routeRequest();
+\MWCore\Kernel\MWProvider::$router -> routeRequest();

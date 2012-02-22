@@ -12,10 +12,10 @@ class CrudController extends MWController
 	protected $entityname;
 	protected $entitylabel;	
 
-	public function __construct($entityname, $entitylabel)
+	public function __construct($session, $context, $request, $settings)
 	{
 		
-		parent::__construct();
+		parent::__construct($session, $context, $request, $settings, );
 		
 		$this -> entityname = $entityname;
 		$this -> entitylabel = $entitylabel;
@@ -140,7 +140,7 @@ class CrudController extends MWController
 			$sizeLimit = 10 * 1024 * 1024;
 
 			$uploader = new \App\Library\qqFileUploader($allowedExtensions, $sizeLimit, $this -> request);
-			$this -> json( $result = $uploader -> handleUpload(PICTURES_PATH.'tmp/') );
+			$this -> json( $result = $uploader -> handleUpload(APP_PICTURES_PATH.'tmp/') );
 			
 		}
 		
