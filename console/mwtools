@@ -112,7 +112,7 @@ switch($argv[1]){
 	
 		try{
 	
-			$packageManager = \MWCore\Kernel\MWPackageManager::getInstance();
+			$packageManager = \MWCore\Kernel\MWProvider::$packageManager;
 			
 			$package = $packageManager -> getPackage($argv[2]);
 			
