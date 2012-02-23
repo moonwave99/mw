@@ -42,7 +42,7 @@ class MWQueryBuilder
 				{
 
 					$this -> query .= sprintf(
-						" INNER JOIN %s ON %s = %s ",
+						" INNER JOIN `%s` ON %s = %s ",
 						$join['jointable'],
 						$join['field_from'].".id",
 						$join['jointable'].".id_".$join['field_from']
@@ -96,7 +96,7 @@ class MWQueryBuilder
 				
 				( $i > 0 ) && $this -> query .= sprintf(" %s ", $w['boolean']);
 
-				$this -> query .= sprintf($w['mode'] == 'MD5' ? "MD5(%s.%s) %s %s" : "%s.%s %s %s", 
+				$this -> query .= sprintf($w['mode'] == 'MD5' ? "MD5(`%s`.%s) %s %s" : "`%s`.%s %s %s", 
 					$w['table'] == "" ? MWEntity::getTableNameFromClass( $this -> entityname ) : $w['table'],
 					$w['field'],
 					$w['operator'],
@@ -111,7 +111,7 @@ class MWQueryBuilder
 		if($this -> order != NULL){
 		
 			$this -> query .= sprintf(
-				" ORDER BY %s.%s %s",
+				" ORDER BY `%s`.%s %s",
 				!isset($this -> order['table']) ? MWEntity::getTableNameFromClass( $this -> entityname ) : $this ->order['table'],
 				$this -> order['column'],
 				$this -> order['order']
@@ -138,7 +138,7 @@ class MWQueryBuilder
 		$this -> entityname = $entityname;
 		
 		$this -> query = sprintf(
-			"SELECT COUNT(id) FROM %s",
+			"SELECT COUNT(id) FROM `%s`",
 			MWEntity::getTableNameFromClass( $entityname )
 		);
 
@@ -154,7 +154,7 @@ class MWQueryBuilder
 		$this -> entityname = $entityname;
 		
 		$this -> query = sprintf(
-			"SELECT %s.* FROM %s",
+			"SELECT `%s`.* FROM `%s`",
 			MWEntity::getTableNameFromClass( $entityname ),
 			MWEntity::getTableNameFromClass( $entityname )
 		);
@@ -171,7 +171,7 @@ class MWQueryBuilder
 		$this -> entityname = $entityname;		
 		
 		$this -> query = sprintf(
-			"INSERT INTO %s ",
+			"INSERT INTO `%s` ",
 			MWEntity::getTableNameFromClass( $entityname )
 		);		
 		
@@ -187,7 +187,7 @@ class MWQueryBuilder
 		$this -> entityname = $entityname;	
 		
 		$this -> query = sprintf(
-			"UPDATE %s SET ",
+			"UPDATE `%s` SET ",
 			MWEntity::getTableNameFromClass( $entityname )
 		);			
 		
