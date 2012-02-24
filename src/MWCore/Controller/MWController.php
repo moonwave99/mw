@@ -97,5 +97,84 @@ class MWController
 		}
 
 	}
+	
+	protected function bindRequest($entityName)
+	{
+		
+		$entity = null;
+		
+		if((int)($this -> request -> id) != 0){
+
+			$repName = $this -> inspector -> getRepositoryNameForEntity($entityName);	
+			$rep = new $repName;
+			$entity = $rep -> findOneById($this -> request -> id);
+
+		}else{
+
+			$entity = new $entityName;			
+			
+		}
+
+		$fieldInfo = $this -> inspector -> getAnnotationsForEntity($entityName);
+		
+		$tmpEntity = null;
+		$tmpEntityName = null;
+		$tmpList = null;
+		$tmpAnnotationName = null;
+		
+		foreach($fieldInfo as $field)
+		{
+			
+			$tmpAnnotationName = array_shift(array_keys($field['annotations']));
+			
+			if($this -> request -> $field['name'] != ''){
+			
+				switch($tmpAnnotationName){
+
+					case "MWCore\Annotation\Field":
+
+						$entity -> $field['name'] = $this -> request -> $field['name'];
+						break;
+
+					case "MWCore\Annotation\OneToOne":
+					case "MWCore\Annotation\ManyToOne":					
+
+						$tmpEntityName = $field['annotations'][$tmpAnnotationName][0] -> entity;
+						$tmpEntity = new $tmpEntityName;
+						$tmpEntity -> id = $this -> request -> $field['name'];
+						
+						$entity -> $field['name'] = $tmpEntity;
+
+						break;
+
+					case "MWCore\Annotation\ManyToMany":		
+
+						$entity -> $field['name'] = new MWCollection();	
+
+						foreach($this -> request -> $field['name'] as $v){
+
+							$tmpEntityName = $field['annotations'][$tmpAnnotationName][0] -> entity;
+							$tmpEntity = new $tmpEntityName;
+							$tmpEntity -> id = $v;
+
+							$entity -> $field['name'] -> add($tmpEntity);
+
+						}
+
+						break;
+
+					default:
+						
+						break;
+
+				}			
+				
+			}		
+			
+		}	
+		
+		return $entity;	
+		
+	}	
 
 }
