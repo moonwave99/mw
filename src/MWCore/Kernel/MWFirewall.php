@@ -36,12 +36,31 @@ class MWFirewall
 
 		$currentTiles = MWSingleRoute::tiles($pattern);
 		
+		$check = NULL;
+		
 		foreach($this -> rules as $rule)
 		{
+
+			$ruleTiles = MWSingleRoute::tiles( $rule -> getPattern() );
+
+			if(count($ruleTiles) > count($currentTiles))
+				continue;		
+				
+			$check = true;
+				
+			foreach($ruleTiles as $i => $tile )
+			{
+				
+				if($tile != $currentTiles[$i]){
+					
+					$check = false;
+					break;
+					
+				}
+				
+			}
 			
-			$tiles = MWSingleRoute::tiles( $rule -> getPattern() );
-			
-			if($tiles[0] == $currentTiles[0])
+			if($check === true)
 			{
 
 				return $this -> context -> isRoleGranted( $rule -> getRole() ) || 
