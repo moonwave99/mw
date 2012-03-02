@@ -4,13 +4,13 @@ namespace Backstage\Controller;
 
 use Backstage\Controller\CrudController;
 
-class %2$sController extends CrudController
+class UserController extends CrudController
 {
 
 	public function __construct($session, $context, $request, $settings)
 	{
 		
-		parent::__construct($session, $context, $request, $settings, "%1$s", "%2$s");
+		parent::__construct($session, $context, $request, $settings, "MWCore\Entity\MWUser", "User");
 
 	}	
 

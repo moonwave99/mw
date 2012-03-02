@@ -4,6 +4,7 @@
 		<meta charset="UTF-8"/>
 		<title>MWLabs. | 404 Not Found</title>	
 		<link rel="stylesheet" href="<?php echo ASSET_PATH ?>css/style.css"/>
+		<link rel="stylesheet" href="<?php echo ASSET_PATH ?>css/mw.css"/>		
 	</head>
 	<body>
 		<div class="mwAlertBox cornered">

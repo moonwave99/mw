@@ -10,6 +10,6 @@
 
 <?php startblock('content') ?>
 
-	<p>This is the backstage of your application.</p>
-
+	<p>Here you can setup everything in your kickass app.</p>		
+	
 <?php endblock() ?>

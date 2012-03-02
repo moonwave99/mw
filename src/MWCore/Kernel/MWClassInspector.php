@@ -41,7 +41,7 @@ class MWClassInspector implements MWSingleton
 	
 	public function getAnnotationsForEntity($entity)
 	{
-
+		
 		$className = is_object($entity) ? get_class($entity) : $entity;
 
 		$properties = NULL;
@@ -152,7 +152,7 @@ class MWClassInspector implements MWSingleton
 	{
 
 		$className = is_object($entity) ? get_class($entity) : $entity;
-		
+
 		if( $this -> commonCache[$className] === NULL){
 
 			$ref = new \ReflectionAnnotatedClass($entity);

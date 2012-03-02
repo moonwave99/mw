@@ -2,7 +2,7 @@
 
 <?php startblock('css') ?>
 	<?php superBlock() ?>
-
+	<link rel="stylesheet" href="<?php $this -> asset('css/mw.css') ?>"/>
 	<!-- require page specific CSS files here -->
 
 <?php endblock() ?>

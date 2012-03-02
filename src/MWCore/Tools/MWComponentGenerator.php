@@ -58,7 +58,7 @@ class MWComponentGenerator
 		printf("	Building CRUD Controller for '%s'...\n", $this -> entity);
 		
 		$bits = explode('\\', $this -> entity);
-		$destination = sprintf(SRC_PATH."%s/Controller/Crud/%sController.php", $bits[0], $bits[2]);
+		$destination = sprintf(SRC_PATH."Backstage/Controller/%sController.php", $bits[2]);
 
 		if(file_exists($destination)){
 			

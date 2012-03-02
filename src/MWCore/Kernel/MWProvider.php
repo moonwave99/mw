@@ -115,4 +115,17 @@ class MWProvider
 		
 	}
 	
+	public static function makeCrudController($controllerName, $params = array())
+	{
+		
+		if(!class_exists($controllerName)) return false;
+		
+		$reflect  = new \ReflectionClass($controllerName);
+		
+		return $reflect -> newInstanceArgs(array_merge(
+			array(self::$session, self::$context, self::$request, self::$settings), $params
+		));
+		
+	}
+	
 }

@@ -3,7 +3,6 @@
 namespace MWCore\Controller;
 
 use MWCore\Controller\MWController;
-use MWCore\Kernel\MWLog;
 
 class MWTestController extends MWController
 {
@@ -11,7 +10,13 @@ class MWTestController extends MWController
 	public function testAction()
 	{
 		
-		echo "This is a test playground.";
+		$tag = new \App\Entity\Tag(1);
+		
+		//pre($tag);
+		
+		$note = $this -> inspector -> getSingleAnnotationForEntity($tag, 'Backstage\Annotation\EntitySetup');
+		
+		pre($note);
 		
 	}
 		

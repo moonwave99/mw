@@ -27,11 +27,10 @@ class MWContext
 		
 	}
 	
-	public function isRoleGranted($roleName)
+	public function isRoleGranted($role)
 	{
 		
-		return	$this -> user != NULL ? 
-				$this -> user -> hasRole($roleName) || $roleName == "IS_LOGGED" : false;
+		return	$this -> user != NULL && $this -> user -> hasRole($role);
 		
 	}
 	

@@ -1,36 +1,24 @@
 <?php
 
-namespace App\Controller\Crud;
+namespace Backstage\Controller;
 
-use MWCore\Controller\MWController;
+use Backstage\Controller\BackstageController;
 use MWCore\Entity\MWEntity;
 use MWCore\Component\MWCollection;
 
-class CrudController extends MWController
+class CrudController extends BackstageController
 {
 
 	protected $entityname;
 	protected $entitylabel;	
 
-	public function __construct($session, $context, $request, $settings)
+	public function __construct($session, $context, $request, $settings, $entityname, $entitylabel)
 	{
 		
-		parent::__construct($session, $context, $request, $settings, );
+		parent::__construct($session, $context, $request, $settings);
 		
 		$this -> entityname = $entityname;
 		$this -> entitylabel = $entitylabel;
-		
-	}
-	
-	public function indexAction()
-	{
-
-		$this -> requestView("App\View\Admin\listitems", array(
-			'pageTitle'	=> sprintf('Sostanze Records. | Manage %ss', ucwords($this -> entitylabel)),
-			'title'		=> 'Admin Area',
-			'entity'	=> $this -> entitylabel,
-			'fields'	=> call_user_func(array($this -> entityname, 'getCRUDFields'))
-		));
 		
 	}
 	
@@ -49,43 +37,10 @@ class CrudController extends MWController
 	
 	public function listAction()
 	{	
+		
+		$rep = MWEntity::createRepository($this -> entityname);
 
-		$data = array('aaData' => array());
-		
-		$repName = MWEntity::getRepositoryNameFromClass($this -> entityname);
-		
-		$rep = new $repName;
-		
-		foreach($rep -> findAll() -> toArray() as $r)
-		{
-			
-			$data['aaData'][] =	array_merge(
-				(array)sprintf(
-					'<input name="%s-list-single" type="checkbox" data-entity="%s" value="%s"/>',
-					strtolower($this -> entitylabel),
-					strtolower($this -> entitylabel),
-					$r -> id
-				),
-				$r -> toDataTable(),
-				(array)sprintf('
-				<ul class="item-actions">
-					<li>
-						<button title="Edit" data-icon="pencil" data-controller="%s" data-action="edit" data-id="%s"></button>
-					</li>
-					<li>
-						<button title="Delete" data-icon="trash" data-controller="common" data-entity="%s" data-action="delete" data-id="%s"></button>
-					</li>
-				</ul>',
-					strtolower($this -> entitylabel),
-					$r -> id,
-					strtolower($this -> entitylabel),
-					$r -> id					
-				)
-			);
-			
-		}
-		
-		$this -> json($data);
+		$this -> json($rep -> findAll() -> toArray());
 		
 	}
 	

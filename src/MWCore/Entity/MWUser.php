@@ -9,12 +9,14 @@ use MWCore\Component\MWCollection;
 /** 
 *	@MWCore\Annotation\Table("user")
 *	@MWCore\Annotation\Repository("\MWCore\Repository\MWUserRepository")
+*	@Backstage\Annotation\EntitySetup(label="Users", pathName="user", granted="ROLE_ADMIN")
 */	
 class MWUser extends MWEntity
 {
 	
 	/**
 	*	@MWCore\Annotation\Field(name="username", type="string", length="10")
+	*	@Backstage\Annotation\TableField(label="Username", size="10")
 	*/	
 	protected $username;
 	
@@ -30,23 +32,26 @@ class MWUser extends MWEntity
 	
 	/**
 	*	@MWCore\Annotation\Field(name="email", type="string", length="64", default="")
+	*	@Backstage\Annotation\TableField(label="E-mail", size="5")	
 	*/	
 	protected $email;
 	
 	/**
 	*	@MWCore\Annotation\Field(name="enabled", type="int", length="1", default="0")
+	*	@Backstage\Annotation\TableField(label="Enabled", size="2")	
 	*/	
 	protected $enabled;
 	
 	/**
 	*	@MWCore\Annotation\Field(name="createdAt", type="datetime")
+	*	@Backstage\Annotation\TableField(label="Created On", size="5")	
 	*/	
 	protected $createdAt;	
 	
 	/**
-	*	@MWCore\Annotation\ManyToMany(entity="\MWCore\Entity\MWRole", jointable="role_to_user")
+	*	@MWCore\Annotation\Field(name="role", type="int", length="3", default="1")
 	*/	
-	protected $roleList;
+	protected $role;
 	
 	public function __construct($id = NULL)
 	{
@@ -55,22 +60,12 @@ class MWUser extends MWEntity
 		
 		$this -> createdAt = new \DateTime();
 		
-		$this -> roleList = new MWCollection();
-		
 	}
 	
-	public function hasRole($roleName)
+	public function hasRole($role)
 	{
 
-		foreach($this -> roleList -> toArray() as $role)
-		{
-
-			if($role -> name == $roleName)
-				return true;
-			
-		}
-		
-		return false;
+		return $this -> role % $role == 0;
 		
 	}
 	

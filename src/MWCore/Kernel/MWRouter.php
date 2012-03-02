@@ -18,7 +18,6 @@ class MWRouter
 	{	
 	
 		$this -> routes = array();
-		
 		$this -> firewall = $firewall;
 		
 	}	
@@ -35,7 +34,7 @@ class MWRouter
 	
 	public function routeRequest()
 	{
-
+		
 		$pattern = $this -> getPatternFromURI();
 		
 		$firewallProblem = $this -> firewall -> isPatternRejected($pattern);
@@ -48,41 +47,26 @@ class MWRouter
 		}			
 
 		$route = $this -> searchPattern($pattern);	
-		
 		$route === false && $this -> requestNotFound();
-		
 		$controller = MWProvider::makeController($route -> controller);
 
-		if($controller !== false){
-			
-			if(method_exists($controller, $route -> action."Action")){
-
-				$params = MWSingleRoute::tiles($pattern);
-				
-				while(count($params) > $route -> getParamCount() )
-				{
-					array_shift($params);
-				}
-				
-				call_user_func_array(
-					array(
-						$controller,
-						$route -> action."Action"
-					),
-					$this -> cleanParams($params)
-				);
-				
-			}else{
-			
-				$this -> requestNotFound();
-				
-			}
-			
-		}else{
-			
+		if($controller === false || !method_exists($controller, $route -> action."Action"))
 			$this -> requestNotFound();
-			
-		}		
+
+		$params = MWSingleRoute::tiles($pattern);
+		
+		while(count($params) > $route -> getParamCount() )
+		{
+			array_shift($params);
+		}
+		
+		call_user_func_array(
+			array(
+				$controller,
+				$route -> action."Action"
+			),
+			$this -> cleanParams($params)
+		);
 		
 	}	
 	
