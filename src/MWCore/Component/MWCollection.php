@@ -14,7 +14,7 @@ class MWCollection
 		
 	}
 	
-	public function get($key)
+	public function &get($key)
 	{
 		
 		return $this -> elements[$key];

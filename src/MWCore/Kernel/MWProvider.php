@@ -32,6 +32,13 @@ class MWProvider
 		
 	}
 	
+	public static function initSettingsManager()
+	{
+
+		self::$settings = new \MWCore\Kernel\MWSettingsManager();		
+		
+	}	
+	
 	public static function initContext()
 	{
 		
@@ -79,13 +86,6 @@ class MWProvider
 	{
 		
 		self::$request = new \MWCore\Component\MWRequest();
-		
-	}
-	
-	public static function initSettings()
-	{
-
-		self::$settings = new \MWCore\Kernel\MWSettings();		
 		
 	}
 	

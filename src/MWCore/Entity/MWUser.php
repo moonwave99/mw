@@ -9,14 +9,14 @@ use MWCore\Component\MWCollection;
 /** 
 *	@MWCore\Annotation\Table("user")
 *	@MWCore\Annotation\Repository("\MWCore\Repository\MWUserRepository")
-*	@Backstage\Annotation\EntitySetup(label="Users", pathName="user", granted="ROLE_ADMIN")
+*	@Backstage\Annotation\EntitySetup(label="Users", pathName="user", granted="ROLE_ADMIN", icon="user")
 */	
 class MWUser extends MWEntity
 {
 	
 	/**
 	*	@MWCore\Annotation\Field(name="username", type="string", length="10")
-	*	@Backstage\Annotation\TableField(label="Username", size="10")
+	*	@Backstage\Annotation\BackstageField(label="Username", colSize="10")
 	*/	
 	protected $username;
 	
@@ -32,19 +32,19 @@ class MWUser extends MWEntity
 	
 	/**
 	*	@MWCore\Annotation\Field(name="email", type="string", length="64", default="")
-	*	@Backstage\Annotation\TableField(label="E-mail", size="5")	
+	*	@Backstage\Annotation\BackstageField(label="E-mail", colSize="5", inputMode="email")	
 	*/	
 	protected $email;
 	
 	/**
 	*	@MWCore\Annotation\Field(name="enabled", type="int", length="1", default="0")
-	*	@Backstage\Annotation\TableField(label="Enabled", size="2")	
+	*	@Backstage\Annotation\BackstageField(label="Enabled", colSize="2", inputMode="radio-boolean")	
 	*/	
 	protected $enabled;
 	
 	/**
 	*	@MWCore\Annotation\Field(name="createdAt", type="datetime")
-	*	@Backstage\Annotation\TableField(label="Created On", size="5")	
+	*	@Backstage\Annotation\BackstageField(label="Created On", colSize="5", inputMode="date", target="table")	
 	*/	
 	protected $createdAt;	
 	

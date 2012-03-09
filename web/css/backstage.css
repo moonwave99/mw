@@ -1,0 +1,37 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+	background-color: #D0E4F2;
+}
+.sidebar-nav {
+  padding: 9px 0;
+}
+
+.backstage-form{
+	margin:0;
+}
+
+table#dataTable{
+	margin:10px 0px 15px 0px!important;
+}
+
+table#dataTable td{
+	vertical-align: middle!important;
+}
+
+table#dataTable td input[type="checkbox"]{
+	margin:0!important;
+}
+
+table#dataTable tbody tr td:first-child{
+	text-align:center;
+}
+
+#box{
+	overflow:visible!important;
+}
+
+span.thumbnail{
+	width:160px;
+}
+

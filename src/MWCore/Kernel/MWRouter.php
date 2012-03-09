@@ -24,9 +24,10 @@ class MWRouter
 	
 	public function setRoutes($routes){ 
 	
-		foreach($routes as $r){
+		foreach($routes as $r)
+		{
 			
-			$this -> routes[$r->getPatternLength()][] = $r;
+			$this -> routes[$r -> getPatternLength()][] = $r;
 			
 		}
 		
@@ -34,7 +35,7 @@ class MWRouter
 	
 	public function routeRequest()
 	{
-		
+
 		$pattern = $this -> getPatternFromURI();
 		
 		$firewallProblem = $this -> firewall -> isPatternRejected($pattern);

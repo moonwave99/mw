@@ -10,7 +10,7 @@ class TagController extends CrudController
 	public function __construct($session, $context, $request, $settings)
 	{
 		
-		parent::__construct($session, $context, $request, $settings, "App\Entity\Tag", "Tag");
+		parent::__construct($session, $context, $request, $settings, "App\Entity\Tag", "tag");
 
 	}	
 
@@ -52,7 +52,7 @@ class TagController extends CrudController
 	public function uploadAction()
 	{
 		
-		parent::uploadActionAction();
+		parent::uploadAction();
 		
 	}	
 		

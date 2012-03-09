@@ -2,6 +2,23 @@
 
 */
 
+window.locale = {
+    "fileupload": {
+        "errors": {
+            "maxFileSize": "File is too big",
+            "minFileSize": "File is too small",
+            "acceptFileTypes": "Filetype not allowed",
+            "maxNumberOfFiles": "Max number of files exceeded",
+            "uploadedBytes": "Uploaded bytes exceed file size",
+            "emptyResult": "Empty file upload result"
+        },
+        "error": "Error",
+        "start": "Start",
+        "cancel": "Cancel",
+        "destroy": "Delete"
+    }
+};
+
 BACKSTAGE = {
 	
 	common : {
@@ -9,9 +26,15 @@ BACKSTAGE = {
 		dataTable : null,
 		deleteList : null,
 		
+		templates : {
+ 			alert			: _.template( $("#alert").html() ),
+ 			tablerow		: _.template( $("#table-row").html() ),
+			editsettings	: _.template( $("#settings-edit").html() )
+		},
+		
 		settings : {
 			basePath : mwBasepath,
-			draftInterval : 10000,
+			imgPath : mwBasepath + 'web/img/uploads/',
 			tinymce : {
 				
 				// Location of TinyMCE script
@@ -46,14 +69,14 @@ BACKSTAGE = {
 			});
 			
 			// Bind forms to controllers
-			$(document).on('submit', '.mw-form', function(){
-				
+			$(document).on('submit', '.backstage-form', function(){
+
 				BASE.exec(
 					$(this).attr('data-controller'),
 					$(this).attr('data-action'),
 					this
 				);				
-				
+
 				return false;
 				
 			});
@@ -71,11 +94,8 @@ BACKSTAGE = {
 				
 			});	
 			
-		},
-
-		cancel : function(){
-
-			
+			// Bootstrap stuff
+			$('a[data-content]').popover({trigger: 'manual', delay:'1000'});
 			
 		},
 		
@@ -118,7 +138,7 @@ BACKSTAGE = {
 					"sDom": "<'row-fluid'<'span5'l><'span7'f>r>t<'row-fluid'<'span5'i><'span7'p>>",
 					"sPaginationType": "bootstrap",
 					"oLanguage": {
-						"sLengthMenu": "Show _MENU_ records per page"
+						"sLengthMenu": "Show _MENU_ records per page."
 					}
 				} );			
 				
@@ -134,6 +154,8 @@ BACKSTAGE = {
 			
 			$('#box').html(template());
 			
+			BACKSTAGE.common.uiSetup();
+			
 			$('#box').modal({
 				keyboard : false
 			});
@@ -146,17 +168,101 @@ BACKSTAGE = {
 			var id = $(button).parent().parent().attr('data-id');
 			var template = _.template( $("#item-edit").html() );
 			
-			$('#box').html(template());
+			$.post(BACKSTAGE.common.settings.basePath + 'backstage/' + entityName + "/get", {id : id}, function(data){
+
+				$('#box').html(template());
+				$('#box [name="id"]').val(id);
+				
+				_.each(data.entity, function(value, key){
+
+					switch(typeof value){
+						
+						case "string":
+						
+							$('#box form [name="'+key+'"]').val(value);							
+							
+							break;
+							
+						case "object":
+						
+							if(value == null) break;
+						
+							if(value.length > 0){
+
+								_.each(value, function(v){
+
+									$('#box form [name="'+key+'[]"] option[value="'+v.id+'"]').attr('selected', 'selected');
+									
+								});
+
+							}else{
+
+								$('#box form [name="'+key+'"]').val(value.id);
+								
+							}
+						
+							break;
+						
+					}
+					
+					$('#thumb_'+key).each(function(){
+
+						$('#_'+key).attr('value') != '' && $(this).attr('src', BACKSTAGE.common.settings.imgPath + $('#_'+key).attr('value'));
+						
+					});
+					
+				});
+		
+				BACKSTAGE.common.uiSetup();			
+		
+				$('#box').modal({
+					keyboard : false
+				});		
+				
+			});
+		
+		},
+		
+		save : function(form){
+
+			var req = $('form').serializeArray();
 			
-			$('#box').modal({
-				keyboard : false
+			req.push({ name : 'token', value : $('meta[name="csrf"]').attr('content')});
+
+			$.post($(form).attr('action'), req, function(data){
+			
+				switch(data.status)
+				{
+					
+					case "Error":
+					
+						break;
+					
+					case "OK":
+
+						if(typeof(tinyMCE) !== 'undefined')
+							tinyMCE.activeEditor.remove();
+					
+						$('#box').modal('toggle');
+						
+						$('#alertBox').html(
+							BACKSTAGE.common.templates.alert({
+								'mode' : 'success',
+								'message' : data.message
+							})					
+						);
+						
+						break;
+					
+				}
+				
 			});
 			
-		},
+		},		
 		
 		delete : function(button){
 			
-			BACKSTAGE.common.deleteList = [];
+			BACKSTAGE.common.deleteList = [];			
 			
 			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
 			var id = $(button).parent().parent().attr('data-id');
@@ -176,7 +282,7 @@ BACKSTAGE = {
 	
 		deleteCecked : function(button){
 			
-			BACKSTAGE.common.deleteList = [];
+			BACKSTAGE.common.deleteList = [];			
 			
 			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
 			var entities = $('input[name="list-single"]:checked');
@@ -194,7 +300,7 @@ BACKSTAGE = {
 				
 				$('#box').html(template({
 					entityName : entityName
-				}));
+				}));		
 
 				$('#box').modal({
 					keyboard : false
@@ -234,52 +340,29 @@ BACKSTAGE = {
 			
 		},
 		
-		uploadSetup: function(button){
+		uploadSetup : function(element){
+
+			$(element).fileupload({
 			
-			if($('#pic-uploader').length > 0){
-
-			var uploader = new qq.FileUploader({
-				element: document.getElementById('pic-uploader'),
-		        action: BACKSTAGE.common.settings.basePath + 'backstage/'+$(button).attr('data-controller')+'/upload',
-		        debug: false,
-				multiple: false,
-				fileTemplate: '<li>' +
-				                  '<span class="qq-upload-file"></span>' +
-				                  '<span class="qq-upload-spinner"></span>' +
-				                  '<span class="qq-upload-size"></span>' +
-				                  '<a class="qq-upload-cancel" href="#">Cancel</a>' +
-				               '</li>',
-				
-		        onComplete: function(id, filename, responseJSON){
-
-					if( responseJSON.success == true){
-
-						$.post(
-							BACKSTAGE.common.settings.basePath + 'backstage/'+$(button).attr('data-controller')+'/savepicture',
-							{
-								file : filename,
-								id : $(button).attr('data-id')
-							},
-							function(data){
-
-								if(data.status == 'OK'){
-
-									$('#thumb').attr('src', data.filename + '?'+Math.random());
-									
-								}
-
-								$('#picResponse').html(data.message);								
-								
-							}
-						
-						);
-						
-					}
+				dataType : 'json',
+				url : BACKSTAGE.common.settings.basePath + 'backstage/picture/upload',
+				done : function(e, data){
 					
-		        }
-		    });			
+					$('#thumb_' + $(data.fileInput[0]).attr('id').split('_')[1]).attr('src', data.result[0].url);
+					$('#_' + $(data.fileInput[0]).attr('id').split('_')[1]).val(data.files[0].fileName);
+					
+				}
+				
+			});			
+		
+		},
+		
+		uiSetup : function(element)
+		{
 			
-			}			
+			$('#box select').chosen();
+			$('#box [data-rich]').tinymce(BACKSTAGE.common.settings.tinymce);
+			BACKSTAGE.common.uploadSetup($('#box input[type="file"]'));
 			
 		},
 		
@@ -296,6 +379,51 @@ BACKSTAGE = {
 		
 	},
 	
+	settings : {
+		
+		edit : function(element){
+			
+			$('#box').html(BACKSTAGE.common.templates.editsettings());
+			$('#box select').chosen();			
+			
+			$('#box').modal({
+				keyboard : false
+			});		
+			
+		},
+		
+		save : function(form){
+			
+			var req = $('form').serializeArray();
+			
+			req.push({ name : 'token', value : $('meta[name="csrf"]').attr('content')});
+
+			$.post($(form).attr('action'), req, function(data){
+			
+				switch(data.status)
+				{
+					
+					case "Error":
+					
+						$('.btn-primary', form).addClass('btn-danger').attr('value', 'Error.');
+					
+						break;
+					
+					case "OK":
+					
+						$('.btn-primary', form).addClass('btn-success').attr('value', 'Saved!');
+
+						break;
+					
+				}
+				
+			});
+			
+			
+		}
+		
+	},
+
 	release : {
 		
 		init : function(element){
@@ -484,33 +612,7 @@ BACKSTAGE = {
 		
 	},
 	
-	settings : {
-		
-		save : function(form){
-			
-			var button = $('input[name="settings_submit"]', form);
-			var buttonText = button.val();
-			
-			$.post(
-				$(form).attr('action'), 
-				$(form).serialize()
-				,
-				function(data){
-
-					$(button).val(data.message).attr('disabled', 'disabled').val(data.message);
-					
-					setTimeout(function(){
-
-						$(button).val(buttonText).removeAttr('disabled');
-
-					}, 2000);
-				
-				}
-			);			
-			
-		}
-		
-	}
+	
 	
 };
 

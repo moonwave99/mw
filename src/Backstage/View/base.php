@@ -13,16 +13,6 @@
 <?php startblock('css') ?>		
 
     <link href="<?php $this -> asset('css/bootstrap.css')?>" rel="stylesheet"/>
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-		background-color: #D0E4F2;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-    </style>
 	<?php if(DEBUG === true):?>
 	<link rel="stylesheet" href="<?php $this -> asset('css/debug.css') ?>"/>
 	<?php endif;?>
@@ -55,21 +45,6 @@
 
 	<script src="<?php $this -> asset('js/libs/underscore-min.js') ?>"></script>
 	<script src="<?php $this -> asset('js/plugins.js') ?>"></script>
-	
-	<!--
-		<script src="../assets/js/bootstrap-transition.js"></script>
-		<script src="../assets/js/bootstrap-alert.js"></script>
-		<script src="../assets/js/bootstrap-modal.js"></script>
-		<script src="../assets/js/bootstrap-dropdown.js"></script>
-		<script src="../assets/js/bootstrap-scrollspy.js"></script>
-		<script src="../assets/js/bootstrap-tab.js"></script>
-		<script src="../assets/js/bootstrap-tooltip.js"></script>
-		<script src="../assets/js/bootstrap-popover.js"></script>
-		<script src="../assets/js/bootstrap-button.js"></script>
-		<script src="../assets/js/bootstrap-collapse.js"></script>
-		<script src="../assets/js/bootstrap-carousel.js"></script>
-		<script src="../assets/js/bootstrap-typeahead.js"></script>	
-	-->	
 	
   <!--[if lt IE 7 ]>
     <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>

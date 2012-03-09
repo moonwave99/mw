@@ -10,7 +10,7 @@ class UserController extends CrudController
 	public function __construct($session, $context, $request, $settings)
 	{
 		
-		parent::__construct($session, $context, $request, $settings, "MWCore\Entity\MWUser", "User");
+		parent::__construct($session, $context, $request, $settings, "MWCore\Entity\MWUser", "user");
 
 	}	
 
@@ -37,8 +37,10 @@ class UserController extends CrudController
 	
 	public function saveAction()
 	{
-	
+
 		parent::saveAction();
+		pre($this -> request);
+		pre($this -> log -> flush());
 
 	}
 	
@@ -52,7 +54,7 @@ class UserController extends CrudController
 	public function uploadAction()
 	{
 		
-		parent::uploadActionAction();
+		parent::uploadAction();
 		
 	}	
 		

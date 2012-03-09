@@ -5,6 +5,7 @@ namespace Backstage\Controller;
 use Backstage\Controller\BackstageController;
 use MWCore\Entity\MWEntity;
 use MWCore\Component\MWCollection;
+use Backstage\Library\UploadHandler;
 
 class CrudController extends BackstageController
 {
@@ -31,7 +32,43 @@ class CrudController extends BackstageController
 
 		$entity = $rep -> findOneById($this -> request -> id);
 		
-		$this -> json(array('entity' => $entity === false ? new $this -> entityname : $entity));
+		$tempRow = array();
+		
+		$info = $this -> getEntityInfo($this -> entityname);
+
+		foreach($info as $i)
+		{
+			
+			if($i -> target != 'both' && $i -> target != 'form') continue;
+
+			switch($i -> inputMode)
+			{
+				
+				case "select-multiple":
+					$tempRow[$i -> name] = $entity -> {$i -> name} -> toArray();					
+					break;
+					
+				case "select":
+					$tempRow[$i -> name] = $entity -> {$i -> name};
+					break;
+					
+				case "date":
+					$tempRow[$i -> name] = $entity -> {$i -> name} -> format('M d Y');
+					break;
+					
+				case "checkbox":
+					$tempRow[$i -> name] = $entity -> {$i -> name} == 1 ? "Yes" : "No";
+					break;
+					
+				default:
+					$tempRow[$i -> name] = html_entity_decode($entity -> {$i -> name}, ENT_QUOTES, 'UTF-8');
+					break;
+			
+			}
+
+		}		
+		
+		$this -> json(array('entity' => $entity === false ? new $this -> entityname : $tempRow));
 		
 	}
 	
@@ -40,13 +77,84 @@ class CrudController extends BackstageController
 		
 		$rep = MWEntity::createRepository($this -> entityname);
 
-		$this -> json($rep -> findAll() -> toArray());
+		$results = array();
+		$tempRow = NULL;
+		$tempString = NULL;
+
+		$info = $this -> getEntityInfo($this -> entityname);
+		
+		foreach($rep -> findAll() -> toArray() as $r)
+		{
+			
+			$tempRow = array('id' => $r -> id);
+			
+			foreach($info as $i)
+			{
+				
+				if($i -> target != 'both' && $i -> target != 'table') continue;
+
+				switch($i -> inputMode)
+				{
+					
+					case "picture":
+						
+						$tempRow[$i -> name] = sprintf(
+							'<img src="%s" alt=""/>',
+							BASE_PATH."thumbnails/" . $r -> {$i -> name}
+						);
+						
+						break;
+					
+					case "select-multiple":
+					
+						$tempString = "";
+						
+						foreach($r -> {$i -> name} -> toArray() as $e)
+						{
+							
+							$tempString .= $e.", ";
+							
+						}
+						
+						$tempRow[$i -> name] = substr($tempString, 0, -2);
+						
+						break;
+						
+					case "select":
+						$tempRow[$i -> name] = $r -> {$i -> name} -> __toString();
+						break;
+						
+					case "date":
+						$tempRow[$i -> name] = $r -> {$i -> name} -> format('M d Y');
+						break;
+						
+					case "checkbox":
+						$tempRow[$i -> name] = $r -> {$i -> name} == 1 ? "Yes" : "No";
+						break;
+						
+					case "radio-boolean":
+						$tempRow[$i -> name] = $r -> {$i -> name} == 1 ? "Yes" : "No";
+						break;						
+						
+					default:
+						$tempRow[$i -> name] = $r -> {$i -> name};
+						break;
+					
+				}
+
+			}
+			
+			$results[] = $tempRow;
+			
+		}
+		
+		$this -> json($results);
 		
 	}
 	
 	public function saveAction()
 	{
-	
+
 		if($this -> request -> getMethod() != 'POST' || $this -> csrfCheck() !== true)
 			exit;
 
@@ -88,16 +196,7 @@ class CrudController extends BackstageController
 	public function uploadAction()
 	{
 		
-		if($this -> request -> getMethod() == 'POST'){
-			
-			$allowedExtensions = array('jpg', 'jpeg', 'png', 'gif');
 
-			$sizeLimit = 10 * 1024 * 1024;
-
-			$uploader = new \App\Library\qqFileUploader($allowedExtensions, $sizeLimit, $this -> request);
-			$this -> json( $result = $uploader -> handleUpload(APP_PICTURES_PATH.'tmp/') );
-			
-		}
 		
 	}	
 	
@@ -135,14 +234,13 @@ class CrudController extends BackstageController
 					case "MWCore\Annotation\Field":
 
 						$entity -> $field['name'] = $this -> request -> $field['name'];
+					
 						break;
 
 					case "MWCore\Annotation\OneToOne":
 					case "MWCore\Annotation\ManyToOne":					
 
-						$tmpEntityName = $field['annotations'][$tmpAnnotationName][0] -> entity;
-						$tmpEntity = new $tmpEntityName;
-						$tmpEntity -> id = $this -> request -> $field['name'];
+						$entity -> $field['name'] -> id = $this -> request -> $field['name'];
 
 						break;
 

@@ -52,7 +52,7 @@ class %2$sController extends CrudController
 	public function uploadAction()
 	{
 		
-		parent::uploadActionAction();
+		parent::uploadAction();
 		
 	}	
 		

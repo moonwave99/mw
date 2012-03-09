@@ -105,6 +105,8 @@ class MWSchemaGenerator
 				case "MWCore\Annotation\ManyToMany":
 
 					$this -> _createCrossTable($tmpAnnotation);
+					
+					printf("#	%s	: creating cross table...\n", $field['name']);					
 
 					break;											
 
@@ -234,7 +236,7 @@ class MWSchemaGenerator
 			
 			if($this -> _searchAnnotation($col, $notes) === false && $col['COLUMN_NAME'] != "id"){
 			
-				$query = sprintf('ALTER TABLE %1$s DROP COLUMN %2$s',
+				$query = sprintf('ALTER TABLE `%1$s` DROP COLUMN `%2$s`',
 					$this -> tableInfo['TABLE_NAME'],
 					$col['COLUMN_NAME']
 				);					

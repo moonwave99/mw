@@ -19,19 +19,19 @@
 
 <?php startblock('content') ?>
 
-	<p>Here you can manage your <strong><?php echo $this -> entity?></strong> list.</p>
-	
+	<p>Here you can manage your <strong><?php echo ucwords($this -> entity)?></strong> list.</p>
+	<hr/>	
 	<a class="btn btn-inverse" href="#" data-controller="common" data-entity="<?php echo strtolower($this -> entity)?>" data-action="new">Add New <?php echo ucwords($this -> entity)?></a>
 	  <a class="btn btn-inverse" href="#" data-controller="common" data-entity="<?php echo strtolower($this -> entity)?>" data-action="deleteCecked" data-content="You should select an item at least." title="Hey you!">Delete Selected</a>	
-	
+
 	<table id="dataTable" class="table table-striped table-bordered" data-entity="<?php echo strtolower($this -> entity) ?>" data-startup="true" data-controller="common" data-action="fetch" data-source="<?php $this -> path_to(sprintf('backstage/%s/list', strtolower($this -> entity))) ?>">
 	    <thead>
 	        <tr>
 				<th style="width:1%;" data-field="id"></th>
 				
 			<?php foreach($this -> fields as $field): ?>
-
-				<th style="width:<?php echo $field['size'] ?>%" data-field="<?php echo $field['name'] ?>"><?php echo $field['label'] ?></th>
+				<?php if($field -> target !== 'table' && $field -> target !== 'both') continue;?>
+				<th style="width:<?php echo $field -> colSize ?>%" data-field="<?php echo $field -> name ?>"><?php echo $field -> label ?></th>
 
 			<?php endforeach; ?>
 
@@ -42,10 +42,14 @@
 	    </tbody>
 	</table>
 
-	<div class="modal fade" id="box" style="display:none"></div>	
+<?php endblock() ?>
 
-	<?php $this -> requestView('Backstage\View\item-new') ?>	
-	<?php $this -> requestView('Backstage\View\item-edit') ?>	
-	<?php $this -> requestView('Backstage\View\item-delete') ?>
+<?php startblock('templates') ?>
+	<?php superBlock() ?>
+
+	<?php $this -> requestView('Backstage\View\Templates\table-row') ?>	
+	<?php $this -> requestView('Backstage\View\Templates\item-new') ?>	
+	<?php $this -> requestView('Backstage\View\Templates\item-edit') ?>	
+	<?php $this -> requestView('Backstage\View\Templates\item-delete') ?>
 
 <?php endblock() ?>

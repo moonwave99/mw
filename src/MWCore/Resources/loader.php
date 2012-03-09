@@ -7,12 +7,13 @@ $package = new MWPackage("MWCore", "MW");
 
 $package -> addConstants(
 	array(
-		
+
 		// Security Constants
 		"MW_LOGIN_PATH"		=> "login",
 		"MW_LOGOUT_PATH"	=> "logout",
 		"MW_LOGIN_ENTRANCE"	=> "backstage",		
 		"MW_LOGIN_ENTITY"	=> "\MWCore\Entity\MWUser",
+		"MW_UPLOAD_PATH"	=> SRC_PATH."../web/tmp/",
 		
 		// Role Constants
 		"IS_LOGGED"			=> 1,

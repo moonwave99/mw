@@ -4,8 +4,7 @@
 	<?php superBlock() ?>
 	
 	<link rel="stylesheet" href="<?php $this -> asset('css/datatable_bootstrap.css') ?>"/>	
-	<link rel="stylesheet" href="<?php $this -> asset('css/jquery.fancybox.css') ?>"/>	
-	<link rel="stylesheet" href="<?php $this -> asset('css/fileuploader.css') ?>"/>		
+	<link rel="stylesheet" href="<?php $this -> asset('css/jquery.fileupload-ui.css') ?>"/>		
 	<link rel="stylesheet" href="<?php $this -> asset('css/chosen.css') ?>"/>	
 	<link rel="stylesheet" href="<?php $this -> asset('css/backstage.css') ?>"/>	
 
@@ -16,14 +15,9 @@
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"/>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
       <a class="brand" href="<?php $this -> path_to('backstage')?>">MW | Backstage.</a>
       <div class="nav-collapse">
-        <p class="navbar-text pull-right">Logged in as <a href="#"><?php echo $this -> user -> username ?></a></p>
+        <p class="navbar-text pull-right">Logged in as <a href="<?php $this -> path_to('backstage/profile')?>"><?php echo $this -> user -> username ?></a></p>
       </div><!--/.nav-collapse -->
     </div>
   </div>
@@ -37,7 +31,9 @@
 		<h1><?php startblock('title') ?>This is the backstage.<?php endblock() ?></h1>	
 <?php startblock('content') ?>
 
-<?php endblock() ?>
+<?php endblock() ?>		
+		<div class="modal fade" id="box" style="display:none"></div>	
+		<div id="alertBox"></div>	
       </div>
     </div><!--/span-->
   </div><!--/row-->
@@ -50,6 +46,13 @@
 
 </div><!--/.fluid-container-->
 
+<?php startblock('templates') ?>
+
+	<?php $this -> requestView('Backstage\View\Templates\alert') ?>
+	<?php $this -> requestView('Backstage\View\Templates\settings-edit') ?>
+
+<?php endblock() ?>
+
 <?php endblock() ?>
 
 <?php startblock('js') ?>
@@ -59,12 +62,15 @@
 	<script src="<?php $this -> asset('js/libs/dataTables.bootstrap.js')?>"></script>
 	<script src="<?php $this -> asset('js/libs/dataTables.date.js')?>"></script>
 	<script src="<?php $this -> asset('js/libs/tiny_mce/jquery.tinymce.js')?>"></script>
-	<script src="<?php $this -> asset('js/libs/fileuploader.js')?>"></script>	
 	<script src="<?php $this -> asset('js/libs/bootstrap/bootstrap-transition.js')?>"></script>	
 	<script src="<?php $this -> asset('js/libs/bootstrap/bootstrap-modal.js')?>"></script>	
 	<script src="<?php $this -> asset('js/libs/bootstrap/bootstrap-tooltip.js')?>"></script>	
-	<script src="<?php $this -> asset('js/libs/bootstrap/bootstrap-popover.js')?>"></script>			
-	<script src="<?php $this -> asset('js/plugins.js')?>"></script>	
+	<script src="<?php $this -> asset('js/libs/bootstrap/bootstrap-popover.js')?>"></script>
+	
+	<script src="<?php $this -> asset('js/libs/jquery.ui.widget.js')?>"></script>	
+	<script src="<?php $this -> asset('js/libs/blueimp/jquery.iframe-transport.js')?>"></script>
+	<script src="<?php $this -> asset('js/libs/blueimp/jquery.fileupload.js')?>"></script>
+	
 	<script src="<?php $this -> asset('js/mylibs/backstage.js')?>"></script>
 
 <?php endblock() ?>

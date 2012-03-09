@@ -5,8 +5,6 @@ namespace MWCore\Kernel;
 class MWContext
 {
 
-	protected $user;
-	
 	protected $session;	
 	
 	public function __construct(&$session)
@@ -14,11 +12,9 @@ class MWContext
 		
 		$this -> session = $session;
 		
-		$this -> user = $this -> session -> get('user');
-		
 	}
-	
-	public function getUser(){ return $this -> user; }
+
+	public function getUser(){ return $this -> session -> get('user'); }
 	
 	public function isUserLogged()
 	{
@@ -30,7 +26,7 @@ class MWContext
 	public function isRoleGranted($role)
 	{
 		
-		return	$this -> user != NULL && $this -> user -> hasRole($role);
+		return	$this -> session -> get('user') != NULL && $this -> session -> get('user') -> hasRole($role);
 		
 	}
 	

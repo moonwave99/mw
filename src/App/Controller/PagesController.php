@@ -21,7 +21,7 @@ class PagesController extends MWController
 	{
 
 		$this -> requestView("App\View\Pages\\".$page, array(
-			'pageTitle'	=> 'MW. | '.ucwords($page),
+			'pageTitle'	=> 'MW | '.ucwords($page),
 			'title'		=> ucwords($page)			
 		));
 

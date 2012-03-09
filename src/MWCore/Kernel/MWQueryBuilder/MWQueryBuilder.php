@@ -60,7 +60,7 @@ class MWQueryBuilder
 
 				foreach($this -> columnList as $column)
 				{
-					$this -> query .= $column['name'].", ";					
+					$this -> query .= '`'.$column['name']."`, ";					
 					$values .= ":".$column['name'].", ";
 				}
 
@@ -76,7 +76,7 @@ class MWQueryBuilder
 				foreach($this -> columnList as $column)
 				{
 
-					$this -> query .= $column['name']." = :". $column['name'].", ";					
+					$this -> query .= '`'.$column['name']."` = :". $column['name'].", ";					
 					
 				}
 

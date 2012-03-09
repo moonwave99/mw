@@ -11,6 +11,8 @@ class EntitySetup extends \Annotation
 	
 	public $pathName;
 	
+	public $icon;
+	
 	public function isRoleGranted($roleName)
 	{
 		
