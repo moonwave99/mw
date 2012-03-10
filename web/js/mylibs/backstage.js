@@ -28,7 +28,6 @@ BACKSTAGE = {
 		
 		templates : {
  			alert			: _.template( $("#alert").html() ),
- 			tablerow		: _.template( $("#table-row").html() ),
 			editsettings	: _.template( $("#settings-edit").html() )
 		},
 		
@@ -51,7 +50,6 @@ BACKSTAGE = {
 			    theme_advanced_statusbar_location : "bottom",
 				width	: "300",
 				height	: "200"
-
 			}
 		},
 		
@@ -96,6 +94,13 @@ BACKSTAGE = {
 			
 			// Bootstrap stuff
 			$('a[data-content]').popover({trigger: 'manual', delay:'1000'});
+			
+			$('#box').on('hide', function(){
+			
+				if(typeof(tinyMCE) !== 'undefined')
+					tinyMCE.activeEditor.remove();
+				
+			});
 			
 		},
 		
@@ -239,9 +244,6 @@ BACKSTAGE = {
 						break;
 					
 					case "OK":
-
-						if(typeof(tinyMCE) !== 'undefined')
-							tinyMCE.activeEditor.remove();
 					
 						$('#box').modal('toggle');
 						

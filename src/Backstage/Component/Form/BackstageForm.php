@@ -42,10 +42,10 @@ class BackstageForm extends MWForm
 		
 	}
 	
-	public function addTextarea($name, $label, $attributes = array())
+	public function addTextarea($text, $name, $label, $attributes = array())
 	{
 		
-		$this -> fields[] = new BackstageTextarea($name, $label, $attributes);		
+		$this -> fields[] = new BackstageTextarea($text, $name, $label, $attributes);		
 		
 	}	
 	

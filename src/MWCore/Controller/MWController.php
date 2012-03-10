@@ -3,6 +3,7 @@
 namespace MWCore\Controller;
 
 use MWCore\Component\MWRequest;
+use MWCore\Component\MWCollection;
 use MWCore\Kernel\MWRouter;
 use MWCore\Kernel\MWLog;
 use MWCore\Kernel\MWClassInspector;

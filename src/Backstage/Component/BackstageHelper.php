@@ -121,7 +121,7 @@ class BackstageHelper
 
 				case "textarea":
 
-					$form -> addTextarea($f -> name, $f -> label, array(
+					$form -> addTextarea('Enter some text here.', $f -> name, $f -> label, array(
 					
 						'id'		=> "_".$f -> name,
 						'rows'		=> 5,

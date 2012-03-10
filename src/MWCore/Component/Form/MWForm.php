@@ -51,10 +51,10 @@ class MWForm
 		
 	}
 	
-	public function addTextarea($name, $label, $attributes = array())
+	public function addTextarea($text, $name, $label, $attributes = array())
 	{
 		
-		$this -> fields[] = new MWTextarea($name, $label, $attributes);		
+		$this -> fields[] = new MWTextarea($text, $name, $label, $attributes);		
 		
 	}	
 	

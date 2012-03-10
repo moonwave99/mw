@@ -42,7 +42,7 @@ class PictureController extends CrudController
 		if($this -> request -> getMethod() != 'POST' || $this -> csrfCheck() !== true)
 			exit;
 
-		$entity = $this -> _bindRequest();
+		$entity = $this -> bindRequest($this -> entityname);
 
 		($this -> request -> id != 0) ? $entity -> update() : $entity -> create();
 		

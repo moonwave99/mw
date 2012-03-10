@@ -10,10 +10,12 @@ class MWTextarea implements MWRenderable
 	protected $name;
 	protected $label;
 	protected $attributes;
+	protected $text;
 	
-	public function __construct($name, $label, $attributes = array())
+	public function __construct($text, $name, $label, $attributes = array())
 	{
 		
+		$this -> text = $text;
 		$this -> name = $name;
 		$this -> label = $label;
 		$this -> attributes = $attributes;
@@ -38,7 +40,7 @@ class MWTextarea implements MWRenderable
 
 		}
 
-		echo '></textarea>';		
+		echo '>' . $this -> text . '</textarea>';		
 		
 	}
 	
