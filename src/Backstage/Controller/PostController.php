@@ -7,10 +7,10 @@ use Backstage\Controller\CrudController;
 class PostController extends CrudController
 {
 
-	public function __construct($session, $context, $request, $settings)
+	public function __construct()
 	{
 		
-		parent::__construct($session, $context, $request, $settings, "App\Entity\Post", "post");
+		parent::__construct("App\Entity\Post", "post");
 
 	}	
 

@@ -8,10 +8,10 @@ use Backstage\Library\UploadHandler;
 class PictureController extends CrudController
 {
 
-	public function __construct($session, $context, $request, $settings)
+	public function __construct()
 	{
 		
-		parent::__construct($session, $context, $request, $settings, "App\Entity\Picture", "Picture");
+		parent::__construct("App\Entity\Picture", "Picture");
 
 	}	
 

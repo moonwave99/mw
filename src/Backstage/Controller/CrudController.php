@@ -2,39 +2,60 @@
 
 namespace Backstage\Controller;
 
-use Backstage\Controller\BackstageController;
 use MWCore\Entity\MWEntity;
 use MWCore\Component\MWCollection;
+use MWCore\Controller\MWController;
 use Backstage\Library\UploadHandler;
 
-class CrudController extends BackstageController
+class CrudController extends MWController
 {
 
 	protected $entityname;
-	protected $entitylabel;	
+	protected $entitylabel;
+	
+	protected $helper;
 
-	public function __construct($session, $context, $request, $settings, $entityname, $entitylabel)
+	public function __construct($entityname, $entitylabel)
 	{
-		
-		parent::__construct($session, $context, $request, $settings);
-		
+
 		$this -> entityname = $entityname;
 		$this -> entitylabel = $entitylabel;
 		
 	}
 	
+	public function setHelper($helper){$this -> helper = $helper;}
+	
+	public function indexAction()
+	{
+
+		$info = $this -> helper -> getEntityInfo($this -> entityname);		
+		$newForm = $this -> helper -> createNewEntityForm($this -> entityname, $this -> entitylabel);			
+		$nav = $this -> helper -> getNavigationEntries($this -> context -> getUser() -> role);
+		
+		$this -> requestView("Backstage\View\item-list", array(
+			'pageTitle'			=> sprintf('MW | Manage %s', $nav['entities']['entries'][$this -> entitylabel] -> label ?: ucwords($this -> entitylabel)."s"),
+			'title'				=> sprintf('Manage %s', $nav['entities']['entries'][$this -> entitylabel] -> label ?: ucwords($this -> entitylabel)."s"),
+			'nav'				=> $nav,			
+			'entity'			=> $this -> entitylabel,
+			'fields'			=> $info,
+			'newForm'			=> $newForm,
+			'editForm'			=> $newForm,
+			'editSettingsForm'	=> $this -> helper -> createEditSettingsForm($this -> settings)			
+		));
+		
+	}	
+
 	public function getAction()
 	{
 
 		$repName = MWEntity::getRepositoryNameFromClass($this -> entityname);
-
 		$rep = new $repName;
 
 		$entity = $rep -> findOneById($this -> request -> id);
 		
 		$tempRow = array();
 		
-		$info = $this -> getEntityInfo($this -> entityname);
+		$info = $this -> helper -> getEntityInfo($this -> entityname);
 
 		foreach($info as $i)
 		{
@@ -80,8 +101,8 @@ class CrudController extends BackstageController
 		$results = array();
 		$tempRow = NULL;
 		$tempString = NULL;
-
-		$info = $this -> getEntityInfo($this -> entityname);
+		
+		$info = $this -> helper -> getEntityInfo($this -> entityname);
 		
 		foreach($rep -> findAll() -> toArray() as $r)
 		{
@@ -158,7 +179,7 @@ class CrudController extends BackstageController
 		if($this -> request -> getMethod() != 'POST' || $this -> csrfCheck() !== true)
 			exit;
 
-		$entity = $this -> _bindRequest();
+		$entity = $this -> bindRequest($this -> entityname);
 
 		($this -> request -> id != 0) ? $entity -> update() : $entity -> create();
 
@@ -199,79 +220,5 @@ class CrudController extends BackstageController
 
 		
 	}	
-	
-	protected function _bindRequest()
-	{
 		
-		if($this -> request -> id != 0){
-
-			$repName = MWEntity::getRepositoryNameFromClass($this -> entityname);
-			$rep = new $repName;
-			$entity = $rep -> findOneById($this -> request -> id);
-
-		}else{
-			
-			$entity = new $this -> entityname;			
-			
-		}
-
-		$fieldInfo = $this -> inspector -> getAnnotationsForEntity($entity);
-
-		$tmpEntity = null;
-		$tmpEntityName = null;
-		$tmpList = null;
-		$tmpAnnotationName = null;
-
-		foreach($fieldInfo as $field)
-		{
-			
-			if($this -> request -> $field['name'] != ''){
-
-				$tmpAnnotationName = array_shift(array_keys($field['annotations']));
-		
-				switch($tmpAnnotationName){
-
-					case "MWCore\Annotation\Field":
-
-						$entity -> $field['name'] = $this -> request -> $field['name'];
-					
-						break;
-
-					case "MWCore\Annotation\OneToOne":
-					case "MWCore\Annotation\ManyToOne":					
-
-						$entity -> $field['name'] -> id = $this -> request -> $field['name'];
-
-						break;
-
-					case "MWCore\Annotation\ManyToMany":		
-
-						$entity -> $field['name'] = new MWCollection();	
-
-						foreach($this -> request -> $field['name'] as $v){
-
-							$tmpEntityName = $field['annotations'][$tmpAnnotationName][0] -> entity;
-							$tmpEntity = new $tmpEntityName;
-							$tmpEntity -> id = $v;
-
-							$entity -> $field['name'] -> add($tmpEntity);
-
-						}
-
-						break;
-
-					default:
-						
-						break;
-
-				}			
-				
-			}		
-			
-		}
-		
-		return $entity;		
-		
-	}
-	
 }

@@ -92,39 +92,32 @@ class MWProvider
 	public static function initLog()
 	{
 
-		
+		self::$log = \MWCore\Kernel\MWLog::getInstance();
 		
 	}
 	
 	public static function initClassInspector()
 	{
 		
+		self::$classInspector = \MWCore\Kernel\MWClassInspector::getInstance();
 		
 	}
 	
-	public static function makeController($controllerName, $params = array())
+	public static function makeController($controllerName)
 	{
 		
 		if(!class_exists($controllerName)) return false;
 
-		$reflect  = new \ReflectionClass($controllerName);
+		$controller = new $controllerName;
+
+		$controller -> setSession(self::$session);
+		$controller -> setContext(self::$context);
+		$controller -> setRequest(self::$request);
+		$controller -> setSettings(self::$settings);
+		$controller -> setInspector(self::$classInspector);
+		$controller -> setLog(self::$log);
 		
-		return $reflect -> newInstanceArgs(array_merge(
-			array(self::$session, self::$context, self::$request, self::$settings), $params
-		));
-		
-	}
-	
-	public static function makeCrudController($controllerName, $params = array())
-	{
-		
-		if(!class_exists($controllerName)) return false;
-		
-		$reflect  = new \ReflectionClass($controllerName);
-		
-		return $reflect -> newInstanceArgs(array_merge(
-			array(self::$session, self::$context, self::$request, self::$settings), $params
-		));
+		return $controller;
 		
 	}
 	

@@ -37,4 +37,5 @@ DEBUG === true && \MWCore\Kernel\MWLog::getInstance() -> setStartTime($startTime
 \MWCore\Kernel\MWProvider::initRouter();
 \MWCore\Kernel\MWProvider::initRequest();
 \MWCore\Kernel\MWProvider::initPackageManager($packages);
+\MWCore\Kernel\MWProvider::initClassInspector();
 \MWCore\Kernel\MWProvider::initLog();

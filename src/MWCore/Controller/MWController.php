@@ -24,18 +24,17 @@ class MWController
 	
 	protected $inspector;
 
-	public function __construct($session, $context, $request, $settings)
+	public function __construct()
 	{
-
-		$this -> session	= $session;
-		$this -> context	= $context;
-		$this -> request	= $request;
-		$this -> settings	= $settings;
-		
-		$this -> inspector	= MWClassInspector::getInstance();
-		$this -> log	 	= MWLog::getInstance();		
-		
+			
 	}
+	
+	public function setSession($session){$this -> session = $session;}
+	public function setContext($context){$this -> context = $context;}
+	public function setRequest($request){$this -> request = $request;}
+	public function setSettings($settings){$this -> settings = $settings;}
+	public function setInspector($inspector){$this -> inspector = $inspector;}
+	public function setLog($log){$this -> log = $log;}
 	
 	public function json($data)
 	{

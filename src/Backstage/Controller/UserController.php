@@ -7,10 +7,10 @@ use Backstage\Controller\CrudController;
 class UserController extends CrudController
 {
 
-	public function __construct($session, $context, $request, $settings)
+	public function __construct()
 	{
 		
-		parent::__construct($session, $context, $request, $settings, "MWCore\Entity\MWUser", "user");
+		parent::__construct("MWCore\Entity\MWUser", "user");
 
 	}	
 

@@ -7,10 +7,10 @@ use Backstage\Controller\CrudController;
 class %2$sController extends CrudController
 {
 
-	public function __construct($session, $context, $request, $settings)
+	public function __construct()
 	{
 		
-		parent::__construct($session, $context, $request, $settings, "%1$s", "%2$s");
+		parent::__construct("%1$s", "%2$s");
 
 	}	
 
