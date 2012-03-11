@@ -20,7 +20,7 @@
 <?php endblock() ?>	
 
 	<script src="<?php $this -> asset('js/libs/modernizr-2.0.6.min.js') ?>"></script>
-	<script>var mwBasepath = "<?php echo BASE_PATH ?>"</script>
+	<script>var mwBasepath = "<?php echo str_replace('index.php?', '', BASE_PATH) ?>"</script>
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico"/>

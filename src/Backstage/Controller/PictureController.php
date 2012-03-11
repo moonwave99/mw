@@ -50,7 +50,8 @@ class PictureController extends CrudController
 
 		return $this -> json(array(
 			'status'	=> 'OK',
-			'message'	=> 'Saved succesfully!'
+			'message'	=> 'Saved succesfully!',
+			'entity'	=>  $this -> encodeSingleEntity($entity, 'table')			
 		));
 
 	}

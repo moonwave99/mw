@@ -16,7 +16,7 @@ class Post extends MWEntity
 
 	/**
 	*	@MWCore\Annotation\Field(name="title", type="string", length="32")
-	*	@Backstage\Annotation\BackstageField(label="Title", colSize="20")
+	*	@Backstage\Annotation\BackstageField(label="Title")
 	*/	
 	protected $title;
 	
@@ -28,19 +28,19 @@ class Post extends MWEntity
 	
 	/**
 	*	@MWCore\Annotation\Field(name="createdAt", type="datetime")
-	*	@Backstage\Annotation\BackstageField(label="Created On", colSize="5", inputMode="date", target="table")	
+	*	@Backstage\Annotation\BackstageField(label="Created On", inputMode="date", target="table")	
 	*/	
 	protected $createdAt;	
 	
 	/**
 	*	@MWCore\Annotation\ManyToMany(entity="App\Entity\Tag", jointable="tag_to_post")
-	*	@Backstage\Annotation\BackstageField(label="Tags", inputMode="select-multiple", target="both", colSize="15")
+	*	@Backstage\Annotation\BackstageField(label="Tags", inputMode="select-multiple", target="both")
 	*/	
 	protected $tagList;		
 	
 	/**
 	*	@MWCore\Annotation\ManyToOne(entity="App\Entity\Category")
-	*	@Backstage\Annotation\BackstageField(label="Category", inputMode="select", target="both", colSize="10")
+	*	@Backstage\Annotation\BackstageField(label="Category", inputMode="select", target="both")
 	*/	
 	protected $category;
 	

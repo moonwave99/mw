@@ -6,7 +6,6 @@ class BackstageField extends \Annotation
 {
 
 	public $label;
-	public $colSize;
 	public $inputMode = "text";
 	public $target = "both";
 	public $source;

@@ -39,8 +39,6 @@ class UserController extends CrudController
 	{
 
 		parent::saveAction();
-		pre($this -> request);
-		pre($this -> log -> flush());
 
 	}
 	

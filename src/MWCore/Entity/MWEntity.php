@@ -103,6 +103,14 @@ class MWEntity implements MWPersistent
 		
 	}
 	
+	public function hydrate()
+	{
+		
+		$rep = self::createRepository($this);
+		return $rep -> findOneById($this -> id);
+		
+	}
+	
 	public function create()
 	{
 

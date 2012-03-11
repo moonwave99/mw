@@ -10,7 +10,7 @@ class TagController extends CrudController
 	public function __construct()
 	{
 		
-		parent::__construct("App\Entity\Category", "category");
+		parent::__construct("App\Entity\Tag", "tag");
 
 	}	
 

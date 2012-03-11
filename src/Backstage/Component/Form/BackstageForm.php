@@ -8,6 +8,7 @@ use Backstage\Component\Form\BackstageField;
 use Backstage\Component\Form\BackstageSelect;
 use Backstage\Component\Form\BackstageTextarea;
 use Backstage\Component\Form\BackstagePicture;
+use Backstage\Component\Form\BackstageRadioBoolean;
 
 class BackstageForm extends MWForm
 {
@@ -56,12 +57,19 @@ class BackstageForm extends MWForm
 		
 	}	
 	
-	public function addPicture($name, $label, $src = NULL)
+	public function addPicture($name, $label, $src = NULL, $attributes = array())
 	{
 	
-		$this -> fields[] = new BackstagePicture($name, $label, $src);
+		$this -> fields[] = new BackstagePicture($name, $label, $src, $attributes);
 		
 	}	
+	
+	public function addRadioBoolean($name, $label, $attributes = array())
+	{
+		
+		$this -> fields[] = new BackstageRadioBoolean($name, $label, $attributes);		
+		
+	}
 
 	public function render()
 	{

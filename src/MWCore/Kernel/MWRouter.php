@@ -91,17 +91,17 @@ class MWRouter
 	protected function getPatternFromURI()
 	{
 
-		$rewrite_rule = explode(' ', REWRITE_RULE);
-		
-		$xpl = str_replace($rewrite_rule[1], '', $_SERVER['SCRIPT_NAME']);
-		
+		$xpl = str_replace(array_pop(explode(' ', REWRITE_RULE)), '', $_SERVER['SCRIPT_NAME']);
+
 		$route = explode('?', str_replace(
 			$xpl == "/" ? '' : $xpl,
 			'',
 			$_SERVER['REQUEST_URI']
 		));
 
-		return $route[0];
+		return strpos($_SERVER['REQUEST_URI'], 'index.php') !== false ? 
+			array_shift(explode('&', array_pop($route))) :
+			array_shift($route);
 		
 	}
 	

@@ -96,8 +96,8 @@ BACKSTAGE = {
 			$('a[data-content]').popover({trigger: 'manual', delay:'1000'});
 			
 			$('#box').on('hide', function(){
-			
-				if(typeof(tinyMCE) !== 'undefined')
+
+				if(typeof(tinyMCE) !== 'undefined' && typeof(tinyMCE.activeEditor) !== 'undefined')
 					tinyMCE.activeEditor.remove();
 				
 			});
@@ -107,35 +107,16 @@ BACKSTAGE = {
 		fetch : function(element){
 			
 			$.post($(element).attr('data-source'),{},function(data){
-			
+
 				var tbody = $(element).find('tbody');
-				var tr = null;
-			
+				var template = _.template($('#item-table').html());
+
 				$.each(data,function(i,row){
-				
-					tr = $('<tr></tr>');
-					tr.append($('<td></td>').html($('<input type="checkbox"/>').attr('name', 'list-single')));
 					
-					$.each($(element).find('th[data-field]'), function(){
-						
-						$(this).attr('data-field') != "id" && tr.append($('<td></td>').html(row[$(this).attr('data-field')]));
-						
-					});
-					
-					tr.append($('<td></td>').append(
-						$('<a></a>')
-							.html($('<i></i>').addClass('icon-pencil').addClass('icon-white'))						
-							.attr('href', '#').attr('data-controller', 'common').attr('data-action', 'edit')
-							.addClass('btn').addClass('btn-mini').addClass('btn-inverse')
-					).append(
-						$('<a></a>')
-							.html($('<i></i>').addClass('icon-trash').addClass('icon-white'))						
-							.attr('href', '#').attr('data-controller', 'common').attr('data-action', 'delete')
-							.addClass('btn').addClass('btn-mini').addClass('btn-inverse')
-					).addClass('btn-group'))
-					 .attr('data-id', row.id);
-					
-					tbody.append(tr);
+					tbody.append(template({
+						header	: $(element).find('th[data-field]').map(function(){ return $(this).attr('data-field') != 'id' ? $(this).attr('data-field') : null}),
+						row		: row
+					}));					
 					
 				});
 				
@@ -144,8 +125,13 @@ BACKSTAGE = {
 					"sPaginationType": "bootstrap",
 					"oLanguage": {
 						"sLengthMenu": "Show _MENU_ records per page."
-					}
-				} );			
+					},
+					"aoColumnDefs": [ 
+				      { "sWidth": "10px", "aTargets": [ 0 ] },
+				      { "sWidth": "60px", "aTargets": [ $(element).find('th[data-field]').length ] },
+					  { "bSortable": false, "aTargets": [ 0, $(element).find('th[data-field]').length ] }				
+				    ]
+				});			
 				
 			});
 			
@@ -170,14 +156,14 @@ BACKSTAGE = {
 		edit : function(button, delegate){
 
 			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
-			var id = $(button).parent().parent().attr('data-id');
+			var id = $(button).closest('tr').find('[data-id]').attr('data-id');
 			var template = _.template( $("#item-edit").html() );
 			
 			$.post(BACKSTAGE.common.settings.basePath + 'backstage/' + entityName + "/get", {id : id}, function(data){
 
 				$('#box').html(template());
 				$('#box [name="id"]').val(id);
-				
+
 				_.each(data.entity, function(value, key){
 
 					switch(typeof value){
@@ -191,20 +177,16 @@ BACKSTAGE = {
 						case "object":
 						
 							if(value == null) break;
-						
-							if(value.length > 0){
+				
+							var multiple = '';
+				
+							_.each(value, function(id){
 
-								_.each(value, function(v){
+								multiple = key.substring(key.length-4,key.length) == 'List' ? '[]' : '';
 
-									$('#box form [name="'+key+'[]"] option[value="'+v.id+'"]').attr('selected', 'selected');
-									
-								});
-
-							}else{
-
-								$('#box form [name="'+key+'"]').val(value.id);
+								$('#box form [name="'+key+multiple+'"] option[value="'+id+'"]').attr('selected', 'selected');
 								
-							}
+							});
 						
 							break;
 						
@@ -241,9 +223,39 @@ BACKSTAGE = {
 					
 					case "Error":
 					
+						$('.btn-primary', form).addClass('btn-danger').attr('value', data.message);					
+					
 						break;
 					
 					case "OK":
+			
+						var row = $('#dataTable [data-id="'+data.entity.id+'"]').closest('tr');
+						
+						if(row.length > 0){
+						
+							var i = 0, pos = 0;
+						
+							for(p in data.entity)
+							{
+								i++;
+								if(p == 'id') continue;
+								
+								BACKSTAGE.common.dataTable.fnUpdate(data.entity[p], row[0], i-1);
+								
+							}						
+							
+						}else{
+							
+							var template = _.template($('#item-table').html());
+
+							BACKSTAGE.common.dataTable.dataTable().fnAddData(
+								$(template({
+									header	: $('#dataTable th[data-field]').map(function(){ return $(this).attr('data-field') != 'id' ? $(this).attr('data-field') : null}),
+									row		: data.entity
+								})).find('td').map(function(){return $(this).html()})
+							);
+							
+						}
 					
 						$('#box').modal('toggle');
 						
@@ -267,7 +279,8 @@ BACKSTAGE = {
 			BACKSTAGE.common.deleteList = [];			
 			
 			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
-			var id = $(button).parent().parent().attr('data-id');
+			var id = $(button).closest('tr').find('[data-id]').attr('data-id');
+			
 			var template = _.template( $("#item-delete").html() );
 			
 			BACKSTAGE.common.deleteList.push(id);
@@ -287,7 +300,7 @@ BACKSTAGE = {
 			BACKSTAGE.common.deleteList = [];			
 			
 			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
-			var entities = $('input[name="list-single"]:checked');
+			var entities = $('#dataTable input[name="list-single[]"]:checked');
 			var template = _.template( $("#item-delete").html() );		
 			
 			if(entities.length == 0){
@@ -297,7 +310,7 @@ BACKSTAGE = {
 			}else{
 				
 				entities.each(function(){					
-					BACKSTAGE.common.deleteList.push($(this).parent().parent().attr('data-id'));
+					BACKSTAGE.common.deleteList.push($(this).attr('data-id'));
 				});				
 				
 				$('#box').html(template({
@@ -328,7 +341,7 @@ BACKSTAGE = {
 						
 						$.each(BACKSTAGE.common.deleteList, function(i, v){
 
-							BACKSTAGE.common.dataTable.find('tr[data-id="' + v + '"]').fadeOut("slow", function () {
+							BACKSTAGE.common.dataTable.find('[data-id="' + v + '"]').closest('tr').fadeOut("slow", function () {
 								var pos = BACKSTAGE.common.dataTable.fnGetPosition(this);
 								BACKSTAGE.common.dataTable.fnDeleteRow(pos);
 							});						
@@ -365,17 +378,6 @@ BACKSTAGE = {
 			$('#box select').chosen();
 			$('#box [data-rich]').tinymce(BACKSTAGE.common.settings.tinymce);
 			BACKSTAGE.common.uploadSetup($('#box input[type="file"]'));
-			
-		},
-		
-		contains : function(list, id){
-			
-			for(var i = 0; i <list.length; i++){
-				if( list[i]['id'] == id)
-					return true;
-			}
-			
-			return false;
 			
 		}
 		
@@ -424,197 +426,7 @@ BACKSTAGE = {
 			
 		}
 		
-	},
-
-	release : {
-		
-		init : function(element){
-			
-			BACKSTAGE.common.datatable = $(element).dataTable({
-				"aaSorting": [[ 5, "desc" ]],
-				"bJQueryUI": true,
-				"sPaginationType": "full_numbers",
-				"sAjaxSource": $(element).attr('data-source'),
-				"fnDrawCallback": function (){
-					
-
-					
-				}
-			});			
-			
-		},
-		
-		new : function(element){
-			BACKSTAGE.common.new(element, this.tracklistSetup); 
-		},
-		
-		edit : function(element){
-			BACKSTAGE.common.edit(element, this.tracklistSetup);			
-		},
-		
-		save : function(form){
-
-			var trackList = [];
-			
-			$('#release-tracklist li').each(function(){
-			
-				trackList.push(parseInt($(this).attr('data-track-id')));
-				
-			});
-
-			$.post(
-				$(form).attr('action'), 
-				{
-					id				: $(form.id).val(),
-					trackList		: trackList,					
-					title			: $(form.title).val(),														
-					catalog			: $(form.catalog).val(),	
-					url				: $(form.url).val(),	
-					info			: tinyMCE.activeEditor.getContent(),					
-					enabled			: $(form.enabled).val(),													
-					token			: $('meta[name="csrf"]').attr("content")
-				},
-				function(data){
-
-					if(data.status == 'OK'){
-						
-						$.fancybox.close();
-						
-						BACKSTAGE.common.datatable.fnReloadAjax();
-						
-					}
-				
-				}
-			);
-			
-		},
-		
-		tracklistSetup: function(response){
-			
-			BACKSTAGE.release.tracks = [];
-			var suggestions = [];
-			
-			_.each(response.tracks, function(t){
-				
-				suggestions.push({
-					value : parseInt(t.id),
-					label : t.authorList[0].stageName+" - "+t.title
-				});
-				
-				t.chosen = false;
-				
-				BACKSTAGE.release.tracks[parseInt(t.id)] = t;
-				
-			});
-			
-			$('#release-tracklist li').each(function(){
-			
-				BACKSTAGE.release.tracks[parseInt($(this).attr('data-track-id'))].chosen = true;
-				
-			});
-			
-			$('#track-suggest').autocomplete({
-				
-				source: suggestions,
-	
-				select: function(event, ui) {
-
-					if(BACKSTAGE.release.tracks[ui.item.value].chosen == true){
-						
-						alert('Track already present in current release!');
-						
-					}else{
-					
-						var row = _.template( $("#release-single-track").html() );
-
-						$('#release-tracklist').append(row({
-							track : BACKSTAGE.release.tracks[ui.item.value]
-						}));
-
-						BACKSTAGE.release.tracks[ui.item.value].chosen = true;					
-						
-					}
-					
-					$('#track-suggest').val('');
-					
-					$('#release-tracklist li').length > 0 && $('.notracks').hide();
-					
-					return false;
-
-				}
-
-			});
-			
-			$('#release-tracklist').sortable({});
-			
-			$('#release-tracklist li').length > 0 && $('.notracks').hide();
-			
-		},
-		
-		removeTrack: function(element){
-			
-			BACKSTAGE.release.tracks[parseInt($(element).parent().attr('data-track-id'))].chosen = false;
-			$(element).parent().remove();
-			$('#release-tracklist li').length == 0 && $('.notracks').show();
-			
-		}
-		
-	},
-	
-	partner : {
-
-		init : function(element){
-			
-			BACKSTAGE.common.datatable = $(element).dataTable({
-				"aaSorting": [[ 2, "asc" ]],
-				"bJQueryUI": true,
-				"sPaginationType": "full_numbers",
-				"sAjaxSource": $(element).attr('data-source'),
-				"fnDrawCallback": function (){
-					
-
-					
-				}
-			});			
-			
-		},
-		
-		new : function(element){
-			BACKSTAGE.common.new(element);
-		},
-		
-		edit : function(element){
-			BACKSTAGE.common.edit(element);			
-		},
-		
-		save : function(form){
-			
-			$.post(
-				$(form).attr('action'), 
-				{
-					id			: $(form.id).val(),
-					name		: $(form.name).val(),
-					url			: $(form.url).val(),													
-					token		: $('meta[name="csrf"]').attr("content")
-				},
-				function(data){
-
-					if(data.status == 'OK'){
-						
-						$.fancybox.close();
-						
-						BACKSTAGE.common.datatable.fnReloadAjax();
-						
-					}
-				
-				}
-			);
-			
-		}		
-		
-	},
-	
-	
+	}
 	
 };
 

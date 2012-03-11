@@ -16,7 +16,7 @@ class Tag extends MWEntity
 	
 	/**
 	*	@MWCore\Annotation\Field(name="label", type="string", length="16")
-	*	@Backstage\Annotation\BackstageField(label="Name", colSize="20")
+	*	@Backstage\Annotation\BackstageField(label="Name")
 	*/	
 	protected $label;
 	

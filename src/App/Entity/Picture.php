@@ -15,20 +15,20 @@ class Picture extends MWEntity
 {
 	
 	/**
-	*	@MWCore\Annotation\Field(name="src", type="string", length="64")
-	*	@Backstage\Annotation\BackstageField(label="Picture", colSize = "10", inputMode="picture", target="both")	
+	*	@MWCore\Annotation\Field(name="src", type="string", length="64", default="")
+	*	@Backstage\Annotation\BackstageField(label="Picture", inputMode="picture", target="both")	
 	*/	
 	protected $src;
 	
 	/**
 	*	@MWCore\Annotation\Field(name="label", type="string", length="16")
-	*	@Backstage\Annotation\BackstageField(label="Name", colSize="20")
+	*	@Backstage\Annotation\BackstageField(label="Name")
 	*/	
 	protected $label;
 	
 	/**
 	*	@MWCore\Annotation\Field(name="description", type="text", default="")
-	*	@Backstage\Annotation\BackstageField(label="Description", colSize="20", inputMode="textarea", target="both")
+	*	@Backstage\Annotation\BackstageField(label="Description", inputMode="textarea", target="both")
 	*/	
 	protected $description;	
 	

@@ -52,44 +52,10 @@ class CrudController extends MWController
 		$rep = new $repName;
 
 		$entity = $rep -> findOneById($this -> request -> id);
+	
+		$encodedEntity = $this -> encodeSingleEntity($entity, 'form');
 		
-		$tempRow = array();
-		
-		$info = $this -> helper -> getEntityInfo($this -> entityname);
-
-		foreach($info as $i)
-		{
-			
-			if($i -> target != 'both' && $i -> target != 'form') continue;
-
-			switch($i -> inputMode)
-			{
-				
-				case "select-multiple":
-					$tempRow[$i -> name] = $entity -> {$i -> name} -> toArray();					
-					break;
-					
-				case "select":
-					$tempRow[$i -> name] = $entity -> {$i -> name};
-					break;
-					
-				case "date":
-					$tempRow[$i -> name] = $entity -> {$i -> name} -> format('M d Y');
-					break;
-					
-				case "checkbox":
-					$tempRow[$i -> name] = $entity -> {$i -> name} == 1 ? "Yes" : "No";
-					break;
-					
-				default:
-					$tempRow[$i -> name] = html_entity_decode($entity -> {$i -> name}, ENT_QUOTES, 'UTF-8');
-					break;
-			
-			}
-
-		}		
-		
-		$this -> json(array('entity' => $entity === false ? new $this -> entityname : $tempRow));
+		$this -> json(array('entity' => $entity === false ? new $this -> entityname : $encodedEntity));
 		
 	}
 	
@@ -99,73 +65,11 @@ class CrudController extends MWController
 		$rep = MWEntity::createRepository($this -> entityname);
 
 		$results = array();
-		$tempRow = NULL;
-		$tempString = NULL;
-		
-		$info = $this -> helper -> getEntityInfo($this -> entityname);
 		
 		foreach($rep -> findAll() -> toArray() as $r)
 		{
 			
-			$tempRow = array('id' => $r -> id);
-			
-			foreach($info as $i)
-			{
-				
-				if($i -> target != 'both' && $i -> target != 'table') continue;
-
-				switch($i -> inputMode)
-				{
-					
-					case "picture":
-						
-						$tempRow[$i -> name] = sprintf(
-							'<img src="%s" alt=""/>',
-							BASE_PATH."thumbnails/" . $r -> {$i -> name}
-						);
-						
-						break;
-					
-					case "select-multiple":
-					
-						$tempString = "";
-						
-						foreach($r -> {$i -> name} -> toArray() as $e)
-						{
-							
-							$tempString .= $e.", ";
-							
-						}
-						
-						$tempRow[$i -> name] = substr($tempString, 0, -2);
-						
-						break;
-						
-					case "select":
-						$tempRow[$i -> name] = $r -> {$i -> name} -> __toString();
-						break;
-						
-					case "date":
-						$tempRow[$i -> name] = $r -> {$i -> name} -> format('M d Y');
-						break;
-						
-					case "checkbox":
-						$tempRow[$i -> name] = $r -> {$i -> name} == 1 ? "Yes" : "No";
-						break;
-						
-					case "radio-boolean":
-						$tempRow[$i -> name] = $r -> {$i -> name} == 1 ? "Yes" : "No";
-						break;						
-						
-					default:
-						$tempRow[$i -> name] = $r -> {$i -> name};
-						break;
-					
-				}
-
-			}
-			
-			$results[] = $tempRow;
+			$results[] = $this -> encodeSingleEntity($r, 'table');
 			
 		}
 		
@@ -185,7 +89,8 @@ class CrudController extends MWController
 
 		return $this -> json(array(
 			'status'	=> 'OK',
-			'message'	=> 'Saved succesfully!'
+			'message'	=> 'Saved succesfully!',
+			'entity'	=>  $this -> encodeSingleEntity($entity -> hydrate(), 'table')
 		));
 
 	}
@@ -218,6 +123,95 @@ class CrudController extends MWController
 	{
 		
 
+		
+	}
+	
+	protected function encodeSingleEntity($entity, $mode)
+	{
+
+		$info = $this -> helper -> getEntityInfo(get_class($entity));		
+		$encodedEntity = array();
+		$encodedEntity = array('id' => $entity -> id); 		
+		
+		$tempString = "";
+		$tempArray = NULL;
+		$tempObject = NULL;
+
+		foreach($info as $i)
+		{
+			
+			if($i -> target != 'both' && $i -> target != $mode) continue;
+
+			switch($i -> inputMode)
+			{
+				
+				case "select-multiple":
+				
+					if($mode == 'table'){
+
+						$tempString = "";
+
+						foreach($entity -> {$i -> name} -> toArray() as $key => $e)
+						{
+
+							$tempString .= $e -> __toString().", ";
+
+						}
+
+						$encodedEntity[$i -> name] = substr($tempString, 0, -2);
+						
+					}else{
+						
+						$tempArray = array();
+
+						foreach($entity -> {$i -> name} -> toArray() as $key => $e)
+						{
+
+							$tempArray[] = $e -> id;
+
+						}
+
+						$encodedEntity[$i -> name] = $tempArray;						
+						
+					}
+
+					break;
+					
+				case "select":
+				
+					if($mode == 'table'){
+						
+						$encodedEntity[$i -> name] = $entity -> {$i -> name} -> __toString();
+						
+					}else{
+						
+						$encodedEntity[$i -> name]  = array($entity -> {$i -> name} -> id);
+						
+					}
+
+					break;
+					
+				case "date":
+					$encodedEntity[$i -> name] = $entity -> {$i -> name} -> format('M d Y');
+					break;
+					
+				case "checkbox":
+					$encodedEntity[$i -> name] = $entity -> {$i -> name} == 1 ? "Yes" : "No";
+					break;
+					
+				case "radio-boolean":
+					$encodedEntity[$i -> name] = $entity -> {$i -> name} == 1 ? "Yes" : "No";
+					break;						
+					
+				default:
+					$encodedEntity[$i -> name] = html_entity_decode($entity -> {$i -> name}, ENT_QUOTES, 'UTF-8');
+					break;
+			
+			}
+
+		}
+
+		return $encodedEntity;	
 		
 	}	
 		

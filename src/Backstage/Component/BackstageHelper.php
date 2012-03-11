@@ -10,16 +10,22 @@ class BackstageHelper
 	
 	public $inspector;
 	
+	protected $infoCache;
+	
 	public function __construct($inspector)
 	{
 		
 		$this -> inspector = $inspector;
+		$this -> infoCache = array();
 
 	}	
 	
 	public function getEntityInfo($entity)
 	{
-
+		
+		if($this -> infoCache[$entity] !== NULL)
+			return $this -> infoCache[$entity];
+		
 		$info = array();
 
 		foreach($this -> inspector -> getAnnotationsForEntity($entity) as $field)
@@ -47,6 +53,8 @@ class BackstageHelper
 			$info[] = $singleField;
 			
 		}
+		
+		$this -> infoCache[$entity] = $info;
 		
 		return $info;
 		
@@ -109,19 +117,21 @@ class BackstageHelper
 				
 				case "picture":
 
-					$form -> addPicture($f -> name, $f -> label, NULL);
+					$form -> addPicture($f -> name, $f -> label, NULL, array(
+						'required'	=> $f -> default === NULL ? "required" : NULL,						
+					));
 				
 					break;
 					
 				case "radio-boolean":
 				
-					
+					$form -> addRadioBoolean($f -> name, $f -> label, NULL);					
 				
 					break;
 
 				case "textarea":
 
-					$form -> addTextarea('Enter some text here.', $f -> name, $f -> label, array(
+					$form -> addTextarea(sprintf('Enter %s Here', $f -> label), $f -> name, $f -> label, array(
 					
 						'id'		=> "_".$f -> name,
 						'rows'		=> 5,
@@ -156,7 +166,7 @@ class BackstageHelper
 						'id'		=> "_".$f -> name,
 						'required'	=> $f -> default === NULL ? "required" : NULL,
 						'multiple'	=> true,
-						'class'		=> 'span4',								
+						'class'		=> 'span4',							
 
 					));
 
@@ -169,10 +179,11 @@ class BackstageHelper
 				
 					$form -> addField($f -> inputMode, $f -> name, $f -> label, array(
 						
-						'id'		=> "_".$f -> name,
-						'required'	=> $f -> default === NULL ? "required" : NULL,
-						'maxlength'	=> $f -> length,
-						'class'		=> 'span4',						
+						'id'			=> "_".$f -> name,
+						'required'		=> $f -> default === NULL ? "required" : NULL,
+						'maxlength'		=> $f -> length,
+						'class'			=> 'span4',
+						'placeholder'	=> sprintf('Enter %s Here', $f -> label)
 						
 					));
 				
