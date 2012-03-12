@@ -16,7 +16,7 @@ class MWUser extends MWEntity
 	
 	/**
 	*	@MWCore\Annotation\Field(name="username", type="string", length="10")
-	*	@Backstage\Annotation\BackstageField(label="Username", colSize="10")
+	*	@Backstage\Annotation\BackstageField(label="Username")
 	*/	
 	protected $username;
 	
@@ -32,19 +32,19 @@ class MWUser extends MWEntity
 	
 	/**
 	*	@MWCore\Annotation\Field(name="email", type="string", length="64", default="")
-	*	@Backstage\Annotation\BackstageField(label="E-mail", colSize="5", inputMode="email")	
+	*	@Backstage\Annotation\BackstageField(label="E-mail", inputMode="email")	
 	*/	
 	protected $email;
 	
 	/**
 	*	@MWCore\Annotation\Field(name="enabled", type="int", length="1", default="0")
-	*	@Backstage\Annotation\BackstageField(label="Enabled", colSize="2", inputMode="radio-boolean")	
+	*	@Backstage\Annotation\BackstageField(label="Enabled", inputMode="radio-boolean")	
 	*/	
 	protected $enabled;
 	
 	/**
 	*	@MWCore\Annotation\Field(name="createdAt", type="datetime")
-	*	@Backstage\Annotation\BackstageField(label="Created On", colSize="5", inputMode="date", target="table")	
+	*	@Backstage\Annotation\BackstageField(label="Created On", inputMode="date", target="table")	
 	*/	
 	protected $createdAt;	
 	

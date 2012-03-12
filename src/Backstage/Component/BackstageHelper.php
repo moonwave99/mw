@@ -151,7 +151,7 @@ class BackstageHelper
 					$form -> addSelect($f -> name, $f -> label, $options, array(
 					
 						'id'				=> "_".$f -> name,
-						'required'			=> $f -> default === NULL ? "required" : NULL,
+						'required'			=> $f -> allownull === false ? "required" : NULL,
 						'data-placeholder'	=> 'Choose From List',
 						'class'				=> 'span4',
 						
@@ -164,7 +164,7 @@ class BackstageHelper
 					$form -> addSelect($f -> name, $f -> label, $this -> getOptionList($f -> entity), array(
 
 						'id'		=> "_".$f -> name,
-						'required'	=> $f -> default === NULL ? "required" : NULL,
+						'required'	=> $f -> allownull === false ? "required" : NULL,
 						'multiple'	=> true,
 						'class'		=> 'span4',							
 
@@ -228,7 +228,8 @@ class BackstageHelper
 					
 						'id'	=> "_".$s -> key,
 						'value'	=> $s -> value,
-						'required' => 'required'
+						'required' => 'required',
+						'class'		=> 'span4'
 					
 					));				
 				

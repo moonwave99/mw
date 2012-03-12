@@ -53,7 +53,7 @@ class BackstageForm extends MWForm
 	public function addSelect($name, $label, $options, $attributes = array())
 	{
 		
-		$this -> fields[] = new BackstageSelect($name, $label, $options, $attributes);	
+		$this -> fields[] = new BackstageSelect($name, $label, $options, $attributes);
 		
 	}	
 	

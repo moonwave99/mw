@@ -158,7 +158,7 @@ class CrudController extends MWController
 
 						}
 
-						$encodedEntity[$i -> name] = substr($tempString, 0, -2);
+						$encodedEntity[$i -> name] = strlen($tempString) > 0 ? substr($tempString, 0, -2) : 'None';
 						
 					}else{
 						
@@ -181,7 +181,7 @@ class CrudController extends MWController
 				
 					if($mode == 'table'){
 						
-						$encodedEntity[$i -> name] = $entity -> {$i -> name} -> __toString();
+						$encodedEntity[$i -> name] = $entity -> {$i -> name} !== NULL ? $entity -> {$i -> name} -> __toString() : 'None';
 						
 					}else{
 						

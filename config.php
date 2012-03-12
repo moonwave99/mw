@@ -6,10 +6,11 @@ define('DEBUG', true);
 define("SESSION_NAME", "mw");
 $packages = array("MWCore", "Backstage", "App");
 date_default_timezone_set("Europe/Berlin");
+error_reporting(-1);
 
 // Paths and Site Config
 define("DOMAIN",		"http://localhost/");	
-define("BASE_PATH",		DOMAIN."_projects/mw/");
+define("BASE_PATH",		DOMAIN."_projects/mw/index.php?");
 define("ASSET_PATH",	DOMAIN."_projects/mw/web/");
 
 // Server Config

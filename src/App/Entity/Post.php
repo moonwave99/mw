@@ -15,7 +15,7 @@ class Post extends MWEntity
 {
 
 	/**
-	*	@MWCore\Annotation\Field(name="title", type="string", length="32")
+	*	@MWCore\Annotation\Field(name="title", type="string", length=32)
 	*	@Backstage\Annotation\BackstageField(label="Title")
 	*/	
 	protected $title;
@@ -33,7 +33,7 @@ class Post extends MWEntity
 	protected $createdAt;	
 	
 	/**
-	*	@MWCore\Annotation\ManyToMany(entity="App\Entity\Tag", jointable="tag_to_post")
+	*	@MWCore\Annotation\ManyToMany(entity="App\Entity\Tag", jointable="tag_to_post", allownull=true)
 	*	@Backstage\Annotation\BackstageField(label="Tags", inputMode="select-multiple", target="both")
 	*/	
 	protected $tagList;		
