@@ -17,7 +17,7 @@
     <div class="container-fluid">
       <a class="brand" href="<?php $this -> path_to('backstage')?>">MW | Backstage.</a>
       <div class="nav-collapse">
-        <p class="navbar-text pull-right">Logged in as <a href="<?php $this -> path_to('backstage/profile')?>"><?php echo $this -> user -> username ?></a></p>
+        <p class="navbar-text pull-right">Logged in as <a href="<?php $this -> path_to('backstage/profile')?>"><?php echo $this -> user -> username ?></a> | <a href="<?php $this -> path_to('logout') ?>"><i class="icon-white icon-lock"></i> Logout</a></p>
       </div><!--/.nav-collapse -->
     </div>
   </div>
