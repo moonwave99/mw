@@ -42,7 +42,8 @@ BACKSTAGE = {
 				// General options
 			    mode : "textareas",
 			    theme : "advanced",
-			    theme_advanced_buttons1 : "mylistbox,mysplitbutton,bold,italic,underline,separator,strikethrough,bullist,numlist,undo,redo,link,unlink",
+				plugins : "fullscreen",
+			    theme_advanced_buttons1 : "mylistbox,mysplitbutton,bold,italic,underline,separator,bullist,numlist,undo,redo,link,unlink,image,code,fullscreen",
 			    theme_advanced_buttons2 : "",
 			    theme_advanced_buttons3 : "",
 			    theme_advanced_toolbar_location : "top",
