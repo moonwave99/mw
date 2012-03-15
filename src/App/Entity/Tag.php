@@ -9,7 +9,7 @@ use MWCore\Component\MWCollection;
 /** 
 *	@MWCore\Annotation\Table("tag")
 *	@MWCore\Annotation\Repository("\App\Repository\TagRepository")
-*	@Backstage\Annotation\EntitySetup(label="Tags", pathName="tag", granted="ROLE_ADMIN, ROLE_USER", icon="tags")
+*	@Backstage\Annotation\EntitySetup(label="Tags", pathName="tag", granted="ROLE_ADMIN,'ROLE_USER", icon="tags")
 */	
 class Tag extends MWEntity
 {

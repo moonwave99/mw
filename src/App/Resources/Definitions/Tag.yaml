@@ -1,0 +1,33 @@
+# Configuration file for App\Entity\Tag.
+
+# Core Settings
+MWCore:
+    EntityName: Tag
+    TableName: tag
+    RepositoryName: TagRepository
+
+# Backstage Settings
+Backstage:
+    label:      Tags
+    pathName:   tag   
+    granted:    'ROLE_ADMIN, ROLE_USER'
+    icon:       tags
+    
+# Fields List
+Fields:
+        
+    label:
+            type:   Field
+            data:   string
+            length: 16
+            Backstage:
+                label: Name
+            
+    description:
+            type:       Field
+            data:       text
+            default:    ""
+            Backstage:
+                label:      Name 
+                inputMode:  textarea   
+                target:     form

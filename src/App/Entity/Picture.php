@@ -9,7 +9,7 @@ use MWCore\Component\MWCollection;
 /** 
 *	@MWCore\Annotation\Table("picture")
 *	@MWCore\Annotation\Repository("\App\Repository\PictureRepository")
-*	@Backstage\Annotation\EntitySetup(label="Pictures", pathName="picture", granted="ROLE_ADMIN, ROLE_USER", icon="picture")
+*	@Backstage\Annotation\EntitySetup(label="Pictures", pathName="picture", granted="ROLE_ADMIN, ROLE_USER", icon="picture", viewMode='gallery')
 */	
 class Picture extends MWEntity
 {
