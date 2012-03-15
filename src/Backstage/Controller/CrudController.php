@@ -32,7 +32,8 @@ class CrudController extends MWController
 		$newForm = $this -> helper -> createNewEntityForm($this -> entityname, $this -> entitylabel);			
 		$nav = $this -> helper -> getNavigationEntries($this -> context -> getUser() -> role);
 		
-		$this -> requestView("Backstage\View\item-list", array(
+		$this -> requestView(sprintf("Backstage\View\item-%s", $this -> helper -> getEntitySetupInfo($this -> entityname) -> viewMode),
+		array(
 			'pageTitle'			=> sprintf('MW | Manage %s', $nav['entities']['entries'][$this -> entitylabel] -> label ?: ucwords($this -> entitylabel)."s"),
 			'title'				=> sprintf('Manage %s', $nav['entities']['entries'][$this -> entitylabel] -> label ?: ucwords($this -> entitylabel)."s"),
 			'nav'				=> $nav,			
@@ -50,12 +51,15 @@ class CrudController extends MWController
 
 		$repName = MWEntity::getRepositoryNameFromClass($this -> entityname);
 		$rep = new $repName;
-
-		$entity = $rep -> findOneById($this -> request -> id);
-	
-		$encodedEntity = $this -> encodeSingleEntity($entity, 'form');
 		
-		$this -> json(array('entity' => $entity === false ? new $this -> entityname : $encodedEntity));
+		$entity = $rep -> findOneById($this -> request -> id);
+		
+		$this -> json(array(
+			'entity' => $entity === false 
+				? new $this -> entityname
+				: $this -> encodeSingleEntity($entity, 'form')
+			)
+		);
 		
 	}
 	

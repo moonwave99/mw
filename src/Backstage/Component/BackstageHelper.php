@@ -55,10 +55,17 @@ class BackstageHelper
 		}
 		
 		$this -> infoCache[$entity] = $info;
-		
+
 		return $info;
 		
-	}	
+	}
+	
+	public function getEntitySetupInfo($entityName)
+	{
+		
+		return $this -> inspector -> getSingleAnnotationForEntity($entityName, 'Backstage\Annotation\EntitySetup');
+		
+	}
 	
 	public function getNavigationEntries($roleName)
 	{
@@ -72,10 +79,8 @@ class BackstageHelper
 		
 		foreach(glob(SRC_PATH.'App/Entity/*.php') as $e)
 		{
-			
-			$note = $this -> inspector -> getSingleAnnotationForEntity(
-				str_replace('/' , '\\', substr($e, strlen(SRC_PATH), -4)),
-				'Backstage\Annotation\EntitySetup'
+			$note = $this -> getEntitySetupInfo(
+				str_replace('/' , '\\', substr($e, strlen(SRC_PATH), -4))
 			);
 			
 			$note -> isRoleGranted($roleName) === true && $entries['entities']['entries'][ $note -> pathName] = $note;

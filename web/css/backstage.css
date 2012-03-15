@@ -11,6 +11,10 @@ body {
 	margin:0;
 }
 
+#actions-common{
+	text-align:right;
+}
+
 table#dataTable{
 	margin:10px 0px 15px 0px!important;
 }
@@ -31,7 +35,23 @@ table#dataTable tbody tr td:first-child{
 	overflow:visible!important;
 }
 
+#alertBox{
+	margin-top:20px;
+}
+
 span.thumbnail{
 	width:160px;
 }
 
+#item-gallery{
+	margin-top:20px;
+}
+
+#item-gallery .singlePic{
+	text-align:center;
+}
+
+#item-gallery .singlePic img{
+	height:130px;
+	margin-bottom:10px;
+}

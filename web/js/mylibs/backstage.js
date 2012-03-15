@@ -23,8 +23,10 @@ BACKSTAGE = {
 	
 	common : {
 		
+		dataContainer : null,
 		dataTable : null,
 		deleteList : null,
+		viewMode : null,
 		
 		templates : {
  			alert			: _.template( $("#alert").html() ),
@@ -94,7 +96,7 @@ BACKSTAGE = {
 			});	
 			
 			// Bootstrap stuff
-			$('a[data-content]').popover({trigger: 'manual', delay:'1000'});
+			$('a[data-content]').popover({trigger: 'manual', delay:'1000', placement: 'left'});
 			
 			$('#box').on('hide', function(){
 
@@ -103,44 +105,11 @@ BACKSTAGE = {
 				
 			});
 			
-		},
-		
-		fetch : function(element){
-			
-			$.post($(element).attr('data-source'),{},function(data){
-
-				var tbody = $(element).find('tbody');
-				var template = _.template($('#item-table').html());
-
-				$.each(data,function(i,row){
-					
-					tbody.append(template({
-						header	: $(element).find('th[data-field]').map(function(){ return $(this).attr('data-field') != 'id' ? $(this).attr('data-field') : null}),
-						row		: row
-					}));					
-					
-				});
-				
-				BACKSTAGE.common.dataTable = $(element).dataTable( {
-					"sDom": "<'row-fluid'<'span5'l><'span7'f>r>t<'row-fluid'<'span5'i><'span7'p>>",
-					"sPaginationType": "bootstrap",
-					"oLanguage": {
-						"sLengthMenu": "Show _MENU_ records per page."
-					},
-					"aoColumnDefs": [ 
-				      { "sWidth": "10px", "aTargets": [ 0 ] },
-				      { "sWidth": "60px", "aTargets": [ $(element).find('th[data-field]').length ] },
-					  { "bSortable": false, "aTargets": [ 0, $(element).find('th[data-field]').length ] }				
-				    ]
-				});			
-				
-			});
-			
-		},		
+		},	
 		
 		new : function(button, delegate){
 			
-			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
+			var entityName = BACKSTAGE.common.dataContainer.attr('data-entity');
 			var id = $(button).parent().parent().attr('data-id');
 			var template = _.template( $("#item-new").html() );
 			
@@ -156,12 +125,14 @@ BACKSTAGE = {
 		
 		edit : function(button, delegate){
 
-			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
-			var id = $(button).closest('tr').find('[data-id]').attr('data-id');
+			var entityName = BACKSTAGE.common.dataContainer.attr('data-entity');
+			var id = $(button).closest('[data-id]').length > 0
+				? $(button).closest('[data-id]').attr('data-id')
+				: $(button).closest('tr').find('[data-id]').attr('data-id');
 			var template = _.template( $("#item-edit").html() );
 			
 			$.post(BACKSTAGE.common.settings.basePath + 'backstage/' + entityName + "/get", {id : id}, function(data){
-
+				
 				$('#box').html(template());
 				$('#box [name="id"]').val(id);
 
@@ -218,58 +189,8 @@ BACKSTAGE = {
 			req.push({ name : 'token', value : $('meta[name="csrf"]').attr('content')});
 
 			$.post($(form).attr('action'), req, function(data){
-			
-				switch(data.status)
-				{
-					
-					case "Error":
-					
-						$('.btn-primary', form).addClass('btn-danger').attr('value', data.message);					
-					
-						break;
-					
-					case "OK":
-			
-						var row = $('#dataTable [data-id="'+data.entity.id+'"]').closest('tr');
-						
-						if(row.length > 0){
-						
-							var i = 0, pos = 0;
-						
-							for(p in data.entity)
-							{
-								i++;
-								if(p == 'id') continue;
-								
-								BACKSTAGE.common.dataTable.fnUpdate(data.entity[p], row[0], i-1);
-								
-							}						
-							
-						}else{
-							
-							var template = _.template($('#item-table').html());
-
-							BACKSTAGE.common.dataTable.dataTable().fnAddData(
-								$(template({
-									header	: $('#dataTable th[data-field]').map(function(){ return $(this).attr('data-field') != 'id' ? $(this).attr('data-field') : null}),
-									row		: data.entity
-								})).find('td').map(function(){return $(this).html()})
-							);
-							
-						}
-					
-						$('#box').modal('toggle');
-						
-						$('#alertBox').html(
-							BACKSTAGE.common.templates.alert({
-								'mode' : 'success',
-								'message' : data.message
-							})					
-						);
-						
-						break;
-					
-				}
+				
+				BACKSTAGE[BACKSTAGE.common.viewMode].saveDelegate(form, data);
 				
 			});
 			
@@ -279,7 +200,7 @@ BACKSTAGE = {
 			
 			BACKSTAGE.common.deleteList = [];			
 			
-			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
+			var entityName = BACKSTAGE.common.dataContainer.attr('data-entity');
 			var id = $(button).closest('tr').find('[data-id]').attr('data-id');
 			
 			var template = _.template( $("#item-delete").html() );
@@ -300,8 +221,8 @@ BACKSTAGE = {
 			
 			BACKSTAGE.common.deleteList = [];			
 			
-			var entityName = BACKSTAGE.common.dataTable.attr('data-entity');
-			var entities = $('#dataTable input[name="list-single[]"]:checked');
+			var entityName = BACKSTAGE.common.dataContainer.attr('data-entity');
+			var entities = $('input[name="list-single[]"]:checked');
 			var template = _.template( $("#item-delete").html() );		
 			
 			if(entities.length == 0){
@@ -337,19 +258,8 @@ BACKSTAGE = {
 					token	: $('meta[name="csrf"]').attr("content")
 				 },
 				function(data){
-
-					$.when($('#box').modal('hide')).then(function(){
-						
-						$.each(BACKSTAGE.common.deleteList, function(i, v){
-
-							BACKSTAGE.common.dataTable.find('[data-id="' + v + '"]').closest('tr').fadeOut("slow", function () {
-								var pos = BACKSTAGE.common.dataTable.fnGetPosition(this);
-								BACKSTAGE.common.dataTable.fnDeleteRow(pos);
-							});						
-
-						});				
-						
-					});
+					
+					BACKSTAGE[BACKSTAGE.common.viewMode].deleteDelegate(data);
 					
 				}
 			);
@@ -381,6 +291,233 @@ BACKSTAGE = {
 			BACKSTAGE.common.uploadSetup($('#box input[type="file"]'));
 			
 		}
+		
+	},
+	
+	table : {
+		
+		fetch : function(element){
+			
+			BACKSTAGE.common.dataContainer = $(element);
+			BACKSTAGE.common.viewMode = 'table';
+			
+			$.post($(element).attr('data-source'),{},function(data){
+
+				var tbody = $(element).find('tbody');
+				var template = _.template($('#item-table-row').html());
+
+				$.each(data,function(i,row){
+					
+					tbody.append(template({
+						header	: $(element).find('th[data-field]').map(function(){ return $(this).attr('data-field') != 'id' ? $(this).attr('data-field') : null}),
+						row		: row
+					}));					
+					
+				});
+				
+				BACKSTAGE.common.dataTable = $(element).dataTable( {
+					"sDom": "<'row-fluid'<'span5'l><'span7'f>r>t<'row-fluid'<'span5'i><'span7'p>>",
+					"sPaginationType": "bootstrap",
+					"oLanguage": {
+						"sLengthMenu": "Show _MENU_ records per page."
+					},
+					"aoColumnDefs": [ 
+				      { "sWidth": "10px", "aTargets": [ 0 ] },
+				      { "sWidth": "60px", "aTargets": [ $(element).find('th[data-field]').length ] },
+					  { "bSortable": false, "aTargets": [ 0, $(element).find('th[data-field]').length ] }				
+				    ]
+				});			
+				
+			});
+			
+		},
+		
+		saveDelegate : function(form, data)
+		{
+			
+			switch(data.status)
+			{
+
+				case "Error":
+
+					$('.btn-primary', form).addClass('btn-danger').attr('value', data.message);					
+
+					break;
+
+				case "OK":
+
+					var row = $('#dataTable [data-id="'+data.entity.id+'"]').closest('tr');
+
+					if(row.length > 0){
+
+						var i = 0, pos = 0;
+
+						for(p in data.entity)
+						{
+							i++;
+							if(p == 'id') continue;
+
+							BACKSTAGE.common.dataTable.fnUpdate(data.entity[p], row[0], i-1);
+
+						}						
+
+					}else{
+
+						var template = _.template($('#item-table-row').html());
+
+						BACKSTAGE.common.dataTable.dataTable().fnAddData(
+							$(template({
+								header	: $('#dataTable th[data-field]').map(function(){ return $(this).attr('data-field') != 'id' ? $(this).attr('data-field') : null}),
+								row		: data.entity
+							})).find('td').map(function(){return $(this).html()})
+						);
+
+					}
+
+					$('#box').modal('toggle');
+
+					$('#alertBox').html(
+						BACKSTAGE.common.templates.alert({
+							'mode' : 'success',
+							'message' : data.message
+						})					
+					);
+
+					break;
+
+			}		
+			
+		},
+		
+		delete : function(button){
+			
+			BACKSTAGE.common.deleteList = [];			
+			
+			var entityName = BACKSTAGE.common.dataContainer.attr('data-entity');
+			var id = $(button).closest('tr').find('[data-id]').attr('data-id');
+			
+			var template = _.template( $("#item-delete").html() );
+			
+			BACKSTAGE.common.deleteList.push(id);
+			
+			$('#box').html(template({
+				entityName : entityName
+			}));
+			
+			$('#box').modal({
+				keyboard : false
+			});
+			
+		},
+		
+		deleteDelegate : function(data){
+			
+			$.when($('#box').modal('hide')).then(function(){
+				
+				$.each(BACKSTAGE.common.deleteList, function(i, v){
+
+					BACKSTAGE.common.dataTable.find('[data-id="' + v + '"]').closest('tr').fadeOut("slow", function () {
+						var pos = BACKSTAGE.common.dataTable.fnGetPosition(this);
+						BACKSTAGE.common.dataTable.fnDeleteRow(pos);
+					});						
+
+				});				
+				
+			});			
+			
+		}
+		
+	},
+	
+	gallery : {
+		
+		fetch : function(element){
+			
+			BACKSTAGE.common.dataContainer = $(element);
+			BACKSTAGE.common.viewMode = 'gallery';			
+			
+			$.post($(element).attr('data-source'),{},function(data){
+
+				var tpl = _.template($('#item-gallery-thumbs').html());
+				
+				if(data.length > 0){
+					
+					$(element).append(tpl({
+						basePath	: BACKSTAGE.common.settings.imgPath,
+						pics		: data
+					}));
+					
+				}
+				
+			});			
+			
+		},
+		
+		saveDelegate : function(form, data)
+		{
+			
+			switch(data.status)
+			{
+
+				case "Error":
+
+					$('.btn-primary', form).addClass('btn-danger').attr('value', data.message);					
+
+					break;
+
+				case "OK":
+
+					
+
+					$('#box').modal('toggle');
+
+					$('#alertBox').html(
+						BACKSTAGE.common.templates.alert({
+							'mode' : 'success',
+							'message' : data.message
+						})					
+					);
+
+					break;
+
+			}
+			
+		},
+		
+		delete : function(button){
+			
+			BACKSTAGE.common.deleteList = [];			
+			
+			var entityName = BACKSTAGE.common.dataContainer.attr('data-entity');
+			var id = $(button).find('[data-id]').attr('data-id');
+			
+			var template = _.template( $("#item-delete").html() );
+			
+			BACKSTAGE.common.deleteList.push(id);
+			
+			$('#box').html(template({
+				entityName : entityName
+			}));
+			
+			$('#box').modal({
+				keyboard : false
+			});
+			
+		},
+		
+		deleteDelegate : function(data){
+			
+			$.when($('#box').modal('hide')).then(function(){
+				
+				$.each(BACKSTAGE.common.deleteList, function(i, v){
+
+					$('[data-id="'+v+'"]').parent().fadeOut('slow');
+
+				});				
+				
+			});			
+			
+		}		
 		
 	},
 	
@@ -427,7 +564,7 @@ BACKSTAGE = {
 			
 		}
 		
-	}
+	}	
 	
 };
 

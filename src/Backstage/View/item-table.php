@@ -10,21 +10,11 @@
 
 <?php endblock() ?>
 
-<?php startblock('crumbs') ?>
-
-	<?php superBlock() ?>
-	<li class="cornered-little"><a href="<?php $this -> path_to('backstage/'.strtolower($this -> entity)) ?>"><?php echo ucwords($this -> entity)?></a></li>
-
-<?php endblock() ?>
-
 <?php startblock('content') ?>
 
 	<p>Here you can manage your <strong><?php echo ucwords($this -> entity)?></strong> list.</p>
-	<hr/>	
-	<a class="btn btn-inverse" href="#" data-controller="common" data-entity="<?php echo strtolower($this -> entity)?>" data-action="new"><i class="icon-white icon-plus"></i> Add New <?php echo ucwords($this -> entity)?></a>
-	  <a class="btn btn-inverse" href="#" data-controller="common" data-entity="<?php echo strtolower($this -> entity)?>" data-action="deleteCecked" data-content="You should select an item at least." title="Hey you!"><i class="icon-white icon-trash"></i> Delete Selected</a>	
-
-	<table id="dataTable" class="table table-striped table-bordered" data-entity="<?php echo strtolower($this -> entity) ?>" data-startup="true" data-controller="common" data-action="fetch" data-source="<?php $this -> path_to(sprintf('backstage/%s/list', strtolower($this -> entity))) ?>">
+	<hr/>
+	<table id="dataTable" class="table table-striped table-bordered" data-entity="<?php echo strtolower($this -> entity) ?>" data-startup="true" data-controller="table" data-action="fetch" data-source="<?php $this -> path_to(sprintf('backstage/%s/list', strtolower($this -> entity))) ?>">
 	    <thead>
 	        <tr>
 				<th data-field="id"></th>
@@ -41,13 +31,17 @@
 	    <tbody>
 	    </tbody>
 	</table>
-
+	<hr/>	
+	<div id="actions-common">
+		<a class="btn btn-inverse" href="#" data-controller="common" data-entity="<?php echo strtolower($this -> entity)?>" data-action="new"><i class="icon-white icon-plus"></i> Add New <?php echo ucwords($this -> entity)?></a>
+		<a class="btn btn-inverse" href="#" data-controller="common" data-entity="<?php echo strtolower($this -> entity)?>" data-action="deleteCecked" data-content="You should select an item at least." title="Hey you!"><i class="icon-white icon-trash"></i> Delete Selected</a>
+	</div>	
 <?php endblock() ?>
 
 <?php startblock('templates') ?>
 	<?php superBlock() ?>
 
-	<?php $this -> requestView('Backstage\View\Templates\item-table') ?>	
+	<?php $this -> requestView('Backstage\View\Templates\item-table-row') ?>	
 	<?php $this -> requestView('Backstage\View\Templates\item-new') ?>	
 	<?php $this -> requestView('Backstage\View\Templates\item-edit') ?>	
 	<?php $this -> requestView('Backstage\View\Templates\item-delete') ?>

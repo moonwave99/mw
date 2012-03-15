@@ -12,9 +12,9 @@ class BackstageController extends MWController
 
 	public function __construct()
 	{
-
-		$this -> helper = \Backstage\Component\BackstageProvider::getHelper();
 		
+		$this -> helper = \Backstage\Component\BackstageProvider::getHelper();
+
 	}
 
 	public function switchAction($section, $action = 'index')

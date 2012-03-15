@@ -1,4 +1,4 @@
-<script type="text/template" id="item-table">
+<script type="text/template" id="item-table-row">
 <tr>
 	<td><input type="checkbox" name="list-single[]" data-id="<%=row.id%>"/></td>
 	
@@ -13,7 +13,7 @@
 		<a href="#" class="btn btn-mini btn-inverse" data-controller="common" data-action="edit">
 			<i class="icon-white icon-pencil"></i>
 		</a>
-		<a href="#" class="btn btn-mini btn-inverse" data-controller="common" data-action="delete">
+		<a href="#" class="btn btn-mini btn-inverse" data-controller="table" data-action="delete">
 			<i class="icon-white icon-trash"></i>
 		</a>
 		</div>

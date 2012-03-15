@@ -13,6 +13,8 @@ class EntitySetup extends \Annotation
 	
 	public $icon;
 	
+	public $viewMode = 'table';
+	
 	public function isRoleGranted($roleName)
 	{
 		

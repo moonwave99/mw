@@ -6,7 +6,7 @@
 </div>
 
 <div class="modal-body">
-<p>Are you sure to delete item(s)?</p>
+<p>Are you sure to delete selected item(s)?</p>
 </div>
 
 <div class="modal-footer">
