@@ -2,7 +2,7 @@
 	
 namespace MWCore\Component;
 
-class MWCollection
+class MWCollection implements \Iterator
 {
 	
 	protected $elements;
@@ -77,5 +77,40 @@ class MWCollection
 		return $this -> elements;
 		
 	}
+	
+    public function rewind()
+    {
+
+        reset($this -> elements);
+
+    }
+  
+    public function current()
+    {
+		
+		return current($this -> elements);
+
+    }
+  
+    public function key() 
+    {
+        
+		return key($this -> elements);
+        
+    }
+  
+    public function next() 
+    {
+
+ 		return next($this -> elements);
+
+    }
+  
+    public function valid()
+    {
+	
+		return key($this -> elements) !== NULL && key($this -> elements) !== FALSE;
+
+    }	
 	
 }
