@@ -26,6 +26,7 @@ BACKSTAGE = {
 		dataContainer : null,
 		dataTable : null,
 		deleteList : null,
+		deletePicsList : null,
 		viewMode : null,
 		
 		templates : {
@@ -306,11 +307,12 @@ BACKSTAGE = {
 				var tbody = $(element).find('tbody');
 				var template = _.template($('#item-table-row').html());
 
-				$.each(data,function(i,row){
+				$.each(data.results,function(i,row){
 					
 					tbody.append(template({
-						header	: $(element).find('th[data-field]').map(function(){ return $(this).attr('data-field') != 'id' ? $(this).attr('data-field') : null}),
-						row		: row
+						header		: $(element).find('th[data-field]').map(function(){ return $(this).attr('data-field') != 'id' ? $(this).attr('data-field') : null}),
+						row			: row,
+						moreActions	: data.moreActions
 					}));					
 					
 				});
@@ -329,6 +331,83 @@ BACKSTAGE = {
 				});			
 				
 			});
+			
+		},
+		
+		gallery : function(button)
+		{
+			
+			var entityName = BACKSTAGE.common.dataContainer.attr('data-entity');
+			var id = $(button).closest('[data-id]').length > 0
+				? $(button).closest('[data-id]').attr('data-id')
+				: $(button).closest('tr').find('[data-id]').attr('data-id');
+			var template = _.template( $("#item-gallery").html() );
+			
+			$.post(BACKSTAGE.common.settings.basePath + 'backstage/' + entityName + "/gallery", {id : id}, function(data){
+
+				$('#box').html(template({id : id, pics : data.pictures, basePath : BACKSTAGE.common.settings.imgPath }));
+		
+				BACKSTAGE.common.uiSetup();			
+		
+				$('#box').modal({
+					keyboard : false
+				});		
+				
+			});			
+			
+		},
+		
+		addPicture : function(element){
+			
+			console.log(element);
+			
+		},
+		
+		removePictures : function(button){
+			
+			BACKSTAGE.common.deletePicsList = [];			
+			
+			var entityName = BACKSTAGE.common.dataContainer.attr('data-entity');
+			$('.item-gallery input[name="list-single[]"]:checked').each(function(){ BACKSTAGE.common.deletePicsList.push($(this).attr('data-id'))});
+
+			if(BACKSTAGE.common.deletePicsList.length == 0){
+				
+				$(button).html('No pics selected!').addClass('btn-warning');
+				
+				setTimeout(function(){
+					$(button).html('Delete Selected').removeClass('btn-warning');
+				}, 3000);
+				
+			}else{
+
+				$.post(
+					BACKSTAGE.common.settings.basePath + 'backstage/'+entityName+"/deletepics",
+					{ 
+						id		: $(button).closest('[data-id]').attr('data-id'),
+						pics	: BACKSTAGE.common.deletePicsList,
+						token	: $('meta[name="csrf"]').attr("content")
+					 },
+					function(data){
+
+						$.each(BACKSTAGE.common.deletePicsList, function(){
+							
+							$('#box [data-id='+this+']').closest('.singlePic').fadeOut("slow").remove();
+							
+						});
+						
+						$(button).html('Done!').addClass('btn-success');
+
+						setTimeout(function(){
+							$(button).html('Delete Selected').removeClass('btn-success');
+							BACKSTAGE.common.deletePicsList = [];
+						}, 3000);						
+
+					}
+				);
+				
+			}
+			
+			
 			
 		},
 		
@@ -511,7 +590,7 @@ BACKSTAGE = {
 				
 				$.each(BACKSTAGE.common.deleteList, function(i, v){
 
-					$('[data-id="'+v+'"]').parent().fadeOut('slow');
+					$('[data-id="'+v+'"]').parent().fadeOut('slow').remove();
 
 				});				
 				

@@ -16,6 +16,13 @@
 		<a href="#" class="btn btn-mini btn-inverse" data-controller="table" data-action="delete">
 			<i class="icon-white icon-trash"></i>
 		</a>
+		<% _.each(moreActions, function(i, action){ %>
+			<% if(i){%>
+			<a href="#" class="btn btn-mini btn-inverse" data-controller="table" data-action="<%=i %>">
+				<i class="icon-white icon-picture"></i>
+			</a>
+			<%}%>
+		<% }); %>		
 		</div>
 	</td>
 </tr>

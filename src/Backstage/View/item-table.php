@@ -45,5 +45,6 @@
 	<?php $this -> requestView('Backstage\View\Templates\item-new') ?>	
 	<?php $this -> requestView('Backstage\View\Templates\item-edit') ?>	
 	<?php $this -> requestView('Backstage\View\Templates\item-delete') ?>
+	<?php $this -> requestView('Backstage\View\Templates\item-gallery') ?>	
 
 <?php endblock() ?>

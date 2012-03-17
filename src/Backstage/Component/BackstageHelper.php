@@ -83,7 +83,9 @@ class BackstageHelper
 				str_replace('/' , '\\', substr($e, strlen(SRC_PATH), -4))
 			);
 			
-			$note -> isRoleGranted($roleName) === true && $entries['entities']['entries'][ $note -> pathName] = $note;
+			$note !== NULL 
+				&& $note -> isRoleGranted($roleName) === true
+				&& $entries['entities']['entries'][ $note -> pathName] = $note;
 			
 		}
 

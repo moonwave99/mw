@@ -28,11 +28,12 @@ class CrudController extends MWController
 	public function indexAction()
 	{
 
-		$info = $this -> helper -> getEntityInfo($this -> entityname);		
-		$newForm = $this -> helper -> createNewEntityForm($this -> entityname, $this -> entitylabel);			
-		$nav = $this -> helper -> getNavigationEntries($this -> context -> getUser() -> role);
+		$info		= $this -> helper -> getEntityInfo($this -> entityname);		
+		$setupInfo	= $this -> helper -> getEntitySetupInfo($this -> entityname);
+		$newForm	= $this -> helper -> createNewEntityForm($this -> entityname, $this -> entitylabel);			
+		$nav		= $this -> helper -> getNavigationEntries($this -> context -> getUser() -> role);
 		
-		$this -> requestView(sprintf("Backstage\View\item-%s", $this -> helper -> getEntitySetupInfo($this -> entityname) -> viewMode),
+		$this -> requestView(sprintf("Backstage\View\item-%s", $setupInfo -> viewMode),
 		array(
 			'pageTitle'			=> sprintf('MW | Manage %s', $nav['entities']['entries'][$this -> entitylabel] -> label ?: ucwords($this -> entitylabel)."s"),
 			'title'				=> sprintf('Manage %s', $nav['entities']['entries'][$this -> entitylabel] -> label ?: ucwords($this -> entitylabel)."s"),
@@ -76,8 +77,10 @@ class CrudController extends MWController
 			$results[] = $this -> encodeSingleEntity($r, 'table');
 			
 		}
-		
-		$this -> json($results);
+
+		$this -> json(array(
+			'results'		=> $results
+		));
 		
 	}
 	
@@ -148,6 +151,12 @@ class CrudController extends MWController
 
 			switch($i -> inputMode)
 			{
+				
+				case "gallery":
+				
+					$encodedEntity[$i -> name] = '<a href="#" class="btn btn-mini btn-inverse" data-controller="table" data-action="gallery"><i class="icon-white icon-picture"></i> Edit</a>';
+				
+					break;
 				
 				case "select-multiple":
 				

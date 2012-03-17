@@ -36,13 +36,19 @@ class Post extends MWEntity
 	*	@MWCore\Annotation\ManyToMany(entity="App\Entity\Tag", jointable="tag_to_post", allownull=true)
 	*	@Backstage\Annotation\BackstageField(label="Tags", inputMode="select-multiple", target="both")
 	*/	
-	protected $tagList;		
+	protected $tagList;	
 	
 	/**
 	*	@MWCore\Annotation\ManyToOne(entity="App\Entity\Category")
 	*	@Backstage\Annotation\BackstageField(label="Category", inputMode="select", target="both")
 	*/	
 	protected $category;
+	
+	/**
+	*	@MWCore\Annotation\ManyToMany(entity="App\Entity\Picture", jointable="picture_to_post", allownull=true)
+	*	@Backstage\Annotation\BackstageField(label="Gallery", inputMode="gallery", target="table")
+	*/	
+	protected $pictureList;
 	
 	public function __construct($id = NULL)
 	{
@@ -51,6 +57,7 @@ class Post extends MWEntity
 		
 		$this -> createdAt = new \DateTime();
 		$this -> tagList = new MWCollection();
+		$this -> pictureList = new MWCollection();
 		$this -> category = new \App\Entity\Category;
 		
 	}

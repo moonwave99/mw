@@ -43,15 +43,15 @@ span.thumbnail{
 	width:160px;
 }
 
-#item-gallery{
+.item-gallery{
 	margin-top:20px;
 }
 
-#item-gallery .singlePic{
+.item-gallery .singlePic{
 	text-align:center;
 }
 
-#item-gallery .singlePic img{
+.item-gallery .singlePic img{
 	height:130px;
 	margin-bottom:10px;
 }

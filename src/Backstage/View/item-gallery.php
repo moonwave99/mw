@@ -15,7 +15,7 @@
 	<p>Here you can manage your <strong><?php echo ucwords($this -> entity)?></strong> list.</p>
 	<hr/>		
 
-	<div class="thumbnails" id="item-gallery" data-entity="<?php echo strtolower($this -> entity) ?>" data-controller="gallery" data-action="fetch" data-startup="true" data-source="<?php $this -> path_to(sprintf('backstage/%s/list', strtolower($this -> entity))) ?>">
+	<div class="thumbnails item-gallery" id="item-gallery" data-entity="<?php echo strtolower($this -> entity) ?>" data-controller="gallery" data-action="fetch" data-startup="true" data-source="<?php $this -> path_to(sprintf('backstage/%s/list', strtolower($this -> entity))) ?>">
 	</div>
 	<hr/>
 	<div id="actions-common">
@@ -31,5 +31,6 @@
 	<?php $this -> requestView('Backstage\View\Templates\item-new') ?>	
 	<?php $this -> requestView('Backstage\View\Templates\item-edit') ?>	
 	<?php $this -> requestView('Backstage\View\Templates\item-delete') ?>
+	<?php $this -> requestView('Backstage\View\Templates\item-gallery') ?>	
 
 <?php endblock() ?>
