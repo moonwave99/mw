@@ -58,7 +58,7 @@ class CrudController extends MWController
 		$this -> json(array(
 			'entity' => $entity === false 
 				? new $this -> entityname
-				: $this -> encodeSingleEntity($entity, 'form')
+				: $this -> encodeSingleEntity($entity, $this -> request -> target !== NULL ? $this -> request -> target : 'form')
 			)
 		);
 		

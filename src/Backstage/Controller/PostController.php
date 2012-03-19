@@ -70,7 +70,7 @@ class PostController extends CrudController
 		
 	}
 	
-	public function deletepicsAction()
+	public function savepicsAction()
 	{
 		
 		$repName = \MWCore\Entity\MWEntity::getRepositoryNameFromClass($this -> entityname);
@@ -78,15 +78,12 @@ class PostController extends CrudController
 		
 		$entity = $rep -> findOneById($this -> request -> id);
 
-		foreach($this -> request -> pics as $p)
+		$entity -> pictureList -> clear();
+
+		foreach($this -> request -> pics as $pic)
 		{
 			
-			foreach($entity -> pictureList -> toArray() as $i => $pic)
-			{
-				
-				if($pic -> id == $p) $entity -> pictureList -> set($i, NULL);
-				
-			}
+			$entity -> pictureList -> add(new \App\Entity\Picture($pic));
 			
 		}
 		

@@ -44,14 +44,21 @@ class PictureController extends CrudController
 
 		$entity = $this -> bindRequest($this -> entityname);
 
-		($this -> request -> id != 0) ? $entity -> update() : $entity -> create();
+		@rename(TMP_UPLOAD_FOLDER . $entity -> src, UPLOAD_FOLDER . $entity -> src);
+
+		$info = getimagesize(UPLOAD_FOLDER . $entity -> src);
 		
-		@rename(TMP_UPLOAD_FOLDER . $entity -> src, UPLOAD_FOLDER . $entity -> src);		
+		$entity -> width = $info[0];
+		$entity -> height = $info[1];
+		$entity -> type = strtoupper(array_pop(explode('/', $info['mime'])));
+		$entity -> size = filesize(UPLOAD_FOLDER . $entity -> src);
+
+		($this -> request -> id != 0) ? $entity -> update() : $entity -> create();		
 
 		return $this -> json(array(
 			'status'	=> 'OK',
 			'message'	=> 'Saved succesfully!',
-			'entity'	=>  $this -> encodeSingleEntity($entity, 'table')			
+			'entity'	=>  $this -> encodeSingleEntity($entity -> hydrate(), 'table')			
 		));
 
 	}

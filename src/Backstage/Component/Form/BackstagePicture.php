@@ -43,7 +43,7 @@ class BackstagePicture implements MWRenderable
 	    echo '<span class="thumbnail">';
 	    echo    '<img src="http://placehold.it/160x120" alt="" id="thumb_'.$this -> name.'"/>';
 	    echo '</span>';	
-		printf('<input type="file" class="input-file" id="file_'.$this -> name.'" name="files[]" %s/>', $this -> attributes['required'] !== NULL ? 'required' : '');
+		printf('<input accept="image/*" type="file" class="input-file" id="file_'.$this -> name.'" name="files[]" %s/>', $this -> attributes['required'] !== NULL ? 'required' : '');
 		echo '<input type="hidden" id="_'.$this -> name.'" name="'.$this -> name.'"/>';
 		echo '</div>';		
 		

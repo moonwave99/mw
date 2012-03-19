@@ -9,6 +9,7 @@ use MWCore\Component\MWCollection;
 /** 
 *	@MWCore\Annotation\Table("picture")
 *	@MWCore\Annotation\Repository("\App\Repository\PictureRepository")
+*	@MWCore\Annotation\ReverseManyToMany(jointable="tag_to_picture")
 *	@Backstage\Annotation\EntitySetup(label="Pictures", pathName="picture", granted="ROLE_ADMIN, ROLE_USER", icon="picture", viewMode='gallery')
 */	
 class Picture extends MWEntity
@@ -27,15 +28,41 @@ class Picture extends MWEntity
 	protected $label;
 	
 	/**
-	*	@MWCore\Annotation\Field(name="description", type="text", default="")
-	*	@Backstage\Annotation\BackstageField(label="Description", inputMode="textarea", target="both")
+	*	@MWCore\Annotation\Field(name="type", type="string", length="4", default="JPEG")
+	*	@Backstage\Annotation\BackstageField(label="Type", target="table")
+	*/
+	protected $type;
+
+	/**
+	*	@MWCore\Annotation\Field(name="size", type="int", length=8, default=0)
+	*	@Backstage\Annotation\BackstageField(label="Size (KB)", target="table")
+	*/
+	protected $size;
+	
+	/**
+	*	@MWCore\Annotation\Field(name="width", type="int", length=4, default=0)
+	*	@Backstage\Annotation\BackstageField(label="Width", target="table")
+	*/
+	protected $width;
+	
+	/**
+	*	@MWCore\Annotation\Field(name="height", type="int", length=4, default=0)
+	*	@Backstage\Annotation\BackstageField(label="Height", target="table")
+	*/
+	protected $height;	
+	
+	/**
+	*	@MWCore\Annotation\ManyToMany(entity="App\Entity\Tag", jointable="tag_to_picture", allownull=true)
+	*	@Backstage\Annotation\BackstageField(label="Tags", inputMode="select-multiple", target="both")
 	*/	
-	protected $description;	
+	protected $tagList;	
 	
 	public function __construct($id = NULL)
 	{
 		
 		parent::__construct($id);
+		
+		$this -> tagList = new \MWCore\Component\MWCollection();
 		
 	}
 	

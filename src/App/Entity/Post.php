@@ -9,6 +9,8 @@ use MWCore\Component\MWCollection;
 /** 
 *	@MWCore\Annotation\Table("post")
 *	@MWCore\Annotation\Repository("\App\Repository\PostRepository")
+*	@MWCore\Annotation\ReverseManyToMany(jointable="tag_to_post")
+*	@MWCore\Annotation\ReverseManyToMany(jointable="picture_to_post")
 *	@Backstage\Annotation\EntitySetup(label="Posts", pathName="post", granted="ROLE_ADMIN, ROLE_USER", icon="pencil")
 */	
 class Post extends MWEntity
