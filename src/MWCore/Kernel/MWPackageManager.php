@@ -1,16 +1,46 @@
 <?php
 
+/**
+*	Part of MW - lightweight MVC framework.
+*	@author Diego Caponera <diego.caponera@gmail.com>
+*	@link https://github.com/moonwave99/mw
+*	@copyright Copyright 2011-2012 Diego Caponera
+*	@license http://www.opensource.org/licenses/mit-license.php MIT License
+*	@package MWCore/Kernel
+*/
+
 namespace MWCore\Kernel;
 
+/**
+*	MWPackageManager Class - handles Packages registration and so.
+*/
 class MWPackageManager
 {
 
+	/**
+	*	@access protected
+	*	@var array
+	*/
 	protected $packages;
 	
+	/**
+	*	@access protected
+	*	@var MWRouter
+	*/	
 	protected $router;
 	
+	/**
+	*	@access protected
+	*	@var MWFirewall
+	*/	
 	protected $firewall;
 	
+	/**
+	*	Default constructor.
+	*	@access public
+	*	@param MWRouter $router MWRouter instance injected
+	*	@param MWFirewall $firewall MWFirewall instance injected
+	*/	
 	public function __construct(&$router, &$firewall)
 	{	
 		
@@ -22,6 +52,12 @@ class MWPackageManager
 		
 	}
 	
+	/**
+	*	Package getter
+	*	@access public
+	*	@param string $packageName The package being looked for
+	*	@return MWPackage
+	*/	
 	public function getPackage($packageName)
 	{
 		
@@ -31,6 +67,11 @@ class MWPackageManager
 		
 	}
 	
+	/**
+	*	Registers package by executing corresponding loader script
+	*	@access public
+	*	@param string $packageName The package being looked for
+	*/	
 	public function registerPackage($packageName)
 	{
 		

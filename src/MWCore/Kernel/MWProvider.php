@@ -1,28 +1,81 @@
 <?php
+
+/**
+*	Part of MW - lightweight MVC framework.
+*	@author Diego Caponera <diego.caponera@gmail.com>
+*	@link https://github.com/moonwave99/mw
+*	@copyright Copyright 2011-2012 Diego Caponera
+*	@license http://www.opensource.org/licenses/mit-license.php MIT License
+*	@package MWCore/Kernel
+*/
 	
 namespace MWCore\Kernel;
 
+/**
+*	MWProvider Class - dependency injection provider.
+*/
 class MWProvider
 {
 
+	/**
+	*	@access protected
+	*	@var MWSession
+	*/
 	public static $session;
-	
+
+	/**
+	*	@access protected
+	*	@var MWContext
+	*/	
 	public static $context;
 	
+	/**
+	*	@access protected
+	*	@var MWFirewall
+	*/	
 	public static $firewall;	
 	
+	/**
+	*	@access protected
+	*	@var MWRouter
+	*/	
 	public static $router;	
 	
+	/**
+	*	@access protected
+	*	@var MWPackageManager
+	*/	
 	public static $packageManager;
 	
+	/**
+	*	@access protected
+	*	@var MWRequest
+	*/	
 	public static $request;
 	
+	/**
+	*	@access protected
+	*	@var MWSettingsManager
+	*/	
 	public static $settings;
 	
+	/**
+	*	@access protected
+	*	@var MWLog
+	*/	
 	public static $log;
 	
+	/**
+	*	@access protected
+	*	@var MWClassInspector
+	*/	
 	public static $classInspector;
 
+	/**
+	*	Creates MWSessionManager and resolves its dependencies.
+	*	@access public
+	*	@param string $sessionName The session name
+	*/
 	public static function initSession($sessionName)
 	{
 		
@@ -32,6 +85,10 @@ class MWProvider
 		
 	}
 	
+	/**
+	*	Creates MWSettingsManager and resolves its dependencies.
+	*	@access public
+	*/	
 	public static function initSettingsManager()
 	{
 
@@ -39,6 +96,10 @@ class MWProvider
 		
 	}	
 	
+	/**
+	*	Creates MWContext and resolves its dependencies.
+	*	@access public
+	*/	
 	public static function initContext()
 	{
 		
@@ -46,6 +107,10 @@ class MWProvider
 		
 	}
 	
+	/**
+	*	Creates MWFirewall and resolves its dependencies.
+	*	@access public
+	*/	
 	public static function initFirewall()
 	{
 		
@@ -53,6 +118,10 @@ class MWProvider
 		
 	}
 	
+	/**
+	*	Creates MWRouter and resolves its dependencies.
+	*	@access public
+	*/	
 	public static function initRouter()
 	{
 		
@@ -60,6 +129,11 @@ class MWProvider
 		
 	}
 	
+	/**
+	*	Creates MWPacketManager and resolves its dependencies.
+	*	@access public
+	*	@param array $packages The packages being loaded
+	*/	
 	public static function initPackageManager($packages)
 	{
 		
@@ -82,6 +156,10 @@ class MWProvider
 		
 	}
 	
+	/**
+	*	Creates MWRequest and resolves its dependencies.
+	*	@access public
+	*/	
 	public static function initRequest()
 	{
 		
@@ -89,6 +167,10 @@ class MWProvider
 		
 	}
 	
+	/**
+	*	Creates MWLog and resolves its dependencies.
+	*	@access public
+	*/	
 	public static function initLog()
 	{
 
@@ -96,6 +178,10 @@ class MWProvider
 		
 	}
 	
+	/**
+	*	Creates MWClassInspector and resolves its dependencies.
+	*	@access public
+	*/	
 	public static function initClassInspector()
 	{
 		
@@ -103,6 +189,12 @@ class MWProvider
 		
 	}
 	
+	/**
+	*	Creates a controller by given name, and resolves its dependencies.
+	*	@access public
+	*	@param string $controllerName The controller name
+	*	@return MWController
+	*/	
 	public static function makeController($controllerName)
 	{
 		

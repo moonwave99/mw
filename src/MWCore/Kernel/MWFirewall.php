@@ -1,16 +1,40 @@
 <?php
+
+/**
+*	Part of MW - lightweight MVC framework.
+*	@author Diego Caponera <diego.caponera@gmail.com>
+*	@link https://github.com/moonwave99/mw
+*	@copyright Copyright 2011-2012 Diego Caponera
+*	@license http://www.opensource.org/licenses/mit-license.php MIT License
+*	@package MWCore/Kernel
+*/
 	
 namespace MWCore\Kernel;
 
+/**
+*	MWFirewall Class - filters any request against the set of provided rules
+*/
 use MWCore\Kernel\MWSingleRoute;
 
 class MWFirewall
 {
 
+	/**
+	*	@access protected
+	*	@var array
+	*/
 	protected $rules;
 	
+	/**
+	*	@access protected
+	*	@var MWContext
+	*/
 	protected $context;
 	
+	/**
+	*	Default constructor.
+	*	@param MWContext $context MWContext instance injected
+	*/
 	public function __construct(&$context)
 	{	
 		
@@ -20,6 +44,10 @@ class MWFirewall
 		
 	}
 	
+	/**
+	*	Rules setter
+	*	@param array $rules The rules being set
+	*/
 	public function setRules($rules)
 	{
 		
@@ -31,6 +59,11 @@ class MWFirewall
 		
 	}
 	
+	/**
+	*	Checks if the user has permission to follow given pattern
+	*	@param string $pattern The pattern being checked
+	*	@return boolean
+	*/
 	public function isPatternRejected($pattern)
 	{
 

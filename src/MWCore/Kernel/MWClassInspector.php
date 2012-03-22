@@ -1,20 +1,45 @@
 <?php
 
+/**
+*	Part of MW - lightweight MVC framework.
+*	@author Diego Caponera <diego.caponera@gmail.com>
+*	@link https://github.com/moonwave99/mw
+*	@copyright Copyright 2011-2012 Diego Caponera
+*	@license http://www.opensource.org/licenses/mit-license.php MIT License
+*	@package MWCore/Kernel
+*/
+
 namespace MWCore\Kernel;
 
 use MWCore\Interfaces\MWSingleton;
 
+/**
+*	MWClassInspector Class - inspects classes for meaningful annotations.
+*/
 class MWClassInspector implements MWSingleton
 {
 
+	/**
+	*	Singleton instance field
+	*	@access private
+	*	@var MWClassInspector
+	*/
 	private static $instance = null;
 
+	/**#@+
+	*	@var array
+	*/
 	protected $annotationCache;
 	protected $tableCache;
 	protected $repCache;
 	protected $reverseCache;
 	protected $commonCache;	
 	
+	/**
+	*	Returns unique instance of current class
+	*	@access public
+	*	@return MWClassInspector
+	*/	
 	public static function getInstance()
 	{
 
@@ -28,6 +53,10 @@ class MWClassInspector implements MWSingleton
 		
 	}
 	
+	/**
+	*	Default constructor, private for design purposes
+	*	@access private
+	*/	
 	private function __construct()
 	{	
 		
@@ -39,6 +68,12 @@ class MWClassInspector implements MWSingleton
 		
 	}	
 	
+	/**
+	*	Returns annotations for given entity
+	*	@access public
+	*	@param mixed $entity Either entity instance or classname
+	*	@return array
+	*/
 	public function getAnnotationsForEntity($entity)
 	{
 		
@@ -100,6 +135,12 @@ class MWClassInspector implements MWSingleton
 		
 	}	
 	
+	/**
+	*	Returns db-table name for given entity
+	*	@access public
+	*	@param mixed $entity Either entity instance or classname
+	*	@return string
+	*/	
 	public function getTableNameForEntity($entity)
 	{
 		
@@ -116,6 +157,12 @@ class MWClassInspector implements MWSingleton
 		
 	}
 	
+	/**
+	*	Returns repository name
+	*	@access public
+	*	@param mixed $entity Either entity instance or classname
+	*	@return string
+	*/	
 	public function getRepositoryNameForEntity($entity)
 	{
 	
@@ -132,6 +179,12 @@ class MWClassInspector implements MWSingleton
 		
 	}
 	
+	/**
+	*	Returns reverse-annotations for given entity
+	*	@access public
+	*	@param mixed $entity Either entity instance or classname
+	*	@return array
+	*/	
 	public function getReverseAnnotationsForEntity($entity)
 	{
 
@@ -148,7 +201,14 @@ class MWClassInspector implements MWSingleton
 		
 	}	
 	
-	public function getSingleAnnotationForEntity($entity, $annotation)
+	/**
+	*	Returns specific annotation for given entity by given name
+	*	@access public
+	*	@param mixed $entity Either entity instance or classname
+	*	@param string $annotationName The name of the annotation being looked for
+	*	@return array
+	*/	
+	public function getSingleAnnotationForEntity($entity, $annotationName)
 	{
 
 		$className = is_object($entity) ? get_class($entity) : $entity;
@@ -156,7 +216,7 @@ class MWClassInspector implements MWSingleton
 		if( $this -> commonCache[$className] === NULL){
 
 			$ref = new \ReflectionAnnotatedClass($entity);
-			$notes = $ref -> getAllAnnotations($annotation);
+			$notes = $ref -> getAllAnnotations($annotationName);
 			$this -> commonCache[$className] = $notes[0];
 			
 		}

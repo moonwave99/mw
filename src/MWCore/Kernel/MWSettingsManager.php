@@ -1,5 +1,14 @@
 <?php
 
+/**
+*	Part of MW - lightweight MVC framework.
+*	@author Diego Caponera <diego.caponera@gmail.com>
+*	@link https://github.com/moonwave99/mw
+*	@copyright Copyright 2011-2012 Diego Caponera
+*	@license http://www.opensource.org/licenses/mit-license.php MIT License
+*	@package MWCore/Kernel
+*/
+
 namespace MWCore\Kernel;
 
 use MWCore\Component\MWCollection;
@@ -7,13 +16,28 @@ use MWCore\Kernel\MWDBManager;
 use MWCore\Entity\MWSetting;
 use MWCore\Repository\MWSettingRepository;
 
+/**
+*	MWSettingsManager Class - handles global website settings and provides lazy loading.
+*/
 class MWSettingsManager
 {
 
+	/**
+	*	@access protected
+	*	@var boolean
+	*/
 	protected $loaded;
 	
+	/**
+	*	@access protected
+	*	@var MWCollection
+	*/	
 	protected $settingList;
 
+	/**
+	*	Default constructor.
+	*	@access public	
+	*/
 	public function __construct()
 	{
 
@@ -22,6 +46,12 @@ class MWSettingsManager
 		
 	}
 	
+	/**
+	*	Magic getter
+	*	@access public
+	*	@param string $key Property name
+	*	@return mixed
+	*/	
 	public function __get($key)
 	{
 		
@@ -39,6 +69,11 @@ class MWSettingsManager
 		
 	}
 	
+	/**
+	*	Returns all settings
+	*	@access public
+	*	@return MWCollection
+	*/	
 	public function getAll()
 	{
 		
@@ -48,6 +83,14 @@ class MWSettingsManager
 		
 	}
 
+	/**
+	*	Saves Setting entry to database
+	*	@access public
+	*	@param string $key Property name
+	*	@param mixed $value Property value
+	*	@param string $description Setting description text
+	*	@param string $type Setting type
+	*/
 	public function saveSetting($key, $value, $description, $type)
 	{
 		
@@ -78,6 +121,11 @@ class MWSettingsManager
 		
 	}
 	
+	/**
+	*	Loads settings from database, if not loaded yet
+	*	@access public
+	*	@param boolean $force If true, enforces reload
+	*/	
 	public function load($force = false)
 	{
 		

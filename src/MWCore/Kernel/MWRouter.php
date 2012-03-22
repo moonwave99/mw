@@ -1,4 +1,13 @@
 <?php
+
+/**
+*	Part of MW - lightweight MVC framework.
+*	@author Diego Caponera <diego.caponera@gmail.com>
+*	@link https://github.com/moonwave99/mw
+*	@copyright Copyright 2011-2012 Diego Caponera
+*	@license http://www.opensource.org/licenses/mit-license.php MIT License
+*	@package MWCore/Kernel
+*/
 	
 namespace MWCore\Kernel;
 
@@ -7,13 +16,29 @@ use MWCore\Kernel\MWFirewall;
 use MWCore\Kernel\MWFirewallRule;
 use MWCore\Kernel\MWProvider;
 
+/**
+*	MWRouter Class - routes URI according to app routes collection, and fires a 404 eventually.
+*/
 class MWRouter
 {
 	
+	/**
+	*	@access protected
+	*	@var array
+	*/
 	protected $routes;
 	
+	/**
+	*	@access protected
+	*	@var MWFirewall
+	*/
 	protected $firewall;
 	
+	/**
+	*	Default constructor.
+	*	@access public	
+	*	@param MWFirewall $firewall MWFirewall instance injected
+	*/
 	public function __construct(&$firewall)
 	{	
 	
@@ -22,6 +47,11 @@ class MWRouter
 		
 	}	
 	
+	/**
+	*	Sets routes, dividing them by their pattern length
+	*	@access public
+	*	@param array $routes The routes being set
+	*/
 	public function setRoutes($routes){ 
 	
 		foreach($routes as $r)
@@ -33,6 +63,10 @@ class MWRouter
 		
 	}
 	
+	/**
+	*	Core feature of the whole framework, routes URI pattern agains own routes collection
+	*	@access public
+	*/
 	public function routeRequest()
 	{
 
@@ -49,9 +83,9 @@ class MWRouter
 
 		$route = $this -> searchPattern($pattern);	
 		$route === false && $this -> requestNotFound();
-		$controller = MWProvider::makeController($route -> controller);
+		$controller = MWProvider::makeController($route -> controllerName);
 
-		if($controller === false || !method_exists($controller, $route -> action."Action"))
+		if($controller === false || !method_exists($controller, $route -> actionName."Action"))
 			$this -> requestNotFound();
 
 		$params = MWSingleRoute::tiles($pattern);
@@ -64,13 +98,33 @@ class MWRouter
 		call_user_func_array(
 			array(
 				$controller,
-				$route -> action."Action"
+				$route -> actionName."Action"
 			),
 			$this -> cleanParams($params)
 		);
 		
 	}	
 	
+	/**
+	*	Provides a 404 page with proper http header
+	*/
+	static function requestNotFound()
+	{
+
+		header("HTTP/1.0 404 Not Found");
+		
+		\MWCore\Kernel\MWView::reqView('MWCore\View\Error\404');
+		
+		exit;
+		
+	}	
+	
+	/**
+	*	Searches own collection for given pattern
+	*	@access protected
+	*	@param string $pattern The pattern being looked for
+	*	@return mixed Matching MWSingleRoute if found, or false
+	*/
 	protected function searchPattern($pattern)
 	{
 
@@ -88,6 +142,10 @@ class MWRouter
 		
 	}
 	
+	/**
+	*	Returns pattern from URI
+	*	@return string
+	*/
 	protected function getPatternFromURI()
 	{
 
@@ -105,31 +163,22 @@ class MWRouter
 		
 	}
 	
+	/**
+	*	Cleans URI parameters
+	*	@return array
+	*/
 	protected function cleanParams($params)
 	{
 		
-		$p = array();
-		
-		foreach($params as $param)
+		foreach($params as &$param)
 		{
 			
-			$p[] = htmlentities($param, ENT_QUOTES, 'UTF-8');
+			$param = htmlentities($param, ENT_QUOTES, 'UTF-8');
 			
 		}
 		
-		return $p;
+		return $params;
 				
 	}	
-
-	static function requestNotFound()
-	{
-
-		header("HTTP/1.0 404 Not Found");
-		
-		\MWCore\Kernel\MWView::reqView('MWCore\View\Error\404');
-		
-		exit;
-		
-	}
 
 }
