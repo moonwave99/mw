@@ -4,7 +4,7 @@ namespace MWCore\Entity;
 
 use MWCore\Kernel\MWDBManager;
 use MWCore\Kernel\MWClassInspector;
-use MWCore\Kernel\MWQueryBuilder\MWQueryBuilder;
+use MWCore\Kernel\MWQueryBuilder;
 use MWCore\Interfaces\MWPersistent;
 use MWCore\Component\MWCollection;
 	

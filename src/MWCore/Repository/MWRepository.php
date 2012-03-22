@@ -5,7 +5,7 @@ namespace MWCore\Repository;
 use MWCore\Entity\MWEntity;
 use MWCore\Kernel\MWDBManager;
 use MWCore\Kernel\MWClassInspector;
-use MWCore\Kernel\MWQueryBuilder\MWQueryBuilder;
+use MWCore\Kernel\MWQueryBuilder;
 use MWCore\Component\MWCollection;
 	
 class MWRepository
