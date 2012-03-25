@@ -20,7 +20,7 @@ class MWRepository
 
 		$this -> entityname = $entityname;
 		
-		$this -> cache = array();
+		$this -> cache = array();		
 		
 	}
 
@@ -29,17 +29,21 @@ class MWRepository
 
 		$dbh = MWDBManager::getInstance();	
 		$qb = new MWQueryBuilder();
-		
+
 		$qb -> selectFrom( $this -> entityname ) -> order($column, $order) -> limit($start, $range);
 		
 		$queryResults = $dbh -> getDBData( $qb -> build() );
 		
 		$results = array();
 		
+		$entity = NULL;
+		
 		foreach($queryResults as $r)
 		{
-
-			$results[] = $this -> fillObjectFromArray($this -> entityname, $r);
+			
+			$entity = new $this -> entityname;
+			$entity -> fillFromArray($r);
+			$results[] = $entity;
 			
 		}
 		
@@ -66,11 +70,15 @@ class MWRepository
 		));
 	
 		$results = array();
+		
+		$entity = NULL;		
 	
 		foreach($queryResults as $r)
 		{
 
-			$results[] = $this -> fillObjectFromArray($this -> entityname, $r);
+			$entity = new $this -> entityname;
+			$entity -> fillFromArray($r);
+			$results[] = $entity;
 		
 		}
 	
@@ -93,8 +101,13 @@ class MWRepository
 				'type'	=> \PDO::PARAM_INT
 			)
 		));
+	
+		if( count($queryResults) == 0 ) return false;
 
-		return count($queryResults) > 0 ? $this -> fillObjectFromArray($this -> entityname, $queryResults[0]) : false;
+		$entity = new $this -> entityname;
+		$entity -> fillFromArray($queryResults[0]);
+		
+		return $entity;
 
 	}
 	
@@ -114,7 +127,12 @@ class MWRepository
 			)
 		));
 
-		return count($queryResults) > 0 ? $this -> fillObjectFromArray($this -> entityname, $queryResults[0]) : false;
+		if( count($queryResults) == 0 ) return false;
+	
+		$entity = new $this -> entityname;
+		$entity -> fillFromArray($queryResults[0]);
+	
+		return $entity;
 
 	}	
 	
@@ -136,7 +154,12 @@ class MWRepository
 			)
 		));
 
-		return count($queryResults) > 0 ? $this -> fillObjectFromArray($this -> entityname, $queryResults[0]) : false;
+		if( count($queryResults) == 0 ) return false;
+		
+		$entity = new $this -> entityname;
+		$entity -> fillFromArray($queryResults[0]);
+		
+		return $entity;
 		
 	}
 	
@@ -155,9 +178,9 @@ class MWRepository
 		
 	}
 	
-	protected function findFromJoinTable($field, $containerEntity, $id)
+	static function findFromJoinTable($field, $containerEntity, $id)
 	{
-
+		
 		$dbh = MWDBManager::getInstance();		
 		$qb = new MWQueryBuilder();
 
@@ -166,11 +189,11 @@ class MWRepository
 			-> where(
 				'id_'.MWEntity::getTableNameFromClass($containerEntity),
 				'=',
-				NULL	,
+				NULL,
 				$field -> jointable
 			)
 			-> order('order', 'ASC', $field -> jointable);
-
+		;
 		$queryResults = $dbh -> getDBData( $qb -> build() , array(
 			array(
 				'field'	=> 'id_'.MWEntity::getTableNameFromClass($containerEntity),
@@ -178,13 +201,17 @@ class MWRepository
 				'type'	=> \PDO::PARAM_INT
 			)
 		));
-	
+		
 		$results = array();
+		
+		$entity = NULL;
 	
 		foreach($queryResults as $r)
 		{
 
-			$results[] = $this -> fillObjectFromArray($field -> entity, $r);
+			$entity = new $field -> entity;
+			$entity -> fillFromArray($r);
+			$results[] = $entity;
 		
 		}
 	

@@ -74,6 +74,13 @@ class MWUser extends MWEntity
 		
 		$this -> salt = generateSalt(6);
 		$this -> password = encodePassword($password, $this -> salt);
+
+	}
+	
+	public function checkPassword($password)
+	{
+		
+		return encodePassword($password, $this -> salt ) == $this -> password;
 		
 	}
 

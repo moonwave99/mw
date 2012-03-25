@@ -22,19 +22,19 @@ class MWEntity implements MWPersistent
 	
 	public function __set($property, $value)
 	{
-		
-		if(property_exists($this, $property)){
-			
-			$this -> $property = $value;			
-			
-		}
-		
+
+		method_exists($this, 'set'.ucwords($property))
+			? $this -> {'set'.ucwords($property)}($value)
+			: property_exists($this, $property) && $this -> $property = $value;
+
 	}	
 	
 	public function &__get($property)
 	{
-		
-		return property_exists($this, $property) ? $this -> $property : NULL;
+
+		return method_exists($this, 'get'.ucwords($property))
+			? $this -> {'get'.ucwords($property)}()
+			: (property_exists($this, $property) ? $this -> $property : NULL);
 		
 	}
 	
@@ -100,6 +100,84 @@ class MWEntity implements MWPersistent
 	{
 		
 		return get_object_vars($this);
+		
+	}
+	
+	public function fillFromArray($result)
+	{
+
+		$fields = self::getFieldsWithAnnotationsFromClass($this);
+
+		$this -> id = $result['id'];
+		
+		$fieldName = null;
+		$results = null;
+		$annotation = null;
+
+		foreach($fields as $field)
+		{
+			
+			$annotation = array_shift(array_shift(array_values($field['annotations'])));
+			
+			switch( get_class($annotation) ){
+				
+				case "MWCore\Annotation\Field":
+				
+					$fieldName = $field['name'];
+
+					$this -> $fieldName = $annotation -> type == 'datetime' ? 
+						new \DateTime($result[$fieldName]) :
+						$result[$fieldName];
+				
+					break;
+					
+				case "MWCore\Annotation\OneToMany":
+				
+					$fieldName = $field['name'];
+					$repName = self::getRepositoryNameFromClass($annotation -> entity);				
+
+					$rep = new $repName;
+					
+					$results = $rep -> findAllByField("id_". self::getTableNameFromClass($entityname), $result['id'] );
+
+					$this -> $fieldName = $results === false ? array() : $results;
+					
+					break;
+				
+				case "MWCore\Annotation\OneToOne":
+				case "MWCore\Annotation\ManyToOne":					
+					
+					$fieldName = self::getTableNameFromClass($annotation -> entity);	
+					$repName = self::getRepositoryNameFromClass($annotation -> entity);
+					$entityName = $annotation -> entity;
+					
+					$rep = new $repName;
+
+					$this -> $fieldName = $annotation -> container == "false" ?
+								new $entityName( $result['id_'.$fieldName] ) :
+								$rep -> findOneById( $result['id_'.$fieldName] );
+				
+					break;
+					
+				case "MWCore\Annotation\ManyToMany":
+					
+					$fieldName = $field['name'];
+
+					$this -> $fieldName = \MWCore\Repository\MWRepository::findFromJoinTable(
+						$annotation,
+						get_class($this),
+						$result['id']
+					);
+				
+					break;
+
+				default:
+				
+					break;
+				
+			}
+			
+		}	
 		
 	}
 	

@@ -128,4 +128,15 @@ class MWSession
 		
 	}
 	
+	/**
+	*	Regenerates session id
+	*	@access public
+	*/
+	public function regenerate()
+	{
+		
+		session_regenerate_id();
+		
+	}
+	
 }

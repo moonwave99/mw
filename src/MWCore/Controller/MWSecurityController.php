@@ -9,7 +9,7 @@ class MWSecurityController extends MWController
 	
 	public function loginAction()
 	{
-
+		
 		$this -> requestView('MWCore\View\Pages\login', array(
 			'title'		=> 'Login page.',
 			'message'	=> $this -> request -> error !== NULL ? "Please check your username and password." : "Please login."
@@ -21,39 +21,26 @@ class MWSecurityController extends MWController
 	{
 		
 		// Request should be in POST method and the csrf token should match
-		if($this -> request -> getMethod() != 'POST' || $this -> csrfCheck() !== true)
-			$this -> redirect(MW_LOGIN_PATH);			
+		($this -> request -> getMethod() != 'POST' || $this -> csrfCheck() !== true) &&	$this -> redirect(MW_LOGIN_PATH);			
 		
 		$repName = $this -> inspector -> getRepositoryNameForEntity(MW_LOGIN_ENTITY);
 		$rep = new $repName();
 		$user = $rep -> findOneByField('username', $this -> request -> username );
 
-		if($user === false){
-			
-			$this -> redirect(MW_LOGIN_PATH."?error");
-			
-		}
+		$user === false && $this -> redirect(MW_LOGIN_PATH."?error");
 		
-		$hash = encodePassword($this -> request -> password, $user -> salt );
+		($user -> checkPassword($this -> request -> password) === false && $user -> enabled == 1)
+			&& $this -> redirect(MW_LOGIN_PATH."?error");
 		
-		if($user -> password == $hash && $user -> enabled == 1){
-			
-			session_regenerate_id();
-			
-			$this -> session -> set('logged', true);				
-			
-			$user -> password = NULL;
-			$user -> salt = NULL;
-			
-			$this -> session -> set('user', $user);				
+		$this -> session -> regenerate();
+		$this -> session -> set('logged', true);				
+		
+		$user -> password = NULL;
+		$user -> salt = NULL;
+		
+		$this -> session -> set('user', $user);				
 
-			$this -> redirect(MW_LOGIN_ENTRANCE);
-			
-		}else{
-			
-			$this -> redirect(MW_LOGIN_PATH."?error");
-			
-		}
+		$this -> redirect(MW_LOGIN_ENTRANCE);
 			
 	}
 	
