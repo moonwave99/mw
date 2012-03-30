@@ -132,8 +132,19 @@ class MWQueryBuilder
 
 			$this -> query .= " WHERE ";
 			
+			$bracket = '';
+			
+			$bracketOpen = false;
+			
 			foreach($this -> where as $i => $w)
 			{
+				
+				if($this -> where[$i+1]['boolean'] == 'OR' && $bracketOpen === false){
+					
+					$bracketOpen = true;
+					$this -> query .= '(';
+					
+				}
 				
 				( $i > 0 ) && $this -> query .= sprintf(" %s ", $w['boolean']);
 
@@ -143,6 +154,13 @@ class MWQueryBuilder
 					$w['operator'],
 					$w['value'] == NULL ? ":".$w['field'] : ":".$w['value']
 				);
+				
+				if($this -> where[$i+1]['boolean'] != 'OR' && $i < count($this -> where) -1 && $bracketOpen === true){
+					
+					$this -> query .= ')';					
+					$bracketOpen = false;
+					
+				}
 				
 			}
 			
@@ -166,7 +184,7 @@ class MWQueryBuilder
 			$this -> query .= sprintf(" LIMIT %d, %d", $this -> limit['start'], $this -> limit['range']);
 			
 		}	
-		
+
 		return $this -> query;			
 		
 	}
