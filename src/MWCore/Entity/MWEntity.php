@@ -112,7 +112,7 @@ class MWEntity implements MWPersistent
 	{
 
 		$fields = self::getFieldsWithAnnotationsFromClass($this);
-
+		
 		$this -> id = $result['id'];
 		
 		$fieldName = NULL;
@@ -143,9 +143,9 @@ class MWEntity implements MWPersistent
 
 					$rep = new $repName;
 					
-					$results = $rep -> findAllByField("id_". self::getTableNameFromClass($entityname), $result['id'] );
-
-					$this -> $fieldName = $results === false ? array() : $results;
+					$this -> $fieldName = $rep -> findAllByField(
+						"id_". self::getTableNameFromClass(get_class($this)), $result['id'] 
+					);
 					
 					break;
 				
@@ -158,9 +158,9 @@ class MWEntity implements MWPersistent
 					
 					$rep = new $repName;
 
-					$this -> $fieldName = $annotation -> container == "false" || $annotation -> lazy ?
-								new $entityName( $result['id_'.$fieldName] ) :
-								$rep -> findOneById( $result['id_'.$fieldName] );
+					$this -> $fieldName = $annotation -> lazy ?
+						new $entityName( $result['id_'.$fieldName] ) :
+						$rep -> findOneById( $result['id_'.$fieldName] );
 				
 					break;
 					

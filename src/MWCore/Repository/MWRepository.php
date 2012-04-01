@@ -32,27 +32,7 @@ class MWRepository
 		
 		$queryResults = $dbh -> getDBData( $qb -> build() );
 		
-		$results = array();
-		
-		$entity = NULL;
-		
-		foreach($queryResults as $r)
-		{
-		
-			if(!$entity = &self::searchInCache($this -> entityname, $r['id'])){
-
-				$entity = new $this -> entityname;
-				$entity -> fillFromArray($r);
-
-				self::storeInCache($entity);
-
-			}
-			
-			$results[] = $entity;			
-			
-		}
-		
-		return new MWCollection($results);
+		return self::fillCollection($queryResults, $this -> entityname);
 		
 	}
 	
@@ -74,27 +54,7 @@ class MWRepository
 			)
 		));
 	
-		$results = array();
-		
-		$entity = NULL;		
-	
-		foreach($queryResults as $r)
-		{
-
-			if(!$entity = &self::searchInCache($this -> entityname, $r['id'])){
-
-				$entity = new $this -> entityname;
-				$entity -> fillFromArray($r);
-
-				self::storeInCache($entity);
-
-			}
-			
-			$results[] = $entity;
-		
-		}
-	
-		return new MWCollection($results);
+		return self::fillCollection($queryResults, $this -> entityname);
 		
 	}	
 
@@ -224,7 +184,34 @@ class MWRepository
 	
 		return count($queryResults) == 0 ? false : $queryResults[0];		
 		
-	}	
+	}
+	
+	static function fillCollection($queryResults, $entityname)
+	{
+
+		$results = array();
+		
+		$entity = NULL;
+		
+		foreach($queryResults as $r)
+		{
+		
+			if(!$entity = &self::searchInCache($entityname, $r['id'])){
+
+				$entity = new $entityname;
+				$entity -> fillFromArray($r);
+
+				self::storeInCache($entity);
+
+			}
+			
+			$results[] = $entity;			
+			
+		}
+		
+		return new MWCollection($results);		
+		
+	}
 	
 	static function findFromJoinTable($field, $containerEntity, $id)
 	{
@@ -241,7 +228,7 @@ class MWRepository
 				$field -> jointable
 			)
 			-> order('order', 'ASC', $field -> jointable);
-		;
+		
 		$queryResults = $dbh -> getDBData( $qb -> build() , array(
 			array(
 				'field'	=> 'id_'.MWEntity::getTableNameFromClass($containerEntity),
@@ -250,27 +237,7 @@ class MWRepository
 			)
 		));
 		
-		$results = array();
-		
-		$entity = NULL;
-	
-		foreach($queryResults as $r)
-		{
-
-			if(!$entity = &self::searchInCache($field -> entity, $r['id'])){
-
-				$entity = new $field -> entity;
-				$entity -> fillFromArray($r);
-
-				self::storeInCache($entity);
-
-			}
-			
-			$results[] = $entity;
-		
-		}
-	
-		return new MWCollection($results);
+		return self::fillCollection($queryResults, $field -> entity);
 		
 	}
 	
