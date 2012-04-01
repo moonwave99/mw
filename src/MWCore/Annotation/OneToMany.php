@@ -7,6 +7,7 @@ class OneToMany extends \Annotation
 	
 	public $entity;
 	public $container;
-	public $allownull = false;	
+	public $allownull = false;
+	public $lazy = false;		
 
 }

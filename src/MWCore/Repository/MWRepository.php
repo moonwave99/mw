@@ -13,14 +13,12 @@ class MWRepository
 
 	protected $entityname;
 	
-	protected $cache;
+	static $cache = array();
 	
 	public function __construct($entityname)
 	{
 
 		$this -> entityname = $entityname;
-		
-		$this -> cache = array();		
 		
 	}
 
@@ -40,10 +38,17 @@ class MWRepository
 		
 		foreach($queryResults as $r)
 		{
+		
+			if(!$entity = &self::searchInCache($this -> entityname, $r['id'])){
+
+				$entity = new $this -> entityname;
+				$entity -> fillFromArray($r);
+
+				self::storeInCache($entity);
+
+			}
 			
-			$entity = new $this -> entityname;
-			$entity -> fillFromArray($r);
-			$results[] = $entity;
+			$results[] = $entity;			
 			
 		}
 		
@@ -76,8 +81,15 @@ class MWRepository
 		foreach($queryResults as $r)
 		{
 
-			$entity = new $this -> entityname;
-			$entity -> fillFromArray($r);
+			if(!$entity = &self::searchInCache($this -> entityname, $r['id'])){
+
+				$entity = new $this -> entityname;
+				$entity -> fillFromArray($r);
+
+				self::storeInCache($entity);
+
+			}
+			
 			$results[] = $entity;
 		
 		}
@@ -88,25 +100,21 @@ class MWRepository
 
 	public function findOneById($id)
 	{
-
-		$dbh = MWDBManager::getInstance();	
-		$qb = new MWQueryBuilder();
 		
-		$qb -> selectFrom( $this -> entityname ) -> where('id', '=') -> limit(0, 1);
+		if($entity = &self::searchInCache($this -> entityname, $id))
+		{
 
-		$queryResults = $dbh -> getDBData( $qb -> build() , array(
-			array(
-				'field'	=> 'id',
-				'value'	=> $id,
-				'type'	=> \PDO::PARAM_INT
-			)
-		));
-	
-		if( count($queryResults) == 0 ) return false;
+			return $entity;
+			
+		}
+
+		if(!$rawData = $this -> getSingleRawData($id)) return false;
 
 		$entity = new $this -> entityname;
-		$entity -> fillFromArray($queryResults[0]);
-		
+		$entity -> fillFromArray($rawData);
+			
+		self::storeInCache($entity);
+
 		return $entity;
 
 	}
@@ -128,11 +136,21 @@ class MWRepository
 		));
 
 		if( count($queryResults) == 0 ) return false;
-	
-		$entity = new $this -> entityname;
-		$entity -> fillFromArray($queryResults[0]);
-	
-		return $entity;
+		
+		if($entity = &self::searchInCache($this -> entityname, $queryResults[0]['id'])){
+		
+			return $entity;		
+			
+		}else{
+			
+			$entity = new $this -> entityname;
+			$entity -> fillFromArray($queryResults[0]);
+			
+			self::storeInCache($entity);
+
+			return $entity;			
+			
+		}	
 
 	}	
 	
@@ -156,10 +174,20 @@ class MWRepository
 
 		if( count($queryResults) == 0 ) return false;
 		
-		$entity = new $this -> entityname;
-		$entity -> fillFromArray($queryResults[0]);
+		if($entity = &self::searchInCache($this -> entityname, $queryResults[0]['id'])){
 		
-		return $entity;
+			return $entity;		
+			
+		}else{
+			
+			$entity = new $this -> entityname;
+			$entity -> fillFromArray($queryResults[0]);
+			
+			self::storeInCache($entity);
+
+			return $entity;			
+			
+		}
 		
 	}
 	
@@ -177,6 +205,26 @@ class MWRepository
 		return $result[0]['COUNT(id)'];
 		
 	}
+	
+	public function getSingleRawData($id)
+	{
+		
+		$dbh = MWDBManager::getInstance();	
+		$qb = new MWQueryBuilder();
+		
+		$qb -> selectFrom( $this -> entityname ) -> where('id', '=') -> limit(0, 1);
+
+		$queryResults = $dbh -> getDBData( $qb -> build() , array(
+			array(
+				'field'	=> 'id',
+				'value'	=> $id,
+				'type'	=> \PDO::PARAM_INT
+			)
+		));
+	
+		return count($queryResults) == 0 ? false : $queryResults[0];		
+		
+	}	
 	
 	static function findFromJoinTable($field, $containerEntity, $id)
 	{
@@ -209,8 +257,15 @@ class MWRepository
 		foreach($queryResults as $r)
 		{
 
-			$entity = new $field -> entity;
-			$entity -> fillFromArray($r);
+			if(!$entity = &self::searchInCache($field -> entity, $r['id'])){
+
+				$entity = new $field -> entity;
+				$entity -> fillFromArray($r);
+
+				self::storeInCache($entity);
+
+			}
+			
 			$results[] = $entity;
 		
 		}
@@ -219,81 +274,18 @@ class MWRepository
 		
 	}
 	
-	
-	protected function fillObjectFromArray($entityname, $result)
+	static function searchInCache($entityname, $id)
 	{
-
-		$fields = MWEntity::getFieldsWithAnnotationsFromClass($entityname);
-
-		$entity = new $entityname($result['id']);
-		
-		$fieldName = null;
-		$results = null;
-		$annotation = null;
-
-		foreach($fields as $field)
-		{
-			
-			$annotation = array_shift(array_shift(array_values($field['annotations'])));
 	
-			switch( get_class($annotation) ){
-				
-				case "MWCore\Annotation\Field":
-				
-					$fieldName = $field['name'];
-
-					$entity -> $fieldName = $annotation -> type == 'datetime' ? 
-						new \DateTime($result[$fieldName]) :
-						$result[$fieldName];
-				
-					break;
-					
-				case "MWCore\Annotation\OneToMany":
-				
-					$fieldName = $field['name'];
-					$repName = MWEntity::getRepositoryNameFromClass($annotation -> entity);				
-
-					$rep = new $repName;
-					
-					$results = $rep -> findAllByField("id_". MWEntity::getTableNameFromClass($entityname), $result['id'] );
-
-					$entity -> $fieldName = $results === false ? array() : $results;
-					
-					break;
-				
-				case "MWCore\Annotation\OneToOne":
-				case "MWCore\Annotation\ManyToOne":					
-								
-					$fieldName = MWEntity::getTableNameFromClass($annotation -> entity);	
-					$repName = MWEntity::getRepositoryNameFromClass($annotation -> entity);
-					$entityName = $annotation -> entity;
-					
-					$rep = new $repName;
-
-					$entity -> $fieldName = $annotation -> container == "false" ?
-								new $entityName( $result['id_'.$fieldName] ) :
-								$rep -> findOneById( $result['id_'.$fieldName] );
-				
-					break;
-					
-				case "MWCore\Annotation\ManyToMany":
-					
-					$fieldName = $field['name'];
-
-					$entity -> $fieldName = $this -> findFromJoinTable($annotation, $entityname, $result['id']);
-				
-					break;
-
-				default:
-				
-					break;
-				
-			}
-			
-		}
-
-		return $entity;
+		return self::$cache[$entityname][$id] ?: false;		
 		
 	}
+	
+	static function storeInCache($entity)
+	{
 
+		self::$cache[get_class($entity)][$entity -> id] = $entity;
+		
+	}
+	
 }

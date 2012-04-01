@@ -5,13 +5,16 @@ namespace MWCore\Entity;
 use MWCore\Kernel\MWDBManager;
 use MWCore\Kernel\MWClassInspector;
 use MWCore\Kernel\MWQueryBuilder;
-use MWCore\Interfaces\MWPersistent;
 use MWCore\Component\MWCollection;
+use MWCore\Repository\MWRepository;
+use MWCore\Interfaces\MWPersistent;
 	
 class MWEntity implements MWPersistent
 {
 	
 	protected $id;
+	
+	protected $loaded;
 
 	public function __construct($id = NULL)
 	{
@@ -30,7 +33,9 @@ class MWEntity implements MWPersistent
 	}	
 	
 	public function &__get($property)
-	{
+	{	
+
+		is_callable(array($this -> $property, 'hydrate')) && $this -> $property -> hydrate();
 
 		return method_exists($this, 'get'.ucwords($property))
 			? $this -> {'get'.ucwords($property)}()
@@ -50,7 +55,7 @@ class MWEntity implements MWPersistent
 				switch(get_class($value)){
 					
 					case "DateTime":
-						$value = $value -> format(\MWCore\Kernel\MWDBManager::$dateFormat);
+						$value = $value -> format(MWDBManager::$dateFormat);
 						break;
 						
 					case "MWCore\Component\MWCollection":
@@ -110,13 +115,13 @@ class MWEntity implements MWPersistent
 
 		$this -> id = $result['id'];
 		
-		$fieldName = null;
-		$results = null;
-		$annotation = null;
+		$fieldName = NULL;
+		$results = NULL;
+		$annotation = NULL;
 
 		foreach($fields as $field)
 		{
-			
+
 			$annotation = array_shift(array_shift(array_values($field['annotations'])));
 			
 			switch( get_class($annotation) ){
@@ -153,7 +158,7 @@ class MWEntity implements MWPersistent
 					
 					$rep = new $repName;
 
-					$this -> $fieldName = $annotation -> container == "false" ?
+					$this -> $fieldName = $annotation -> container == "false" || $annotation -> lazy ?
 								new $entityName( $result['id_'.$fieldName] ) :
 								$rep -> findOneById( $result['id_'.$fieldName] );
 				
@@ -163,7 +168,7 @@ class MWEntity implements MWPersistent
 					
 					$fieldName = $field['name'];
 
-					$this -> $fieldName = \MWCore\Repository\MWRepository::findFromJoinTable(
+					$this -> $fieldName = MWRepository::findFromJoinTable(
 						$annotation,
 						get_class($this),
 						$result['id']
@@ -177,15 +182,22 @@ class MWEntity implements MWPersistent
 				
 			}
 			
-		}	
+		}
+		
+		$this -> loaded = true;
 		
 	}
 	
 	public function hydrate()
 	{
+
+		!$this -> loaded && $this -> fillFromArray(
 		
-		$rep = self::createRepository($this);
-		return $rep -> findOneById($this -> id);
+			self::createRepository($this) -> getSingleRawData($this -> id)		
+		
+		);
+		
+		return $this;
 		
 	}
 	
@@ -215,8 +227,7 @@ class MWEntity implements MWPersistent
 				'type'	=> \PDO::PARAM_INT
 			);			
 			
-		}
-			
+		}		
 		
 		foreach($fields as $field)
 		{
@@ -239,8 +250,8 @@ class MWEntity implements MWPersistent
 							
 						case "datetime":					
 							$value = $this -> $field['name'] !== NULL ? 
-								$this -> $field['name'] -> format(\MWCore\Kernel\MWDBManager::$dateFormat) :
-								date(\MWCore\Kernel\MWDBManager::$dateFormat);
+								$this -> $field['name'] -> format(MWDBManager::$dateFormat) :
+								date(MWDBManager::$dateFormat);
 							$type = \PDO::PARAM_STR;						
 							break;
 							
@@ -372,8 +383,8 @@ class MWEntity implements MWPersistent
 							
 						case "datetime":					
 							$value = $this -> $field['name'] !== NULL ? 
-								$this -> $field['name'] -> format(\MWCore\Kernel\MWDBManager::$dateFormat) :
-								date(\MWCore\Kernel\MWDBManager::$dateFormat);
+								$this -> $field['name'] -> format(MWDBManager::$dateFormat) :
+								date(MWDBManager::$dateFormat);
 							$type = \PDO::PARAM_STR;						
 							break;
 							

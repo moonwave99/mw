@@ -9,5 +9,6 @@ class ManyToMany extends \Annotation
 	public $jointable;
 	public $container;
 	public $allownull = false;
+	public $lazy = false;
 
 }

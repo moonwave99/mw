@@ -89,9 +89,9 @@ class CrudController extends MWController
 
 		if($this -> request -> getMethod() != 'POST' || $this -> csrfCheck() !== true)
 			exit;
-		
-		$entity = $this -> bindRequest($this -> entityname);
 
+		$entity = $this -> bindRequest($this -> entityname);
+		
 		($this -> request -> id != 0) ? $entity -> update() : $entity -> create();
 
 		return $this -> json(array(

@@ -157,7 +157,7 @@ class MWController
 							$tmpEntity = new $tmpEntityName;
 							$tmpEntity -> id = $v;
 
-							$entity -> $field['name'] -> add($tmpEntity);
+							$entity -> $field['name'] -> add($tmpEntity -> hydrate());
 
 						}
 
@@ -171,7 +171,7 @@ class MWController
 				
 			}		
 			
-		}	
+		}
 		
 		return $entity;	
 		
