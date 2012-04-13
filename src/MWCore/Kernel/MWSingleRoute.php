@@ -114,7 +114,7 @@ class MWSingleRoute
 	static function patternLength($pattern)
 	{
 	
-		return count(self::tiles($pattern));
+		return strpos($pattern, '*') !== false ? '*' : count(self::tiles($pattern));
 		
 	}
 	
@@ -126,12 +126,18 @@ class MWSingleRoute
 	*/	
 	public function isPatternMatching($pattern)
 	{	
-
+		
 		$tiles = self::tiles($pattern);
 		$ownTiles = $this -> getTiles();
 		
+		if(count($tiles) < count($ownTiles))
+			return false;
+		
 		foreach($tiles as $i => $t)
 		{
+			
+			if($ownTiles[$i] == '*')
+				return true;			
 			
 			if($t !== $ownTiles[$i] && strpos($ownTiles[$i], "{") === false){
 				return false;

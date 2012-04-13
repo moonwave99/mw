@@ -70,7 +70,7 @@ class MWRouter
 	public function routeRequest()
 	{
 
-		$pattern = $this -> getPatternFromURI();
+		$pattern = self::getPatternFromURI();
 		
 		$firewallProblem = $this -> firewall -> isPatternRejected($pattern);
 
@@ -120,33 +120,10 @@ class MWRouter
 	}	
 	
 	/**
-	*	Searches own collection for given pattern
-	*	@access protected
-	*	@param string $pattern The pattern being looked for
-	*	@return mixed Matching MWSingleRoute if found, or false
-	*/
-	protected function searchPattern($pattern)
-	{
-
-		foreach($this -> routes[MWSingleRoute::patternLength($pattern)] as $r)
-		{
-
-			if($r -> isPatternMatching($pattern))
-			{
-				return $r;
-			}
-			
-		}
-		
-		return false;
-		
-	}
-	
-	/**
 	*	Returns pattern from URI
 	*	@return string
 	*/
-	protected function getPatternFromURI()
+	static function getPatternFromURI()
 	{
 
 		$xpl = str_replace(array_pop(explode(' ', REWRITE_RULE)), '', $_SERVER['SCRIPT_NAME']);
@@ -160,6 +137,39 @@ class MWRouter
 		return strpos($_SERVER['REQUEST_URI'], 'index.php') !== false ? 
 			array_shift(explode('&', array_pop($route))) :
 			array_shift($route);
+		
+	}	
+	
+	/**
+	*	Searches own collection for given pattern
+	*	@access protected
+	*	@param string $pattern The pattern being looked for
+	*	@return mixed Matching MWSingleRoute if found, or false
+	*/
+	protected function searchPattern($pattern)
+	{
+
+		foreach($this -> routes['*'] as $r)
+		{
+			
+			if($r -> isPatternMatching($pattern))
+			{
+				return $r;
+			}			
+			
+		}
+
+		foreach($this -> routes[MWSingleRoute::patternLength($pattern)] as $r)
+		{
+
+			if($r -> isPatternMatching($pattern))
+			{
+				return $r;
+			}
+			
+		}
+		
+		return false;
 		
 	}
 	
