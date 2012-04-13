@@ -112,5 +112,21 @@ class MWCollection implements \Iterator
 		return key($this -> elements) !== NULL && key($this -> elements) !== FALSE;
 
     }	
+
+	public function standardize()
+	{
+		
+		$values = $this -> toArray();
+		
+		foreach($values as &$v)
+		{
+			
+			$v = $v -> standardize();
+			
+		}
+		
+		return $values;
+		
+	}
 	
 }
