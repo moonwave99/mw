@@ -34,7 +34,11 @@ class MWRequest
 	protected function cleanRequest()
 	{		
 		
-		foreach(array($_GET, $_POST, $_COOKIE) as $req)
+		$_PUT = array();
+		
+		$this -> method == 'PUT' && parse_str(file_get_contents('php://input'), $_PUT);
+
+		foreach(array($_GET, $_POST, $_PUT, $_COOKIE) as $req)
 		{
 
 			if (get_magic_quotes_gpc())
@@ -63,6 +67,7 @@ class MWRequest
 		
 		unset($_GET);
 		unset($_POST);
+		unset($_PUT);
 		unset($_COOKIE);
 				
 	}
