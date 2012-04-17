@@ -63,7 +63,7 @@ class MWEntity implements MWPersistent
 						break;
 						
 					default:
-						$value -> standardize();					
+						$value = $value -> hydrate() -> standardize();
 						break;
 					
 				}
@@ -81,8 +81,9 @@ class MWEntity implements MWPersistent
 			}
 			
 			$std -> $name = $value;
-			
+
 		}
+		
 		return $std;		
 		
 	}
