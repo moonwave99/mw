@@ -98,16 +98,17 @@ class MWController
 
 	}
 	
-	protected function bindRequest($entityName)
+	protected function bindRequest($entityName, $id = NULL)
 	{
 		
 		$entity = null;
+		$id = !isset($id) ? $this -> request -> id : $id;
 		
-		if((int)($this -> request -> id) != 0){
+		if($id !== NULL){
 
 			$repName = $this -> inspector -> getRepositoryNameForEntity($entityName);	
 			$rep = new $repName;
-			$entity = $rep -> findOneById($this -> request -> id);
+			$entity = $rep -> findOneById($id);
 
 		}else{
 
