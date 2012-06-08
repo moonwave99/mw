@@ -8,7 +8,7 @@
 *	@license http://www.opensource.org/licenses/mit-license.php MIT License
 *	@package MWCore/Kernel
 */
-	
+
 namespace MWCore\Kernel;
 
 /**
@@ -24,41 +24,41 @@ class MWFirewall
 	*	@var array
 	*/
 	protected $rules;
-	
+
 	/**
 	*	@access protected
 	*	@var MWContext
 	*/
 	protected $context;
-	
+
 	/**
 	*	Default constructor.
 	*	@param MWContext $context MWContext instance injected
 	*/
 	public function __construct(&$context)
-	{	
-		
+	{
+
 		$this -> rules = array();
-		
+
 		$this -> context = $context;
-		
+
 	}
-	
+
 	/**
 	*	Rules setter
 	*	@param array $rules The rules being set
 	*/
 	public function setRules($rules)
 	{
-		
+
 		foreach($rules as $r){
-			
+
 			$this -> rules[] = $r;
-			
+
 		}
-		
+
 	}
-	
+
 	/**
 	*	Checks if the user has permission to follow given pattern
 	*	@param string $pattern The pattern being checked
@@ -68,44 +68,44 @@ class MWFirewall
 	{
 
 		$currentTiles = MWSingleRoute::tiles($pattern);
-		
+
 		$check = NULL;
-		
+
 		foreach($this -> rules as $rule)
 		{
 
 			$ruleTiles = MWSingleRoute::tiles( $rule -> getPattern() );
 
 			if(count($ruleTiles) > count($currentTiles))
-				continue;		
-				
+				continue;
+
 			$check = true;
-				
+
 			foreach($ruleTiles as $i => $tile )
 			{
-				
+
 				if($tile != $currentTiles[$i]){
-					
+
 					$check = false;
 					break;
-					
+
 				}
-				
+
 			}
-			
+
 			if($check === true)
 			{
 
-				return $this -> context -> isRoleGranted( $rule -> getRole() ) || 
-					($rule -> isFlashEnabled() && strpos($_SERVER['HTTP_USER_AGENT'], "Adobe Flash Player") !== false )
+				return $this -> context -> isRoleGranted( $rule -> getRole() ) ||
+					($rule -> isFlashEnabled() && strpos($_SERVER['HTTP_USER_AGENT'], "Flash") !== false )
 					? false : $rule -> getFallbackPattern();
-				
+
 			}
-			
+
 		}
-		
+
 		return false;
-		
+
 	}
-	
+
 }
